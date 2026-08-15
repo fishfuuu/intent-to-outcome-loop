@@ -6,8 +6,9 @@ and reviewable — without becoming a platform.
 
 This is *not* an agent runtime, a scheduler, a workflow server, a
 daemon, or a project management system. There is no global state, no
-task board, no database, no web UI. The only persistent artifact any
-skill can create is a Reviewed Change record, and only on demand.
+task board, no database, no web UI. The only persistent artifacts any
+skill can create are on demand: a Reviewed Change record, and — when
+the user explicitly asks — one Handoff Markdown from `coordinate`.
 
 ## What problem this solves
 
@@ -43,6 +44,34 @@ small, consistent vocabulary for those parts.
 
 `task-router` itself never edits files; "hand off" means the matching
 change skill takes over the editing.
+
+## The requirement–implementation–evaluation flywheel
+
+The seven skills form a light cognitive model, not a mandatory pipeline.
+There is no single master entry skill, and you never have to run all of
+them. Use the part you are in:
+
+```
+Requirement unclear?            shape
+Ready to implement?             task-router → quick-change / bounded-change / reviewed-change
+Want to judge the result?       evaluate   (only when you call it)
+Need to switch person/agent/session or request review?   coordinate
+```
+
+How it stays user-driven:
+
+- **shape** is for when the requirement is unclear — not a required first step.
+- **task-router** is the default entry when you want a task done; it hands
+  off to a change skill in the same conversation. Engineers who already
+  know the tier can call a change skill directly.
+- **evaluate** is only ever called by you. No skill or the flywheel itself
+  auto-triggers it.
+- **coordinate** is an on-demand connector for switching people, agents,
+  sessions, or requesting review — not a step you pass through every round.
+- The flywheel is a mental model, not a lifecycle state machine.
+
+Core stays aimed at individuals, solo super-individuals, and small teams.
+It is not marketed as an enterprise governance system.
 
 ## Quick vs Bounded vs Reviewed
 
@@ -121,7 +150,7 @@ python -m unittest discover -s tests -v
 
 OpenCode and Grok can read the canonical `SKILL.md` files directly as
 plain markdown — copy the `skills/` tree into your host's skill
-directory manually. v0.2 does not yet generate adapter metadata for
+directory manually. v0.3 does not yet generate adapter metadata for
 these hosts, so the `evaluate` user-only policy is a convention the
 operator must respect until a future version adds the metadata. See
 [docs/compatibility.md](docs/compatibility.md) for the full compatibility

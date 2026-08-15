@@ -98,15 +98,19 @@ class TestValidate(unittest.TestCase):
         self.assertEqual(declared, on_disk)
 
 
-class TestV02Structure(unittest.TestCase):
-    """Structural checks for the v0.2 contract.
+class TestV03Structure(unittest.TestCase):
+    """Structural checks for the v0.3 contract.
 
     These verify repository and document STRUCTURE only: the manifest is
-    7 skills at version 0.2.0, the required SKILL.md sections exist, the
-    reviewed-change Procedure steps are in order, the record doc matches,
-    and no governance infrastructure files exist. They do NOT assert that
-    a keyword's presence proves a skill's runtime behavior — that is for
-    Codex's forward tests, not these unit tests.
+    7 skills at version 0.3.0, required SKILL.md sections exist, the
+    reviewed-change Procedure steps and baseline contract (proposed
+    approach, finding categories, round counting) hold, the record doc
+    matches, the coordinate Handoff Markdown template exists, and no
+    governance infrastructure files exist. They do NOT assert that a
+    keyword's presence proves a skill's runtime behavior — coordinate's
+    default-no-write, explicit-request gating, and overwrite protection
+    are covered by the three manual scenario walk-throughs, and runtime
+    behavior generally is for Codex's forward tests.
     """
 
     REQUIRED_SECTIONS = ("## Purpose", "## Use when", "## Do not use when",
@@ -117,10 +121,13 @@ class TestV02Structure(unittest.TestCase):
         return (REPO_ROOT / "skills" / name / "SKILL.md").read_text(
             encoding="utf-8")
 
-    def test_version_and_skill_count(self):
-        data = json.loads((REPO_ROOT / "skillset.json")
+    def _skillset(self):
+        return json.loads((REPO_ROOT / "skillset.json")
                           .read_text(encoding="utf-8"))
-        self.assertEqual(data["version"], "0.2.0")
+
+    def test_version_and_skill_count(self):
+        data = self._skillset()
+        self.assertEqual(data["version"], "0.3.0")
         self.assertEqual(len(data["skills"]), 7)
 
     def test_every_skill_has_required_sections(self):
@@ -132,19 +139,101 @@ class TestV02Structure(unittest.TestCase):
                 self.assertIn(section, text,
                               f"{skill.name}: missing section {section!r}")
 
+    def test_coordinate_frontmatter_is_only_name_and_description(self):
+        fm, _ = yaml_subset.parse_frontmatter(self._skill("coordinate"))
+        self.assertEqual(set(fm.keys()), validate.CANONICAL_FRONTMATTER_KEYS,
+                         "coordinate canonical frontmatter must be only "
+                         "name and description")
+        for key in validate.HOST_SPECIFIC_FRONTMATTER_KEYS:
+            self.assertNotIn(key, fm)
+
+    def test_coordinate_persistence_template_present(self):
+        # Structural contract: the persistence-mode Handoff Markdown
+        # template must be a fenced block under the named heading, with
+        # the title and the eight base sections in exact order. This is a
+        # real structure check (ordered section set), not a keyword test.
+        # Behavior such as default-no-write and overwrite protection is
+        # covered by the three manual scenario walk-throughs.
+        text = self._skill("coordinate")
+        lines = text.split("\n")
+
+        # Locate the template heading, then the first fenced block after it.
+        heading_idx = next(
+            (i for i, ln in enumerate(lines)
+             if ln.strip() == "## Handoff Markdown template (persistence mode)"),
+            None)
+        self.assertIsNotNone(heading_idx,
+                             "coordinate missing Handoff Markdown template heading")
+
+        # The non-empty lines of the first fenced block must be exactly
+        # the title and the eight base sections, in this order.
+        fence_idxs = [i for i, ln in enumerate(lines[heading_idx + 1:], start=heading_idx + 1)
+                      if ln.strip() == "```"]
+        self.assertGreaterEqual(len(fence_idxs), 2,
+                                "coordinate missing the persistence template "
+                                "fenced block")
+        first_open, first_close = fence_idxs[0], fence_idxs[1]
+        block = lines[first_open + 1:first_close]
+        expected = [
+            "# Current Outcome Handoff",
+            "## Outcome",
+            "## Current Slice / State",
+            "## Confirmed Facts and Rules",
+            "## Artifacts and Locations",
+            "## Evidence",
+            "## Limitations and Risks",
+            "## Specific Ask / Recommended Next Step",
+            "## Open Questions",
+        ]
+        actual = [ln.strip() for ln in block if ln.strip()]
+        self.assertEqual(actual, expected,
+                         "coordinate persistence template sections do not match "
+                         f"the ordered contract; got:\n{actual}")
+
+        # The optional Data/AI sections live in a second fenced block.
+        optional = [
+            "## Data Meaning and Sensitivity",
+            "## AI Decision and Fallback",
+        ]
+        # Collect all fenced blocks after the heading; the second one is
+        # the optional-sections block.
+        fence_idxs = [i for i, ln in enumerate(lines[heading_idx + 1:], start=heading_idx + 1)
+                      if ln.strip() == "```"]
+        self.assertGreaterEqual(len(fence_idxs), 4,
+                                "coordinate missing the optional Data/AI "
+                                "fenced block")
+        second_open, second_close = fence_idxs[2], fence_idxs[3]
+        opt_actual = [ln.strip() for ln in lines[second_open + 1:second_close]
+                      if ln.strip()]
+        self.assertEqual(opt_actual, optional,
+                         "coordinate optional Data/AI template sections do not "
+                         f"match; got:\n{opt_actual}")
+
     def test_reviewed_change_has_proposed_approach_in_contract(self):
+        # Baseline regression: the Change Contract must define the design
+        # field. (Restored — reviewed-change is not in the v0.3 change set.)
         text = self._skill("reviewed-change")
-        # Structural: the Change Contract must define the design field.
         self.assertIn("Proposed approach / design", text)
-        # And Plan Review names what it reviews (structure, not behavior).
         self.assertIn("proposed approach / design agree", text.lower())
+
+    def test_reviewed_change_finding_categories(self):
+        # Baseline regression: the four category labels are a named
+        # structural contract the skill must enumerate.
+        text = self._skill("reviewed-change")
+        for cat in ("IMPLEMENTATION_DEFECT", "TEST_DEFECT",
+                    "SPECIFICATION_GAP", "FUTURE_ENHANCEMENT"):
+            self.assertIn(cat, text, f"missing finding category {cat!r}")
+
+    def test_reviewed_change_round_counting_present(self):
+        # Baseline regression: review round counting must be defined.
+        text = self._skill("reviewed-change")
+        self.assertIn("Review round counting", text)
 
     def test_reviewed_change_procedure_steps_in_order(self):
         text = self._skill("reviewed-change")
         lines = text.split("\n")
         proc_idx = next(i for i, ln in enumerate(lines)
                         if ln.strip() == "## Procedure")
-        # The ordered steps live on the first content line of Procedure.
         step_line = ""
         for ln in lines[proc_idx + 1:proc_idx + 5]:
             if "Change Contract" in ln and "Plan Review" in ln:
@@ -163,18 +252,6 @@ class TestV02Structure(unittest.TestCase):
             self.assertGreater(idx, last, f"{step!r} not in order")
             last = idx
 
-    def test_reviewed_change_finding_categories(self):
-        # The four category labels are a named structural contract the
-        # skill must enumerate (not a behavior claim).
-        text = self._skill("reviewed-change")
-        for cat in ("IMPLEMENTATION_DEFECT", "TEST_DEFECT",
-                    "SPECIFICATION_GAP", "FUTURE_ENHANCEMENT"):
-            self.assertIn(cat, text, f"missing finding category {cat!r}")
-
-    def test_reviewed_change_round_counting_present(self):
-        text = self._skill("reviewed-change")
-        self.assertIn("Review round counting", text)
-
     def test_record_doc_matches_skill_structure(self):
         doc = (REPO_ROOT / "docs" / "reviewed-change-record.md"
                ).read_text(encoding="utf-8")
@@ -182,21 +259,17 @@ class TestV02Structure(unittest.TestCase):
                         "## Final Independent Review",
                         "## Findings resolution"):
             self.assertIn(section, doc,
-                          f"record doc missing v0.2 section {section!r}")
-        # The doc's Change Contract must mirror the skill's design field.
+                          f"record doc missing section {section!r}")
         self.assertIn("Proposed approach / design", doc)
 
     def test_no_governance_infrastructure_files(self):
         """A real repository-structure check, not a keyword scan.
 
-        The v0.2 contract forbids state machines, gates, boards,
+        The v0.3 contract forbids state machines, gates, boards,
         daemons, databases, and extra runtime scripts. Assert by
         directory/file structure, not by absence of forbidden words.
         """
-        # The manifest has exactly 7 skills (no hidden eighth).
-        data = json.loads((REPO_ROOT / "skillset.json")
-                          .read_text(encoding="utf-8"))
-        self.assertEqual(len(data["skills"]), 7)
+        self.assertEqual(len(self._skillset()["skills"]), 7)
 
         # No governance state/lifecycle directories exist in the repo.
         forbidden_paths = [

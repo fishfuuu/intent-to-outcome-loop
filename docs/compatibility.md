@@ -5,7 +5,7 @@ files use only generic frontmatter (`name`, `description`) so any host
 can read them. Host-specific behavior is layered on top, never baked
 into the canonical files.
 
-## Officially supported (v0.2)
+## Officially supported (v0.3)
 
 | Host | Install | Notes |
 | --- | --- | --- |
@@ -15,18 +15,35 @@ into the canonical files.
 Both hosts support `--scope project` and `--dry-run`. See the README
 for full install instructions.
 
-## Experimentally compatible (v0.2)
+## Experimentally compatible (v0.3)
 
 | Host | Status | What works | What does not |
 | --- | --- | --- | --- |
-| OpenCode | Experimental | Reads the canonical `SKILL.md` files directly. | v0.2 does not yet generate adapter metadata for OpenCode. Copy skills manually. |
-| Grok | Experimental | Reads the canonical `SKILL.md` files directly. | v0.2 does not yet generate adapter metadata for Grok. Copy skills manually. |
+| OpenCode | Experimental | Reads the canonical `SKILL.md` files directly. | v0.3 does not yet generate adapter metadata for OpenCode. Copy skills manually. |
+| Grok | Experimental | Reads the canonical `SKILL.md` files directly. | v0.3 does not yet generate adapter metadata for Grok. Copy skills manually. |
 
 OpenCode and Grok can read the skills as plain markdown. The
-`evaluate` skill is *intended* to be user-only everywhere, but v0.2 has
+`evaluate` skill is *intended* to be user-only everywhere, but v0.3 has
 not yet generated the per-host adapter metadata that would enforce that
 on OpenCode and Grok. On those hosts, treat "user-only" as a convention
 the operator must respect until a future version adds the metadata.
+
+## Coordinate persistence across hosts
+
+The Codex and Claude installed copies read the same `coordinate` skill
+instructions, including the default (in-conversation packet) and
+persistence (save one Handoff Markdown) modes.
+
+- Whether a handoff file is actually saved depends on the current host's
+  file-write permission and the path the user specified.
+- `coordinate` does not bypass host permissions. If the host will not
+  allow the write, `coordinate` reports that and writes nothing.
+- `evaluate` remains user-only on every host (see above).
+
+This repo does not claim that OpenCode, Grok, or any other host not
+listed above is fully compatible. They can read the canonical skills as
+plain markdown, but their handling of `coordinate` persistence and the
+`evaluate` user-only policy is unverified.
 
 ## Why canonical frontmatter stays generic
 
