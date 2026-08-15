@@ -1,0 +1,137 @@
+# Coding Agent Delivery
+
+Lightweight, vendor-neutral **delivery skills** for coding agents.
+Seven small skills that help an agent work in a way that is verifiable
+and reviewable — without becoming a platform.
+
+This is *not* an agent runtime, a scheduler, a workflow server, a
+daemon, or a project management system. There is no global state, no
+task board, no database, no web UI. The only persistent artifact any
+skill can create is a Reviewed Change record, and only on demand.
+
+## What problem this solves
+
+When you use a coding agent seriously, the hard parts are not the code
+— they are deciding what to build, picking the right-sized process for
+the risk, verifying the result, and handing work between people and
+agents without losing context. These seven skills give the agent a
+small, consistent vocabulary for those parts.
+
+## The seven skills
+
+| Skill | What it does | State |
+| --- | --- | --- |
+| `shape` | Optional. Clarifies a business problem into a brief: problem, goal, boundary, success criteria. | None |
+| `evaluate` | User-invoked checkpoint. Returns CONTINUE / IMPROVE / PIVOT / STOP / INSUFFICIENT_EVIDENCE. Never auto-runs. | None |
+| `task-router` | The default entry point. Classifies a task as Quick, Bounded, or Reviewed and hands off to the matching change skill. Read-only. | None |
+| `quick-change` | Docs, copy, comments, formatting, behavior-neutral edits. | None |
+| `bounded-change` | Local behavior-affecting change with a clear boundary and a verify loop. | None |
+| `reviewed-change` | Architecture, data, security, interface, cross-module changes. Change Contract → Plan Review → slices → independent review. | Optional record |
+| `coordinate` | Writes handoff, review-request, and findings-summary packets for people/agent and agent/agent handoffs. | None |
+
+## Two ways in
+
+- **Most users** only need `task-router`. Give it a software task; it
+  reads the task and the code, classifies Quick / Bounded / Reviewed,
+  fills in a short Route Brief (goal, boundary, risk, verification), and
+  — if you asked for the work to be done and nothing blocks it — hands
+  off to the matching change skill **in the same conversation**. You do
+  not need to understand the three tiers or re-type a skill name.
+- **Engineers** who already know the tier can call `quick-change`,
+  `bounded-change`, or `reviewed-change` directly. `task-router` is a
+  convenience, not a gate.
+
+`task-router` itself never edits files; "hand off" means the matching
+change skill takes over the editing.
+
+## Quick vs Bounded vs Reviewed
+
+Pick the **lightest** path that is still safe:
+
+- **Quick** — behavior-neutral, exact boundary, trivially reversible. No verification of behavior needed beyond "nothing changed that matters."
+- **Bounded** — behavior-affecting, but contained in one function/module/feature with a clear boundary and a verification method. Record a baseline, verify the same way before and after, iterate the implementation not the goal.
+- **Reviewed** — touches architecture, data shape, security, a public interface, or spans modules. A lightweight flow: Change Contract → Plan Review → vertical slices → Verification → Final Independent Review → findings resolution → re-review when required.
+
+Escalation is built in: a Quick change that affects behavior becomes
+Bounded; a Bounded change that grows past its boundary becomes
+Reviewed.
+
+## Install
+
+Requirements: Python 3.8+ (standard library only).
+
+### Codex
+
+```bash
+python scripts/install.py --target codex --scope user
+```
+
+Installs the skills into `~/.agents/skills`. The `evaluate` user-only
+policy is enforced via `skills/evaluate/agents/openai.yaml`.
+
+### Claude Code
+
+```bash
+python scripts/install.py --target claude --scope user
+```
+
+Installs the skills into `~/.claude/skills`. The installer adds
+`disable-model-invocation: true` to the installed copy of `evaluate`
+so the agent cannot auto-invoke it; only an explicit user call runs it.
+
+### Options
+
+- `--scope project` — install into the **current project** (cwd)
+  instead of the user directory. The target path depends on the host:
+  - Codex: `<project>/.agents/skills`
+  - Claude Code: `<project>/.claude/skills`
+
+  The project is the current working directory, never the toolkit's own
+  location or the user home.
+- `--dry-run` — report what would be written, without writing or
+  deleting anything.
+- `--destination <dir>` — install into an explicit directory, for tests
+  and non-standard hosts. Overrides scope-based resolution. With a
+  single `--target`, skills are written directly under `<dir>`.
+- `--target both --destination <dir>` — install for both Codex and
+  Claude into **separate subdirectories** `<dir>/codex/` and
+  `<dir>/claude/`, so the two host views never overwrite each other.
+
+The installer **never deletes** unrelated skills in the target
+directory. It only writes the skills it owns. If a target skill already
+exists, the installer reports which files would be overwritten.
+
+## Validate
+
+```bash
+python scripts/validate.py
+```
+
+Checks the skill manifest, the skills directory, frontmatter, line
+budgets, host policies, local-path leakage, and doc links. Exits
+non-zero on errors.
+
+## Run the tests
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+## OpenCode and Grok (experimental)
+
+OpenCode and Grok can read the canonical `SKILL.md` files directly as
+plain markdown — copy the `skills/` tree into your host's skill
+directory manually. v0.2 does not yet generate adapter metadata for
+these hosts, so the `evaluate` user-only policy is a convention the
+operator must respect until a future version adds the metadata. See
+[docs/compatibility.md](docs/compatibility.md) for the full compatibility
+table.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
+
+## Contributing
+
+See [AGENTS.md](AGENTS.md) for the contribution rules. This repo does
+not require you to use its own delivery skills to maintain itself.

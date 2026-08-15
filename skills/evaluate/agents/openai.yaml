@@ -1,0 +1,4 @@
+# Codex agent policy for the evaluate skill.
+# Pins evaluate to user-only invocation in Codex.
+policy:
+  allow_implicit_invocation: false

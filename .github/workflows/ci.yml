@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        # Covers the project's declared minimum (3.8), a current stable
+        # release, and the latest stable release (3.14).
+        python-version: ["3.8", "3.12", "3.14"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Validate
+        run: python scripts/validate.py
+
+      - name: Tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Install dry-run (codex)
+        run: python scripts/install.py --target codex --scope user --dry-run
+
+      - name: Install dry-run (claude)
+        run: python scripts/install.py --target claude --scope user --dry-run
+
+      - name: Install both to temp dir
+        shell: bash
+        run: |
+          tmp=$(mktemp -d)
+          python scripts/install.py --target both --destination "$tmp"
+          ls -R "$tmp"

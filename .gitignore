@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# No local delivery state lives in this repo
+.agent-delivery/
+
+# Build artifacts should not be committed; this repo ships source only
+dist/
+build/

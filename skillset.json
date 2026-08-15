@@ -1,0 +1,62 @@
+{
+  "name": "coding-agent-delivery",
+  "version": "0.2.0",
+  "description": "Lightweight, vendor-neutral delivery skills for coding agents.",
+  "hosts": {
+    "codex": {"support": "supported"},
+    "claude": {"support": "supported"},
+    "opencode": {"support": "experimental"},
+    "grok": {"support": "experimental"}
+  },
+  "skills": [
+    {
+      "name": "shape",
+      "display_name": "Shape",
+      "invocation_mode": "user",
+      "hosts": {"codex": "supported", "claude": "supported", "opencode": "experimental", "grok": "experimental"},
+      "source": "skills/shape/SKILL.md"
+    },
+    {
+      "name": "evaluate",
+      "display_name": "Evaluate",
+      "invocation_mode": "user-only",
+      "hosts": {"codex": "supported", "claude": "supported", "opencode": "experimental", "grok": "experimental"},
+      "source": "skills/evaluate/SKILL.md"
+    },
+    {
+      "name": "task-router",
+      "display_name": "Task Router",
+      "invocation_mode": "user",
+      "hosts": {"codex": "supported", "claude": "supported", "opencode": "experimental", "grok": "experimental"},
+      "source": "skills/task-router/SKILL.md"
+    },
+    {
+      "name": "quick-change",
+      "display_name": "Quick Change",
+      "invocation_mode": "user",
+      "hosts": {"codex": "supported", "claude": "supported", "opencode": "experimental", "grok": "experimental"},
+      "source": "skills/quick-change/SKILL.md"
+    },
+    {
+      "name": "bounded-change",
+      "display_name": "Bounded Change",
+      "invocation_mode": "user",
+      "hosts": {"codex": "supported", "claude": "supported", "opencode": "experimental", "grok": "experimental"},
+      "source": "skills/bounded-change/SKILL.md"
+    },
+    {
+      "name": "reviewed-change",
+      "display_name": "Reviewed Change",
+      "invocation_mode": "user",
+      "hosts": {"codex": "supported", "claude": "supported", "opencode": "experimental", "grok": "experimental"},
+      "source": "skills/reviewed-change/SKILL.md"
+    },
+    {
+      "name": "coordinate",
+      "display_name": "Coordinate",
+      "invocation_mode": "user",
+      "hosts": {"codex": "supported", "claude": "supported", "opencode": "experimental", "grok": "experimental"},
+      "source": "skills/coordinate/SKILL.md"
+    }
+  ]
+}
