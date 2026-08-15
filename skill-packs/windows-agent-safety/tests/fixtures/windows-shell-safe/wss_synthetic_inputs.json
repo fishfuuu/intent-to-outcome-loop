@@ -1,0 +1,147 @@
+{
+  "WSS-01": {
+    "shell": {"family": "GIT_BASH", "confidence": "CONFIRMED"},
+    "command": "Remove-Item -LiteralPath 'C:\\Synthetic\\one.txt'",
+    "expected": ["DIALECT_COMMAND_MISMATCH"]
+  },
+  "WSS-02": {
+    "shell": {"family": "WINDOWS_POWERSHELL_5_1", "version": "5.1", "confidence": "CONFIRMED"},
+    "command": "Get-ChildItem . && Write-Output ok",
+    "expected": ["OPERATOR_UNSUPPORTED_BY_VERSION"]
+  },
+  "WSS-03": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "version": "7.4", "confidence": "CONFIRMED"},
+    "command": "Get-ChildItem . && Write-Output ok",
+    "expected": []
+  },
+  "WSS-04": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "version": "7.4", "confidence": "CONFIRMED"},
+    "command": "grep -n needle C:\\Synthetic\\file.txt",
+    "executable": {"identity": "NATIVE_EXECUTABLE", "resolved": true},
+    "expected": ["NATIVE_EXECUTABLE"]
+  },
+  "WSS-05": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "Write-Output \"grep\"",
+    "expected": []
+  },
+  "WSS-06": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "Get-Item 'C:\\Synthetic Folder\\file.txt'",
+    "expected": ["ARGUMENT_BOUNDARY_EQUIVALENT"]
+  },
+  "WSS-07": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "Get-Item 'C:\\Synthetic\\中文\\文件.txt'",
+    "expected": ["ARGUMENT_BOUNDARY_EQUIVALENT"]
+  },
+  "WSS-08": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "missing-synthetic-executable --flag",
+    "executable": {"resolved": false},
+    "expected": ["EXECUTABLE_NOT_FOUND"]
+  },
+  "WSS-09": {
+    "shell": {"family": "WINDOWSAPPS_STUB", "confidence": "CONFIRMED"},
+    "command": "C:\\Synthetic\\WindowsApps\\bash.exe -c echo",
+    "executable": {"stub": true, "launched": false},
+    "expected": ["WINDOWSAPPS_STUB_DETECTED"]
+  },
+  "WSS-10": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "bash -c \"pwsh -Command Remove-Item -LiteralPath C:\\Synthetic\\one.txt\"",
+    "nested": ["POWERSHELL_7_PLUS", "GIT_BASH", "POWERSHELL_7_PLUS"],
+    "expected": ["NESTED_REINTERPRETATION_RISK"]
+  },
+  "WSS-11": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "Remove-Item -Recurse -LiteralPath C:\\Outside\\target",
+    "working_directory": "C:\\Synthetic\\repo",
+    "allowed_root": "C:\\Synthetic\\repo",
+    "target": "C:\\Outside\\target",
+    "destructive": true,
+    "expected": ["TARGET_OUTSIDE_ALLOWED_ROOT"]
+  },
+  "WSS-12": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "Remove-Item -Recurse -LiteralPath C:\\Synthetic\\repo\\junction",
+    "reparse_point": true,
+    "destructive": true,
+    "expected": ["REPARSE_POINT_DESTRUCTIVE_TARGET"]
+  },
+  "WSS-13": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "Write-Output \"unterminated",
+    "expected": ["UNTERMINATED_QUOTE"]
+  },
+  "WSS-14": {
+    "shell": {"family": "UNKNOWN", "confidence": "CONFLICTED"},
+    "command": "echo synthetic",
+    "evidence": ["POWERSHELL_7_PLUS", "GIT_BASH"],
+    "expected": ["SHELL_EVIDENCE_CONFLICT"]
+  },
+  "WSS-15": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "Remove-Item -Recurse -LiteralPath C:\\Synthetic\\large",
+    "preview": {"entry_limit": 10000, "observed_entries": 10000},
+    "destructive": true,
+    "expected": ["RECURSIVE_PREVIEW_INCOMPLETE"]
+  },
+  "WSS-16": {
+    "shell": {"family": "UNKNOWN", "confidence": "UNKNOWN"},
+    "command": "invoke-synthetic $dynamic",
+    "expected": ["ARGUMENT_BOUNDARY_EQUIVALENCE_NOT_PROVEN"]
+  },
+  "WSS-17": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "curl https://synthetic.invalid --header \"Authorization: Bearer SYNTHETIC_TOKEN_DO_NOT_USE\"",
+    "sensitive_arguments": [1],
+    "expected": ["SENSITIVE_VALUE_REDACTED"]
+  },
+  "WSS-18": {
+    "inventory": [
+      {"path_utf16le_hex": "43003a005c00530079006e007400680065007400690063005c0061002e00740078007400", "type": "F", "size_state": "KNOWN", "size": 1},
+      {"path_utf16le_hex": "43003a005c00530079006e007400680065007400690063005c0062002e00740078007400", "type": "F", "size_state": "KNOWN", "size": 2}
+    ],
+    "display_paths": ["C:\\Synthetic\\a.txt", "C:\\Synthetic\\b.txt"],
+    "alternate_display_paths": ["<ROOT>\\a.txt", "<ROOT>\\b.txt"],
+    "analysis_template": {
+      "shell": {"family": "POWERSHELL_7_PLUS", "version": "7.4", "confidence": "CONFIRMED"},
+      "command": "Get-ChildItem -LiteralPath C:\\Synthetic\\preview",
+      "working_directory": "C:\\Synthetic",
+      "allowed_root": "C:\\Synthetic",
+      "target": "C:\\Synthetic\\preview",
+      "destructive": true,
+      "preview": {"entry_limit": 10000, "observed_entries": 2}
+    },
+    "conflicting_inventory": [
+      {"path_utf16le_hex": "4100", "type": "F", "size_state": "UNAVAILABLE", "size": null},
+      {"path_utf16le_hex": "4100", "type": "F", "size_state": "KNOWN", "size": 1}
+    ],
+    "target_identity_a": {
+      "volume_serial": "SYNTH-VOLUME-01",
+      "file_id_128": "SYNTH-FILE-ID-01"
+    },
+    "target_identity_b": {
+      "volume_serial": "SYNTH-VOLUME-01",
+      "file_id_128": "SYNTH-FILE-ID-02"
+    },
+    "expected_digest": "fc59e6ad690cbcd0f8d1150d5ffd5c2760b2e7384d0a040ee4638e07eb270606",
+    "expected_identity_change_code": "TARGET_CHANGED_DURING_PREVIEW",
+    "expected": []
+  },
+  "WSS-19": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "Remove-Item -LiteralPath C:\\repo-evil",
+    "allowed_root": "C:\\repo",
+    "target": "C:\\repo-evil",
+    "destructive": true,
+    "expected": ["TARGET_OUTSIDE_ALLOWED_ROOT"]
+  },
+  "WSS-20": {
+    "shell": {"family": "POWERSHELL_7_PLUS", "confidence": "CONFIRMED"},
+    "command": "synthetic-name",
+    "identity_candidates": ["POWERSHELL_ALIAS", "POWERSHELL_FUNCTION", "NATIVE_EXECUTABLE"],
+    "expected": ["COMMAND_IDENTITY_AMBIGUOUS"]
+  }
+}

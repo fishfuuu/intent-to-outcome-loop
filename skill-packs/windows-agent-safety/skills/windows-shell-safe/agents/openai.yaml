@@ -1,0 +1,6 @@
+# Codex agent policy for the windows-shell-safe skill.
+# This is a read-only diagnostic: it never executes the analyzed command,
+# never launches a shell, and never grants execution authority, so the agent
+# may invoke it to analyze a command before running it.
+policy:
+  allow_implicit_invocation: true

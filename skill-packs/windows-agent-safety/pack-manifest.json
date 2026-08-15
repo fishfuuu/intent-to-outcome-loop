@@ -1,0 +1,29 @@
+{
+  "pack_name": "windows-agent-safety",
+  "version": "0.2.0",
+  "status": "provisional",
+  "status_note": "Maintained and tested in-repo only. Not installed, and not part of the Core install surface or the Core skillset.json.",
+  "skills": [
+    {
+      "name": "windows-shell-safe",
+      "entry": "skills/windows-shell-safe/SKILL.md",
+      "canonical_files": [
+        "skills/windows-shell-safe/SKILL.md",
+        "skills/windows-shell-safe/agents/openai.yaml",
+        "skills/windows-shell-safe/scripts/windows_shell_safe.py",
+        "skills/windows-shell-safe/scripts/collect_windows_context.ps1"
+      ]
+    },
+    {
+      "name": "text-encoding-guard",
+      "entry": "skills/text-encoding-guard/SKILL.md",
+      "canonical_files": [
+        "skills/text-encoding-guard/SKILL.md",
+        "skills/text-encoding-guard/agents/openai.yaml",
+        "skills/text-encoding-guard/scripts/text_encoding_guard.py"
+      ]
+    }
+  ],
+  "dependencies": [],
+  "installed": false
+}

@@ -1,0 +1,6 @@
+# Codex agent policy for the text-encoding-guard skill.
+# This is a read-only diagnostic: it never writes files, never converts
+# encoding, and never authorizes a write, so the agent may invoke it to
+# guard a file before and after editing.
+policy:
+  allow_implicit_invocation: true
