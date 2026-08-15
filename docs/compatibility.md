@@ -5,7 +5,7 @@ files use only generic frontmatter (`name`, `description`) so any host
 can read them. Host-specific behavior is layered on top, never baked
 into the canonical files.
 
-## Officially supported (v0.3)
+## Officially supported (v0.4)
 
 | Host | Install | Notes |
 | --- | --- | --- |
@@ -15,15 +15,15 @@ into the canonical files.
 Both hosts support `--scope project` and `--dry-run`. See the README
 for full install instructions.
 
-## Experimentally compatible (v0.3)
+## Experimentally compatible (v0.4)
 
 | Host | Status | What works | What does not |
 | --- | --- | --- | --- |
-| OpenCode | Experimental | Reads the canonical `SKILL.md` files directly. | v0.3 does not yet generate adapter metadata for OpenCode. Copy skills manually. |
-| Grok | Experimental | Reads the canonical `SKILL.md` files directly. | v0.3 does not yet generate adapter metadata for Grok. Copy skills manually. |
+| OpenCode | Experimental | Reads the canonical `SKILL.md` files directly. | v0.4 does not yet generate adapter metadata for OpenCode. Copy skills manually. |
+| Grok | Experimental | Reads the canonical `SKILL.md` files directly. | v0.4 does not yet generate adapter metadata for Grok. Copy skills manually. |
 
 OpenCode and Grok can read the skills as plain markdown. The
-`evaluate` skill is *intended* to be user-only everywhere, but v0.3 has
+`evaluate` skill is *intended* to be user-only everywhere, but v0.4 has
 not yet generated the per-host adapter metadata that would enforce that
 on OpenCode and Grok. On those hosts, treat "user-only" as a convention
 the operator must respect until a future version adds the metadata.

@@ -141,5 +141,27 @@ change when it carries that risk.
 - Permissions, security, and production rules for a specific project are
   set by that project, not by Core.
 
+## Core and Companion Skills
+
+Core is the cross-project backbone: outcome and boundary, risk-proportionate
+routing, an evidence-bearing implementation loop, independent review
+discipline, handoff, and user-owned evaluation. It deliberately does not
+contain deep specialist methods.
+
+Specialist depth comes from **Companion Skills** — separate, optionally
+installed skills combined with Core for a given task. They are not
+install dependencies of Core, and Core does not copy their full
+processes. Examples (inspirations, not bundled and not required):
+systematic debugging for hard-to-reproduce bugs; TDD for new behavior
+and regression protection; code review for independent diff review;
+browser or end-to-end testing for browser behavior; security review;
+profiling and performance testing; architecture or code-simplification
+skills; product-management or value-evaluation skills for discovery and
+ROI.
+
+When a Companion Skill is not installed, Core still works on its own —
+it just will not apply that specialist depth. No external repository or
+third-party skill is a required dependency of Core.
+
 See [compatibility.md](compatibility.md) for host support and the
 [reviewed-change record format](reviewed-change-record.md).

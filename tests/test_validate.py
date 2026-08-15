@@ -98,19 +98,19 @@ class TestValidate(unittest.TestCase):
         self.assertEqual(declared, on_disk)
 
 
-class TestV03Structure(unittest.TestCase):
-    """Structural checks for the v0.3 contract.
+class TestV04Structure(unittest.TestCase):
+    """Structural checks for the v0.4 contract.
 
     These verify repository and document STRUCTURE only: the manifest is
-    7 skills at version 0.3.0, required SKILL.md sections exist, the
+    7 skills at version 0.4.0, required SKILL.md sections exist, the
     reviewed-change Procedure steps and baseline contract (proposed
     approach, finding categories, round counting) hold, the record doc
     matches, the coordinate Handoff Markdown template exists, and no
     governance infrastructure files exist. They do NOT assert that a
     keyword's presence proves a skill's runtime behavior — coordinate's
-    default-no-write, explicit-request gating, and overwrite protection
-    are covered by the three manual scenario walk-throughs, and runtime
-    behavior generally is for Codex's forward tests.
+    default-no-write, explicit-request gating, and overwrite protection,
+    and the shape/bounded-change/reviewed-change cognitive upgrades, are
+    covered by manual scenario walk-throughs and Codex's forward tests.
     """
 
     REQUIRED_SECTIONS = ("## Purpose", "## Use when", "## Do not use when",
@@ -127,7 +127,7 @@ class TestV03Structure(unittest.TestCase):
 
     def test_version_and_skill_count(self):
         data = self._skillset()
-        self.assertEqual(data["version"], "0.3.0")
+        self.assertEqual(data["version"], "0.4.0")
         self.assertEqual(len(data["skills"]), 7)
 
     def test_every_skill_has_required_sections(self):
@@ -211,7 +211,8 @@ class TestV03Structure(unittest.TestCase):
 
     def test_reviewed_change_has_proposed_approach_in_contract(self):
         # Baseline regression: the Change Contract must define the design
-        # field. (Restored — reviewed-change is not in the v0.3 change set.)
+        # field. (reviewed-change is in the v0.4 change set; this guards
+        # the proposed-approach field against regression.)
         text = self._skill("reviewed-change")
         self.assertIn("Proposed approach / design", text)
         self.assertIn("proposed approach / design agree", text.lower())
@@ -265,7 +266,7 @@ class TestV03Structure(unittest.TestCase):
     def test_no_governance_infrastructure_files(self):
         """A real repository-structure check, not a keyword scan.
 
-        The v0.3 contract forbids state machines, gates, boards,
+        The v0.4 contract forbids state machines, gates, boards,
         daemons, databases, and extra runtime scripts. Assert by
         directory/file structure, not by absence of forbidden words.
         """

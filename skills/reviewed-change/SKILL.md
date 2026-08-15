@@ -81,7 +81,12 @@ Use four categories; do not add a lifecycle:
 
 ### 6. Final Independent Review
 
-The reviewer must be independent of the implementer, and reviews against the Change Contract, the actual diff, and the verification evidence. Tests passing does not equal acceptance complete — manual and evidence-review checks must also be executed. If no independent reviewer is available, report BLOCKED; do not self-approve.
+The reviewer must be independent of the implementer, and reviews against the Change Contract, the actual diff, and the verification evidence. The review must cover at least two axes — the same reviewer may do both; no two reviewers or parallel agents are required, and this is not a new gate:
+
+- **Contract / Spec axis** — does the implementation satisfy the agreed Change Contract? Look for omissions, misreadings, or scope drift, and confirm the verification evidence actually corresponds to the success criteria, not just that some check passed.
+- **Standards / Quality axis** — does it meet the repository's applicable standards? Look for unnecessary complexity, risk, or maintenance burden, and confirm the tests actually prove the target behavior rather than only reporting that commands ran.
+
+Tests passing does not equal acceptance complete — manual and evidence-review checks must also run, and a green suite does not override a Contract/Standards finding. If no independent reviewer is available, report BLOCKED; do not self-approve.
 
 ### 7. Findings and re-review
 
@@ -114,7 +119,7 @@ If a durable trail earns its keep, write `.agent-delivery/changes/<change-id>/re
 - **Change Contract:** the compact contract, including the proposed approach / design.
 - **Plan Review:** reviewer + verdict (approved / blocking / blocked).
 - **Verified:** per acceptance check, the method and evidence.
-- **Final review:** reviewer, verdict, blocking/non-blocking findings, re-review status.
+- **Final review:** reviewer, verdict, blocking/non-blocking findings, re-review status. Findings are tagged by axis: Contract/Spec or Standards/Quality.
 - **Record (if created):** the path.
 
 ## Example
@@ -123,5 +128,5 @@ If a durable trail earns its keep, write `.agent-delivery/changes/<change-id>/re
 > **Contract:** Outcome — alerts delivered within 15 min; proposed approach / design — a durable queue table owned by `alerts` with a single worker consuming idempotently by message key; must-preserve — no alert lost on worker crash; non-goals — SMS channel; acceptance — crash-recovery test (automated), shutdown drain (automated), idempotency on retry (evidence review).
 > **Plan Review:** Codex — approved, one note to add idempotency acceptance check.
 > **Verified:** crash-recovery test passes (zero lost); shutdown-drain test passes; idempotency key visible in diff.
-> **Final review:** Codex — approved after one blocking finding (missing idempotency key) fixed and re-reviewed (round 2 passed).
+> **Final review:** Codex — approved after one blocking finding (missing idempotency key, Contract/Spec axis) fixed and re-reviewed (round 2 passed); one non-blocking note (worker logging could be simpler, Standards/Quality axis).
 > **Record:** `.agent-delivery/changes/2026-08-15-alert-queue/record.md`

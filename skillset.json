@@ -1,6 +1,6 @@
 {
   "name": "coding-agent-delivery",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Lightweight, vendor-neutral delivery skills for coding agents.",
   "hosts": {
     "codex": {"support": "supported"},

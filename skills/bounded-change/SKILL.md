@@ -44,20 +44,24 @@ Make a behavior-affecting change that stays within one local boundary — a func
 - Do not refactor adjacent code while you are in the file.
 - Iterate the implementation, not the goal or the boundary.
 
+## Feedback loop quality
+
+The baseline, reproduction, or check must actually reach the target behavior and be able to fail because of that target problem. None of these alone proves the behavior is correct: the command ran successfully; a test with a related name exists; unrelated tests pass.
+
+Prefer verifying **externally observable behavior** at a behavioral seam, not only internal implementation details — a test that only asserts an internal state change can pass while the user-visible behavior is still wrong.
+
+For a **bug fix**, when practical: add or use a regression check at the correct behavioral seam; after the fix, re-run the **original reproduction**, not only a narrowed test or the whole suite. A green suite is not proof the bug is gone.
+
+If you cannot build a feedback signal strong enough to distinguish success from failure, stop guessing and report what is missing — the environment, the inputs, the observation capability, or the manual verification needed.
+
 ## Manual verification
 
-When automation is not practical, you may use a manual check, but you must disclose what it does and does not prove:
-
-- State why an automated test was not practical.
-- State what the manual check covered (the exact steps and inputs run).
-- State what it did **not** cover, and the residual limitations — the remaining risk the manual check leaves open.
-- Do not present a single manual observation as a complete proof.
+When automation is not practical, you may use a manual check, but you must disclose what it does and does not prove: why an automated test was not practical; what the manual check covered (the exact steps and inputs run); what it did **not** cover and the residual limitations (the remaining risk it leaves open); and never present a single manual observation as a complete proof.
 
 ## When a fix does not work
 
 - First failure at a symptom is expected.
-- Before a second edit, state a few falsifiable hypotheses about the root cause and pick the one with the strongest evidence.
-- If the second edit addresses the **same root cause** and still fails, stop and report. Do not keep blindly editing.
+- Before a second edit, state a few falsifiable hypotheses about the root cause and pick the one with the strongest evidence. If the second edit addresses the **same root cause** and still fails, stop and report. Do not keep blindly editing.
 
 ## Escalation
 
@@ -67,6 +71,7 @@ If implementation reveals a schema, security, shared-interface, cross-module, or
 
 - The expected behavior is verified (same method, green) and the boundary held.
 - Verification is impossible with the stated method → stop and report; do not widen the change silently.
+- The feedback signal cannot distinguish success from failure (cannot reach or fail on the target behavior) → stop and report what is missing; do not guess.
 - Two rounds fail on the same root cause → stop and report.
 - The change grows past the boundary → stop and route to `reviewed-change`.
 

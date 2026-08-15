@@ -73,6 +73,34 @@ How it stays user-driven:
 Core stays aimed at individuals, solo super-individuals, and small teams.
 It is not marketed as an enterprise governance system.
 
+## Core and Companion Skills
+
+Core provides the cross-project backbone: outcome and boundary
+(`shape`), risk-proportionate routing (`task-router`), an
+evidence-bearing implementation loop (`quick-change` /
+`bounded-change` / `reviewed-change`), independent review discipline
+(`reviewed-change`), handoff (`coordinate`), and user-owned evaluation
+(`evaluate`).
+
+Deeper specialist methods are **Companion Skills** — separate,
+optionally-installed skills you combine with Core for a given task, not
+install dependencies of Core. Examples (inspirations, not mandatory and
+not bundled here):
+
+- hard-to-reproduce bugs or performance regressions → systematic debugging
+- new behavior or regression protection → TDD
+- independent diff review → code review
+- browser behavior → browser or end-to-end testing
+- security → security review
+- performance → profiling and performance testing
+- architecture or simplification → architecture / code-simplification skills
+- product discovery or ROI → product-management or value-evaluation skills
+
+Core does not copy these methods' full processes. When a Companion
+Skill is not installed, Core still works on its own — it just will not
+apply that specialist depth. Do not treat any external repository or
+third-party skill as a required dependency of Core.
+
 ## Quick vs Bounded vs Reviewed
 
 Pick the **lightest** path that is still safe:
@@ -150,7 +178,7 @@ python -m unittest discover -s tests -v
 
 OpenCode and Grok can read the canonical `SKILL.md` files directly as
 plain markdown — copy the `skills/` tree into your host's skill
-directory manually. v0.3 does not yet generate adapter metadata for
+directory manually. v0.4 does not yet generate adapter metadata for
 these hosts, so the `evaluate` user-only policy is a convention the
 operator must respect until a future version adds the metadata. See
 [docs/compatibility.md](docs/compatibility.md) for the full compatibility
