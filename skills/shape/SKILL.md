@@ -1,6 +1,6 @@
 ---
 name: "shape"
-description: "Optional business-problem clarification. Investigates discoverable facts first, separates blocking unknowns from low-impact assumptions, keeps one primary goal, and asks at most three blocking questions. Defines problem, goal, boundary, and success criteria before engineering begins. Does not implement, design architecture, or write code."
+description: "Optional business-problem clarification. Investigates discoverable facts first, separates blocking unknowns from low-impact assumptions, keeps one primary goal, and clarifies material blocking decisions in small, dependency-aware rounds. Defines problem, goal, boundary, and success criteria before engineering begins. Does not implement, design architecture, or write code."
 ---
 
 # Shape
@@ -34,18 +34,18 @@ Turn a vague or contested business request into a short, agreed statement of wha
 2. **Investigate first.** Look at what is discoverable in the environment — existing behavior, data, logs, prior decisions — before asking the user. Do not push a look-up-able question onto the user, and do not re-ask anything the user already stated.
 3. Classify what the user brought you: is it an **underlying problem**, an **observable symptom**, or a **proposed solution**? If they are anchored on a solution, name the most critical, still-unverified **solution assumption** it rests on.
 4. Sort what is unclear into two kinds:
-   - **Blocking unknown** — resolving it changes the direction or the risk. Must be answered before proceeding.
+   - **Blocking unknown** — resolving it changes the direction or the risk. Default to resolving it; the user may explicitly choose to carry it as a stated assumption/risk and continue.
    - **Assumption** — low-impact and reversible. You can state it explicitly and continue.
 5. Keep **one primary goal / outcome**. If the request has several goals, name the primary one and treat the rest as context.
-6. Ask at most **three blocking questions**, ordered by impact, one uncertainty at a time. Stop early if an answer makes the rest unnecessary.
-7. Once the blocking unknowns are resolved, write the brief: problem, goal, boundary (out of scope), and one or more verifiable success criteria. Each success criterion should connect an **affected actor** to an **observable consequence or change**. State the assumptions you are carrying.
-8. Recommend the next step: usually `task-router` or a specific change skill. Do not implement, and do not grow this into a persona, PRD, opportunity-solution tree, problem-framing canvas, stakeholder map, or How-Might-We workshop.
+6. Ask in **small rounds**, never against a preset total. Blocking decisions have dependencies: each round, ask only the current frontier — 1–3 highest-impact questions whose prerequisites are already settled, and never ask dependent questions in the same round. Never ask what code, docs, data, logs, or the environment can answer; business tradeoffs are the user's. When useful, offer a recommended answer with the evidence or assumption behind it, so the user can react to a proposal rather than a blank question.
+7. After answers, **recompute**: drop questions an answer made irrelevant and note what the answers newly unlock. Repeat rounds while materially blocking business decisions remain; stop once Problem, Goal, Boundary, and Success criteria are stable enough to hand off — simple requests end in one or two questions.
+8. Write the brief: problem, goal, boundary (out of scope), and one or more verifiable success criteria, each connecting an **affected actor** to an **observable consequence or change**. State the assumptions you are carrying. Recommend the next step (usually `task-router` or a specific change skill); do not implement, and do not grow this into a persona, PRD, opportunity-solution tree, problem-framing canvas, stakeholder map, or How-Might-We workshop.
 
 ## Stop conditions
 
-- The brief is written and the user agrees with it.
-- The user redirects to implementation — hand off with the brief as-is, including stated assumptions.
-- Three questions have not converged — surface the open questions explicitly and stop.
+- Problem, Goal, Boundary, and Success criteria are stable enough to hand off, with no unresolved business decision that would materially change them — write the brief and agree it with the user.
+- A necessary business choice cannot currently be made — state it and the assumptions you are carrying, and stop.
+- The user redirects to implementation, or chooses to proceed with explicit assumptions — hand off with the brief as-is.
 
 ## Output contract
 
