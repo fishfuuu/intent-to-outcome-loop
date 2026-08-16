@@ -25,7 +25,7 @@ Handle changes too risky for one pass: architecture, data shape, security, publi
 
 ## Procedure
 
-Change Contract → Plan Review → Implementation slices → Verification → Final Independent Review → Findings Resolution → Re-review when required → User decision / commit only when requested.
+Change Contract → Falsification / RED → Plan Review → Implementation slices → Verification → Final Independent Review → Findings Resolution → Re-review when required → User decision / commit only when requested.
 
 ### 1. Change Contract
 
@@ -37,27 +37,27 @@ Before implementing, form one compact contract (conversation is fine; write `rec
 - **Non-goals.**
 - **Risk dimensions.**
 - **Affected boundaries/files.**
-- **Acceptance checks**, each with a verification method: automated test / manual check / evidence review. Before implementing the change, show each practical automated check fails on the pre-existing or missing behavior or a fitting counterexample (RED); if RED is not reasonably possible, state why and the alternative falsification evidence. Green alone is not proof the check could have caught the defect; manual and evidence-review checks need no automated RED.
+- **Acceptance checks**, each with a verification method: automated test / manual check / evidence review; note which automated checks should form RED and which cannot reasonably form RED (with the alternative evidence). Manual and evidence-review checks need no automated RED.
 - **Reviewer.**
 - **Unresolved decisions.**
 
 Do not split this into User Intent Contract, Design Specification, Acceptance Rubric, or other governance files.
 
-### 2. Plan Review
+### 2. Falsification / RED
 
-Before implementation, a reviewer who is not the implementer reviews the contract once:
+Build the verification signal before Plan Review. For each practical automated acceptance check, prove it fails on the pre-existing, missing, or counterexample behavior (RED), or record why and the alternative evidence; fix TEST_DEFECTs until the signal is real. Green alone is not proof the check could have caught the defect. Before Plan Review, verification code may change; production behavior may not.
+
+### 3. Plan Review
+
+A reviewer who is not the implementer reviews the contract and the falsification evidence:
 
 - Do the outcome and the proposed approach / design agree?
-- Is the proposed approach sound — are the technical boundaries and data/state ownership right, and are the risks handled?
-- Are the boundaries clear enough?
-- Do acceptance checks cover the necessary behaviors?
-- Are automated / manual / evidence checks reasonable, and does each automated check have falsification ability (RED shown before implementation, or documented alternative evidence)?
+- Is the proposed approach sound — are the technical boundaries and data/state ownership right, and are the risks handled, and the boundaries clear enough?
+- Do acceptance checks cover the necessary behaviors, with each automated check's falsification ability proven (RED shown, or documented alternative evidence)? Without RED or alternative evidence, or with a blocking finding, do not approve or start implementing.
 
-With a blocking finding, do not start implementing. Reviewer approval is not user acceptance.
+### 4. Semantic freeze
 
-### 3. Semantic freeze
-
-After Plan Review passes, the Change Contract is the implementation baseline — but no state file is created. Stop implementing, amend the contract, and re-run Plan Review if any of these change:
+Production implementation starts only after Plan Review passes. The Change Contract becomes the implementation baseline — but no state file is created. Stop, amend the contract, and re-run Plan Review if any of these change:
 
 - Outcome or user-visible behavior.
 - Must-preserve or non-goals.
@@ -66,11 +66,11 @@ After Plan Review passes, the Change Contract is the implementation baseline —
 - File, module, or system boundary grows.
 - A necessary behavior is undefined.
 
-### 4. Vertical thin slices
+### 5. Vertical thin slices
 
 Split multi-part changes into the smallest end-to-end observable slices. Each slice delivers one observable behavior and satisfies at least one acceptance check. Prefer slices that can be verified or demonstrated alone. Do not stack unverifiable half-finished work by technical layer (database/backend/frontend). Verify a slice before starting the next.
 
-### 5. Finding categories
+### 6. Finding categories
 
 Use four categories; do not add a lifecycle:
 
@@ -79,7 +79,7 @@ Use four categories; do not add a lifecycle:
 - **SPECIFICATION_GAP** — a necessary behavior is undefined; stop, amend the contract, re-run Plan Review.
 - **FUTURE_ENHANCEMENT** — valuable but not a current acceptance condition; record as a later suggestion, do not expand scope.
 
-### 6. Final Independent Review
+### 7. Final Independent Review
 
 The reviewer must be independent of the implementer, and reviews against the Change Contract, the actual diff, and the verification evidence. The review must cover at least two axes — the same reviewer may do both; no two reviewers or parallel agents are required, and this is not a new gate:
 
@@ -88,14 +88,14 @@ The reviewer must be independent of the implementer, and reviews against the Cha
 
 Tests passing does not equal acceptance complete — manual and evidence-review checks must also run, and a green suite does not override a Contract/Standards finding. If no independent reviewer is available, report BLOCKED; do not self-approve.
 
-### 7. Findings and re-review
+### 8. Findings and re-review
 
 - **Blocking** — violates the contract, an acceptance check, a safety boundary, or makes the result unacceptable. Fix, re-run the affected verification, and return to the independent reviewer. "Implementer says fixed" is not closed; the reviewer must explicitly pass it.
 - **Non-blocking** — an improvement or future enhancement; do not sneak it into the current scope.
 
 **Review round counting.** Each independent reviewer verdict is one round. The first blocking verdict is round 1. A re-review that still reports the same blocker is round 2. If the same blocking root cause is still open after round 2, stop and ask the user to choose: change the design, narrow the scope, or pause.
 
-### 8. User and commit boundary
+### 9. User and commit boundary
 
 Reviewer approval is not user acceptance. Routine, explicitly authorized implementation needs no extra confirmation. Destructive, irreversible, security, privacy, financial, or real-production writes need an explicit user decision. Do not commit or push unless the user asks. Working tree safety: never discard or overwrite unrelated or pre-existing user changes; keep this change's edits distinct from the user's; if staging or committing is requested, scope it to this change only.
 
