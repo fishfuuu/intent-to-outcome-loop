@@ -50,7 +50,7 @@ Engineers who already know the tier may call `quick-change`, `bounded-change`, o
 
 **Bounded** — affects behavior; confined to one function, module, small feature, or local interaction; clear boundary; a concrete verification method; no Reviewed risk.
 
-**Reviewed** (any one) — architecture or cross-module behavior; data structure, persistence, schema, or migration; permissions, auth, security, or privacy; financial, accounting, or business-critical computation; public API, shared interface, or compatibility; a new page, workflow, or business capability; external callback or third-party integration; transaction, compensation, or rollback; irreversible or hard-to-recover operation; deploy/release or large blast radius; the engineering boundary is not clear enough to implement safely and needs a design first.
+**Reviewed** (any one) — architecture or cross-module behavior; data structure, persistence, schema, or migration; permissions, auth, security, or privacy; financial, accounting, or business-critical computation; public API, shared interface, or compatibility; new workflow, new business capability; external callback or third-party integration; transaction, compensation, or rollback; irreversible or hard-to-recover operation; deploy/release or large blast radius; the engineering boundary is not clear enough to implement safely and needs a design first. A new page alone is not a Reviewed trigger — only when it introduces one of these risks; a standalone, low-risk page with a clear boundary and verification method is Bounded.
 
 ## Escalation
 

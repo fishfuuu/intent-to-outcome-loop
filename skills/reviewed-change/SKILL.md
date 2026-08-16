@@ -37,7 +37,7 @@ Before implementing, form one compact contract (conversation is fine; write `rec
 - **Non-goals.**
 - **Risk dimensions.**
 - **Affected boundaries/files.**
-- **Acceptance checks**, each with a verification method: automated test / manual check / evidence review.
+- **Acceptance checks**, each with a verification method: automated test / manual check / evidence review. Before implementing the change, show each practical automated check fails on the pre-existing or missing behavior or a fitting counterexample (RED); if RED is not reasonably possible, state why and the alternative falsification evidence. Green alone is not proof the check could have caught the defect; manual and evidence-review checks need no automated RED.
 - **Reviewer.**
 - **Unresolved decisions.**
 
@@ -51,7 +51,7 @@ Before implementation, a reviewer who is not the implementer reviews the contrac
 - Is the proposed approach sound — are the technical boundaries and data/state ownership right, and are the risks handled?
 - Are the boundaries clear enough?
 - Do acceptance checks cover the necessary behaviors?
-- Are automated / manual / evidence checks reasonable?
+- Are automated / manual / evidence checks reasonable, and does each automated check have falsification ability (RED shown before implementation, or documented alternative evidence)?
 
 With a blocking finding, do not start implementing. Reviewer approval is not user acceptance.
 
@@ -97,7 +97,7 @@ Tests passing does not equal acceptance complete — manual and evidence-review 
 
 ### 8. User and commit boundary
 
-Reviewer approval is not user acceptance. Routine, explicitly authorized implementation needs no extra confirmation. Destructive, irreversible, security, privacy, financial, or real-production writes need an explicit user decision. Do not commit or push unless the user asks.
+Reviewer approval is not user acceptance. Routine, explicitly authorized implementation needs no extra confirmation. Destructive, irreversible, security, privacy, financial, or real-production writes need an explicit user decision. Do not commit or push unless the user asks. Working tree safety: never discard or overwrite unrelated or pre-existing user changes; keep this change's edits distinct from the user's; if staging or committing is requested, scope it to this change only.
 
 ## Stop conditions
 

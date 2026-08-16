@@ -40,8 +40,7 @@ Make small, behavior-neutral edits quickly, with just enough verification to pro
 If the edit turns out to be behavior-affecting:
 
 - Only revert **this skill's own edits**, and only when they can be isolated safely.
-- If the edits cannot be cleanly isolated, or reverting would overwrite the user's own changes, stop, leave the working tree as-is, and report.
-- Never discard or overwrite changes the user made.
+- If the edits cannot be cleanly isolated, or reverting would overwrite the user's own changes, stop, leave the working tree as-is, and report. Working tree safety: never discard or overwrite unrelated or pre-existing user changes; keep this change's edits distinct from the user's; if staging or committing is requested, scope it to this change only.
 - Then hand off to `bounded-change`, naming why the change is behavior-affecting.
 
 Do not perform a blanket "stop, revert" without checking isolation and the user's own changes.

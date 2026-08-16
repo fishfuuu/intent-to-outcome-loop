@@ -41,7 +41,7 @@ Make a behavior-affecting change that stays within one local boundary — a func
 
 - If an automated regression test is practical, first prove it fails for the target defect (red), then make it pass (green).
 - Do not make a result pass by weakening the test. The test must verify the behavior, not justify it.
-- Do not refactor adjacent code while you are in the file.
+- Do not refactor adjacent code while you are in the file. Working tree safety: never discard or overwrite unrelated or pre-existing user changes; keep this change's edits distinct from the user's; if staging or committing is requested, scope it to this change only.
 - Iterate the implementation, not the goal or the boundary.
 
 ## Feedback loop quality
