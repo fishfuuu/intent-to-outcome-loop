@@ -1,13 +1,13 @@
 ---
 name: "evaluate"
-description: "User-invoked outcome check. Evaluates one target against one expected outcome and its success signals, distinguishes direct evidence from inference, applies materiality so only material findings drive action, and returns CONTINUE, IMPROVE, PIVOT, STOP, or INSUFFICIENT_EVIDENCE. Never triggers implicitly; the user must call it."
+description: "User-invoked outcome check. Evaluates one target against an evaluation anchor (an expected outcome and its success signals, or an evaluation question about the target), distinguishes direct evidence from inference, applies materiality so only material findings drive action, and returns CONTINUE, IMPROVE, PIVOT, STOP, or INSUFFICIENT_EVIDENCE. Never triggers implicitly; the user must call it."
 ---
 
 # Evaluate
 
 ## Purpose
 
-A deliberate checkpoint the user invokes to judge whether an effort is heading toward its goal. Evaluate reads evidence and outcomes, then gives a single verdict and the reasoning behind it. It is a judgment tool, not an execution tool.
+A deliberate checkpoint the user invokes to judge an effort or an existing target against an evaluation anchor. Evaluate reads evidence, then gives a single verdict and the reasoning behind it. It is a judgment tool, not an execution tool.
 
 ## Use when
 
@@ -23,17 +23,17 @@ A deliberate checkpoint the user invokes to judge whether an effort is heading t
 
 ## Required inputs
 
-- **One target, one expected outcome, and the success signals** that define "on track" for that outcome.
-- Evidence of current results: code, tests, output, logs, or a demonstration.
+- **One target and an evaluation anchor** — an expected outcome with its success signals, or an evaluation question/context about the target.
+- Evidence of the target's state: code, tests, output, logs, a document, or a demonstration.
 - The user's call to evaluate.
 
 ## Procedure
 
-1. Restate the one expected outcome and its success signals in a sentence. If the outcome is missing or unclear, say so and return INSUFFICIENT_EVIDENCE.
+1. Restate the evaluation anchor in a sentence — the expected outcome and its success signals, or the evaluation question about the target. If no target or anchor can be identified, say so and return INSUFFICIENT_EVIDENCE.
 2. Gather the evidence that actually exists. Do not infer results that were not observed or measured.
-3. For each gap, judge whether the evidence is **direct** (observed) or **indirect** (inferred), and whether the gap is **material** — does it actually affect the outcome or a success signal?
-4. Apply materiality: only a finding that materially affects the outcome or a success signal should drive action. A finding is not automatically a task or a backlog item.
-5. If action is warranted, recommend the **smallest sufficient response** — the least change that addresses the material finding without overreaching.
+3. For each finding, judge whether the evidence is **direct** (observed) or **indirect** (inferred), and whether it is **material** — does it change the judgment against the anchor (for an outcome checkpoint: the outcome or a success signal)?
+4. Apply materiality: only a material finding should drive action. A finding is not automatically a task or a backlog item.
+5. If action is warranted, recommend the **smallest sufficient response** — a direction that addresses the material finding, without prescribing the exact implementation.
 6. Return exactly one verdict and a short rationale tied to the evidence.
 
 ## Stop conditions
@@ -45,7 +45,7 @@ A deliberate checkpoint the user invokes to judge whether an effort is heading t
 
 A single verdict line, followed by a short rationale. The five verdicts:
 
-- **CONTINUE** — on track; keep going.
+- **CONTINUE** — on track, or no material change is warranted; keep going.
 - **IMPROVE** — direction is right but quality or completeness is short of the outcome; iterate.
 - **PIVOT** — direction is wrong; the approach should change before more effort.
 - **STOP** — the outcome is met, no longer worth pursuing, or harmful to continue; end the effort.
