@@ -30,28 +30,27 @@ A deliberate checkpoint the user invokes to judge an effort or an existing targe
 ## Procedure
 
 1. Restate the evaluation anchor in a sentence — the expected outcome and its success signals, or the evaluation question about the target. If no target or anchor can be identified, say so and return INSUFFICIENT_EVIDENCE.
-2. Gather the evidence that actually exists. Do not infer results that were not observed or measured.
+2. Gather the evidence that actually exists; do not infer results that were not observed or measured. Stop once more evidence is unlikely to change the verdict or the smallest sufficient response.
 3. For each finding, judge whether the evidence is **direct** (observed) or **indirect** (inferred), and whether it is **material** — does it change the judgment against the anchor (for an outcome checkpoint: the outcome or a success signal)?
 4. Apply materiality: only a material finding should drive action. A finding is not automatically a task or a backlog item.
 5. If action is warranted, recommend the **smallest sufficient response** — a direction that addresses the material finding, without prescribing the exact implementation.
-6. Return exactly one verdict and a short rationale tied to the evidence.
+6. Return exactly one verdict — one of the five — and a short rationale tied to the evidence.
 
 ## Stop conditions
 
 - A verdict is returned.
 - Evidence is too thin to support any verdict → return INSUFFICIENT_EVIDENCE and list what evidence is missing.
+- More evidence is unlikely to change the verdict or the smallest sufficient response → stop gathering findings.
 
 ## Output contract
 
-A single verdict line, followed by a short rationale. The five verdicts:
+A single verdict line — one of the five below — then a short rationale. Include only the material findings that support or qualify the verdict and the smallest sufficient response; anything that changes neither stays out. The five verdicts:
 
 - **CONTINUE** — on track, or no material change is warranted; keep going.
 - **IMPROVE** — direction is right but quality or completeness is short of the outcome; iterate.
 - **PIVOT** — direction is wrong; the approach should change before more effort.
 - **STOP** — the outcome is met, no longer worth pursuing, or harmful to continue; end the effort.
 - **INSUFFICIENT_EVIDENCE** — cannot judge; list the missing evidence.
-
-When a finding is non-material, say so explicitly rather than turning it into an action.
 
 Do not implement changes. Do not edit files. Do not create an Evaluation Record. Do not auto-invoke another skill.
 
