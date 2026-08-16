@@ -1,4 +1,4 @@
-# Coding Agent Delivery
+# Intent to Outcome Loop
 
 Contributing rules and the full guide live in [AGENTS.md](AGENTS.md).
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Coding Agent Delivery repository.
+"""Validate the Intent to Outcome Loop repository.
 
 Standard library only. Checks:
 

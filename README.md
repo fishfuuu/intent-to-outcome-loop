@@ -1,4 +1,4 @@
-# Coding Agent Delivery
+# Intent to Outcome Loop
 
 Lightweight, vendor-neutral **delivery skills** for coding agents.
 Seven small skills that help an agent work in a way that is verifiable

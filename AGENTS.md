@@ -1,4 +1,4 @@
-# Contributing to Coding Agent Delivery
+# Contributing to Intent to Outcome Loop
 
 This repository is kept deliberately small. The rules below are for
 anyone changing it.

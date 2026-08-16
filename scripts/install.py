@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install Coding Agent Delivery skills into a host's skill directory.
+"""Install Intent to Outcome Loop skills into a host's skill directory.
 
 Standard library only. Supports Codex and Claude Code, user and project
 scope, dry-run, and an explicit destination for tests and non-standard hosts.
@@ -150,7 +150,7 @@ def install_target(host, scope, dry_run, explicit_destination, subdir=None):
 
 
 def main(argv=None):
-    p = argparse.ArgumentParser(description="Install Coding Agent Delivery skills.")
+    p = argparse.ArgumentParser(description="Install Intent to Outcome Loop skills.")
     p.add_argument("--target", choices=["codex", "claude", "both"], required=True,
                    help="Which host to install for.")
     p.add_argument("--scope", choices=["user", "project"], default="user",

@@ -1,6 +1,6 @@
 # Host compatibility
 
-Coding Agent Delivery is vendor-neutral. The canonical `SKILL.md`
+Intent to Outcome Loop is vendor-neutral. The canonical `SKILL.md`
 files use only generic frontmatter (`name`, `description`) so any host
 can read them. Host-specific behavior is layered on top, never baked
 into the canonical files.

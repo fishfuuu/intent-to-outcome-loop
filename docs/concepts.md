@@ -1,6 +1,6 @@
 # Core concepts
 
-Coding Agent Delivery is a small set of skills that help a coding agent
+Intent to Outcome Loop is a small set of skills that help a coding agent
 work in a way that is verifiable and reviewable, without becoming a
 platform. These are the ideas behind the seven skills.
 
