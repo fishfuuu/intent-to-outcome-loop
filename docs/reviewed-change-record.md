@@ -39,13 +39,22 @@ A record mirrors the reviewed-change flow, in this order:
 - Reviewer.
 - Unresolved decisions.
 
+## Falsification / RED
+Which practical automated acceptance checks produced a real RED — the
+actual evidence that each failed on the pre-existing, missing, or
+counterexample behavior. Which checks cannot reasonably form RED, and
+the alternative evidence recorded instead. Production implementation
+has not started.
+
 ## Plan Review
 Reviewer (not the implementer) + verdict (approved / blocking / blocked),
-and the review date. The reviewer must judge whether the outcome and the
-proposed approach / design agree, whether the approach is sound, whether
-the boundaries are clear enough, whether the acceptance checks cover the
+and the review date. The reviewer reviews the Change Contract and the
+actual falsification evidence: whether the outcome and the proposed
+approach / design agree, whether the approach is sound, whether the
+boundaries are clear enough, whether the acceptance checks cover the
 necessary behaviors, and whether the verification methods are reasonable.
-A blocking finding here means implementation did not start.
+Without RED or reasonable alternative evidence, do not approve or start
+implementing. A blocking finding here means implementation did not start.
 
 ## Slices and verification
 Each vertical slice: what it delivered, which acceptance check it

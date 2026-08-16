@@ -22,12 +22,12 @@ small, consistent vocabulary for those parts.
 
 | Skill | What it does | State |
 | --- | --- | --- |
-| `shape` | Optional. Clarifies a business problem into a brief: problem, goal, boundary, success criteria. | None |
+| `shape` | Optional. Clarifies an unclear problem and intended outcome into a brief: problem, goal, boundary, success criteria. | None |
 | `evaluate` | User-invoked checkpoint. Returns CONTINUE / IMPROVE / PIVOT / STOP / INSUFFICIENT_EVIDENCE. Never auto-runs. | None |
 | `task-router` | The default entry point. Classifies a task as Quick, Bounded, or Reviewed and hands off to the matching change skill. Read-only. | None |
 | `quick-change` | Docs, copy, comments, formatting, behavior-neutral edits. | None |
 | `bounded-change` | Local behavior-affecting change with a clear boundary and a verify loop. | None |
-| `reviewed-change` | Architecture, data, security, interface, cross-module changes. Change Contract → Plan Review → slices → independent review. | Optional record |
+| `reviewed-change` | Architecture, data, security, interface, cross-module changes. Change Contract → Falsification / RED → Plan Review → slices → Verification → independent review. | Optional record |
 | `coordinate` | Writes handoff, review-request, and findings-summary packets for people/agent and agent/agent handoffs. | None |
 
 ## Two ways in
@@ -113,7 +113,7 @@ Two common starting points:
 - Recommended: `tdd`, `diagnosing-bugs`, `code-review`
 - Optional: `improve-codebase-architecture`, browser / E2E testing, security review, performance profiling
 
-**Prototype** — business, product, and design people building runnable prototypes
+**Prototype** — anyone building runnable prototypes, including business, product, design, and solo builders
 
 - Recommended: `frontend-design`
 - Optional: `ui-ux-pro-max`, browser / E2E testing, `prototype`, `research`
@@ -126,7 +126,7 @@ Pick the **lightest** path that is still safe:
 
 - **Quick** — behavior-neutral, exact boundary, trivially reversible. No verification of behavior needed beyond "nothing changed that matters."
 - **Bounded** — behavior-affecting, but contained in one function/module/feature with a clear boundary and a verification method. Record a baseline, verify the same way before and after, iterate the implementation not the goal.
-- **Reviewed** — touches architecture, data shape, security, a public interface, or spans modules. A lightweight flow: Change Contract → Plan Review → vertical slices → Verification → Final Independent Review → findings resolution → re-review when required.
+- **Reviewed** — touches architecture, data shape, security, a public interface, or spans modules. A lightweight flow: Change Contract → Falsification / RED → Plan Review → vertical slices → Verification → Final Independent Review → findings resolution → re-review when required.
 
 Escalation is built in: a Quick change that affects behavior becomes
 Bounded; a Bounded change that grows past its boundary becomes

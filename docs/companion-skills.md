@@ -51,8 +51,8 @@ already names a source.
 
 ## Prototype
 
-For business managers, product people, and designers building coded
-prototypes.
+For anyone building coded prototypes, including business managers,
+product people, designers, and solo builders.
 
 **Recommended**
 

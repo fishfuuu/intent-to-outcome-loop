@@ -17,8 +17,9 @@ clarity — not by preference.
   and after, iterates the implementation not the goal. No state.
 - **Reviewed Change** — architecture, data shape, security, public
   interface, or cross-module changes. A lightweight flow: Change
-  Contract, Plan Review, vertical slices, Verification, Final
-  Independent Review, findings resolution, and re-review when required.
+  Contract, Falsification / RED, Plan Review, vertical slices,
+  Verification, Final Independent Review, findings resolution, and
+  re-review when required.
   May persist a record on demand.
 
 The rule is to pick the *lightest* path that is still safe. If a Quick
@@ -133,7 +134,7 @@ Moving from a prototype to formal engineering is a change in engineering
 depth and risk, not a Core lifecycle transition. Treat it as a Reviewed
 change when it carries that risk.
 
-- The business goal, the rules, the data meaning, and the acceptance
+- The intended outcome, the rules, the data meaning, and the acceptance
   meaning should stay continuous from prototype to formal.
 - The prototype's technical implementation may be rewritten by the formal
   build.
