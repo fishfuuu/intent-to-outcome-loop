@@ -18,7 +18,7 @@ Engineers who already know the tier may call `quick-change`, `bounded-change`, o
 
 ## Do not use when
 
-- The request is a business question, not a software task — use `shape`.
+- The problem or intended outcome is not clear enough to enter engineering — use `shape`.
 - The user only wants an outcome check — use `evaluate`.
 - An engineer has already chosen a change skill — proceed directly.
 
@@ -30,18 +30,18 @@ Engineers who already know the tier may call `quick-change`, `bounded-change`, o
 ## Procedure
 
 1. Read the task and the affected files. Do not modify anything.
-2. Decide what is unclear, and handle each kind differently (see below): a business goal that cannot be identified, an engineering boundary that needs a design, or missing information needed to judge risk. Do not conflate these three.
+2. Decide what is unclear, and handle each kind differently (see below): a goal or intended outcome that cannot be identified, an engineering boundary that needs a design, or missing information needed to judge risk. Do not conflate these three.
 3. Classify into Quick / Bounded / Reviewed using the rules below, or route to `shape`, or ask up to three focused questions — whichever the kind of uncertainty calls for.
 4. Fill the Route Brief: Route, Goal, Boundary / must-not-change, Risk reason, Verification approach, Blocking question (only if one genuinely exists), Next change skill.
 5. Decide whether to continue in the same conversation:
    - User asked only to classify or advise → output the Route Brief and stop.
    - User asked for the task to be done and nothing blocks it → output the Route Brief, then enter the matching change skill in the same conversation. Do not ask the user to re-type the skill name for an obvious route.
-   - A real business choice blocks the work → ask at most three focused questions, then continue once answered.
+   - A real outcome, scope, or value choice blocks the work → ask at most three focused questions, then continue once answered.
 
 ## Handling uncertainty
 
-- **Business goal or problem is unclear** (you cannot tell what is being solved) → recommend `shape`, or ask at most three truly blocking questions. Do not guess the business goal, and do not pick a change path on an assumed goal.
-- **Business goal is clear, but the engineering boundary, technical path, or impact scope needs a design before it can be determined** → Route = Reviewed. "Needs a design" is itself a Reviewed reason; this is not the same as stopping on an unclear goal.
+- **Goal or problem is unclear** (you cannot tell what is being solved) → recommend `shape`, or ask at most three truly blocking questions. Do not guess the goal, and do not pick a change path on an assumed goal.
+- **Goal is clear, but the engineering boundary, technical path, or impact scope needs a design before it can be determined** → Route = Reviewed. "Needs a design" is itself a Reviewed reason; this is not the same as stopping on an unclear goal.
 - **Information is insufficient to tell whether a security, data, interface, or other risk exists** → ask at most three focused questions, then classify from the answers. Do not default to a lighter path because the risk is unknown.
 
 ## Classification
@@ -61,7 +61,7 @@ Engineers who already know the tier may call `quick-change`, `bounded-change`, o
 ## Stop conditions
 
 - A Route Brief is returned. If the user asked for classification only, stop here.
-- The business goal cannot be identified and cannot be clarified → recommend `shape` and stop; do not classify on an assumed goal.
+- The goal or intended outcome cannot be identified and cannot be clarified → recommend `shape` and stop; do not classify on an assumed goal.
 - You have asked your focused questions and the answers still do not resolve the kind of uncertainty you face → say so and stop; do not pick a lighter path by default.
 
 ## Output contract

@@ -1,6 +1,6 @@
 ---
 name: "reviewed-change"
-description: "Handles architecture, data shape, security, public interface, cross-module, and other high-risk changes. Uses a lightweight flow: Change Contract, Plan Review, vertical slices, Verification, Final Independent Review, findings resolution, and re-review when required. On demand, writes a change record under .agent-delivery/changes."
+description: "Handles architecture, data shape, security, public interface, cross-module, and other high-risk changes. Uses a lightweight flow: Change Contract, Falsification / RED, Plan Review, vertical slices, Verification, Final Independent Review, findings resolution, and re-review when required. On demand, writes a change record under .agent-delivery/changes."
 ---
 
 # Reviewed Change
@@ -15,7 +15,7 @@ Handle changes too risky for one pass: architecture, data shape, security, publi
 
 ## Do not use when
 
-- Behavior-neutral → `quick-change`. Local with a clear boundary and verification → `bounded-change`. Business framing, not engineering → `shape`.
+- Behavior-neutral → `quick-change`. Local with a clear boundary and verification → `bounded-change`. Problem/outcome framing, not engineering → `shape`.
 
 ## Required inputs
 
