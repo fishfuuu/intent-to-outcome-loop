@@ -1,6 +1,6 @@
 ---
 name: "shape"
-description: "Optional problem-and-outcome clarification. Investigates discoverable facts first, separates blocking unknowns from low-impact assumptions, keeps one primary goal, and clarifies material blocking decisions in small, dependency-aware rounds. Defines problem, goal, boundary, and success criteria before engineering begins. Does not implement, design architecture, or write code."
+description: "Use when the request is vague, contradictory, or could mean several different things; names a solution before the problem is clear; or success is not measurable. Clarify problem, goal, boundary, and success criteria before engineering; do not implement or design architecture."
 ---
 
 # Shape
