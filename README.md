@@ -101,6 +101,25 @@ Skill is not installed, Core still works on its own — it just will not
 apply that specialist depth. Do not treat any external repository or
 third-party skill as a required dependency of Core.
 
+### Companion Skills recommendation
+
+Companion Skills are recommendations, not dependencies — Core never
+requires a specific third-party skill.
+
+Two common starting points:
+
+**Engineering** — IT / formal software development
+
+- Recommended: `tdd`, `diagnosing-bugs`, `code-review`
+- Optional: `improve-codebase-architecture`, browser / E2E testing, security review, performance profiling
+
+**Prototype** — business, product, and design people building runnable prototypes
+
+- Recommended: `frontend-design`
+- Optional: `ui-ux-pro-max`, browser / E2E testing, `prototype`, `research`
+
+See [docs/companion-skills.md](docs/companion-skills.md) for what each covers and how to choose.
+
 ## Quick vs Bounded vs Reviewed
 
 Pick the **lightest** path that is still safe:
