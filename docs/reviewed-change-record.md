@@ -36,6 +36,8 @@ A record mirrors the reviewed-change flow, in this order:
 - Affected boundaries/files.
 - Acceptance checks, each with a verification method
   (automated test / manual check / evidence review).
+- User Acceptance Scenarios (only when the change has user-observable
+  behavior): actor → action → observable business result.
 - Reviewer.
 - Unresolved decisions.
 

@@ -29,7 +29,7 @@ Change Contract → Falsification / RED → Plan Review → Implementation slice
 
 ### 1. Change Contract
 
-Before implementing, form one compact contract (conversation is fine; write `record.md` only for audit, async teams, or when the user asks):
+Before implementing, form one compact contract (conversation is fine; write `record.md` only for audit, async teams, or when the user asks). User Acceptance Scenarios and the User Acceptance Card are conversation-only by default — no separate acceptance file or registry, and no split into User Intent Contract, Design Specification, Acceptance Rubric, or other governance files.
 
 - **Outcome.**
 - **Proposed approach / design** — the implementation path, the key technical boundaries, and the relevant data or state ownership. Include only what the reviewer needs to judge the approach; do not write a standalone Design Specification.
@@ -38,10 +38,9 @@ Before implementing, form one compact contract (conversation is fine; write `rec
 - **Risk dimensions.**
 - **Affected boundaries/files.**
 - **Acceptance checks**, each with a verification method: automated test / manual check / evidence review; note which automated checks should form RED and which cannot reasonably form RED (with the alternative evidence). Manual and evidence-review checks need no automated RED.
+- **User Acceptance Scenarios** (only when the change has user-observable behavior; skip for pure internal refactors): 1–5 concrete business scenarios the user will manually accept, each as actor → action → observable business result, drawn from the already-confirmed Outcome / business decisions, not from implementation details.
 - **Reviewer.**
 - **Unresolved decisions.**
-
-Do not split this into User Intent Contract, Design Specification, Acceptance Rubric, or other governance files.
 
 ### 2. Falsification / RED
 
@@ -61,7 +60,7 @@ Production implementation starts only after Plan Review passes. The Change Contr
 
 - Outcome or user-visible behavior.
 - Must-preserve or non-goals.
-- Acceptance meaning.
+- Acceptance meaning, or a User Acceptance Scenario's actor, action, observable result, or material business meaning.
 - Risk level rises.
 - File, module, or system boundary grows.
 - A necessary behavior is undefined.
@@ -86,7 +85,7 @@ The reviewer must be independent of the implementer, and reviews against the Cha
 - **Contract / Spec axis** — does the implementation satisfy the agreed Change Contract? Look for omissions, misreadings, or scope drift, and confirm the verification evidence actually corresponds to the success criteria, not just that some check passed.
 - **Standards / Quality axis** — does it meet the repository's applicable standards? Look for unnecessary complexity, risk, or maintenance burden, and confirm the tests actually prove the target behavior rather than only reporting that commands ran.
 
-Tests passing does not equal acceptance complete — manual and evidence-review checks must also run, and a green suite does not override a Contract/Standards finding. If no independent reviewer is available, report BLOCKED; do not self-approve.
+Tests passing does not equal acceptance complete — manual and evidence-review checks must also run, and a green suite does not override a Contract/Standards finding. When User Acceptance Scenarios exist, the verification evidence must map to them: for each frozen scenario, say which evidence supports it. If no independent reviewer is available, report BLOCKED; do not self-approve.
 
 ### 8. Findings and re-review
 
@@ -97,7 +96,7 @@ Tests passing does not equal acceptance complete — manual and evidence-review 
 
 ### 9. User and commit boundary
 
-Reviewer approval is not user acceptance. Routine, explicitly authorized implementation needs no extra confirmation. Destructive, irreversible, security, privacy, financial, or real-production writes need an explicit user decision. Do not commit or push unless the user asks. Working tree safety: never discard or overwrite unrelated or pre-existing user changes; keep this change's edits distinct from the user's; if staging or committing is requested, scope it to this change only.
+Reviewer approval is not user acceptance. After the final review passes, when User Acceptance Scenarios exist, hand the user a **User Acceptance Card** — a light table of the frozen scenarios (actor → action → observable result) plus a line that automated verification and independent review are done and the user should now manually accept each scenario in their real business role. The card is conversation-only by default and restates the scenarios frozen before implementation, not a new acceptance standard. Do not claim the user's business acceptance has passed. Routine, explicitly authorized implementation needs no extra confirmation. Destructive, irreversible, security, privacy, financial, or real-production writes need an explicit user decision. Do not commit or push unless the user asks. Working tree safety: never discard or overwrite unrelated or pre-existing user changes; keep this change's edits distinct from the user's; if staging or committing is requested, scope it to this change only.
 
 ## Stop conditions
 
@@ -120,6 +119,7 @@ If a durable trail earns its keep, write `.agent-delivery/changes/<change-id>/re
 - **Plan Review:** reviewer + verdict (approved / blocking / blocked).
 - **Verified:** per acceptance check, the method and evidence.
 - **Final review:** reviewer, verdict, blocking/non-blocking findings, re-review status. Findings are tagged by axis: Contract/Spec or Standards/Quality.
+- **User Acceptance Card (if scenarios exist):** the frozen scenarios handed to the user for manual acceptance.
 - **Record (if created):** the path.
 
 ## Example

@@ -85,6 +85,7 @@ A short report, in plain text:
 - **Verified:** the method used and its result (pass/fail, with the evidence).
 - **Boundary:** confirmation that nothing outside the stated scope changed.
 - **Residual limitations:** `none` for automated verification. For manual verification, state what was not covered and the residual risk; never describe one manual observation as a complete proof.
+- **Manual acceptance (only when the behavior is user-observable):** 1–3 lines projecting the verified Expected Behavior into how the user operates it and what they should see. No freeze, review, or record — a handoff, not a new mechanism.
 
 Do not create state files or a record. Do not commit unless the user asks.
 
