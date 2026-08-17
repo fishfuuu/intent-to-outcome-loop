@@ -22,7 +22,7 @@ small, consistent vocabulary for those parts.
 
 | Skill | What it does | State |
 | --- | --- | --- |
-| `shape` | Optional. Clarifies an unclear problem and intended outcome into a brief: problem, goal, boundary, success criteria. | None |
+| `shape` | Optional. Clarifies an unclear problem into a brief: problem, goal, the smallest sufficient solution, boundary, and success criteria. May challenge an over-heavy proposed solution. | None |
 | `evaluate` | User-invoked checkpoint. Returns CONTINUE / IMPROVE / PIVOT / STOP / INSUFFICIENT_EVIDENCE. Never auto-runs. | None |
 | `task-router` | The default entry point. Classifies a task as Quick, Bounded, or Reviewed and hands off to the matching change skill. Read-only. | None |
 | `quick-change` | Docs, copy, comments, formatting, behavior-neutral edits. | None |

@@ -40,8 +40,10 @@ and — when the user explicitly asks — one Handoff Markdown from
 ## The two judgment skills
 
 - **Shape** — optional, before any engineering work. Defines the
-  problem, goal, boundary, and success criteria. It answers *what*
-  and *whether*, not *how*.
+  problem, goal, smallest sufficient solution, boundary, and success
+  criteria. It may challenge a user's first solution and recommend a
+  smaller sufficient form. It answers *what* and *whether*, not *how* —
+  it shapes the solution but does not freeze implementation design.
 - **Evaluate** — a user-invoked checkpoint during or after work.
   Returns CONTINUE, IMPROVE, PIVOT, STOP, or INSUFFICIENT_EVIDENCE. It
   never runs on its own.
