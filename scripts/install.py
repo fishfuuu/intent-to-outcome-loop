@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Install Intent to Outcome Loop skills into a host's skill directory.
 
-Standard library only. Supports Codex and Claude Code, user and project
-scope, dry-run, and an explicit destination for tests and non-standard hosts.
+Standard library only. Supports Codex, Claude Code, and Antigravity
+(user/project scope), OpenCode (experimental, user/project scope),
+dry-run, and an explicit destination for tests and non-standard hosts.
 
 Usage:
     python scripts/install.py --target codex --scope user
     python scripts/install.py --target claude --scope project
+    python scripts/install.py --target antigravity --scope user
     python scripts/install.py --target both --destination <dir>
     python scripts/install.py --target codex --scope user --dry-run
 """
@@ -75,6 +77,11 @@ def host_install_dir(host, scope, explicit_destination):
             return home / ".config" / "opencode" / "skills"
         if scope == "project":
             return cwd / ".opencode" / "skills"
+    if host == "antigravity":
+        if scope == "user":
+            return home / ".gemini" / "config" / "skills"
+        if scope == "project":
+            return cwd / ".agents" / "skills"
     raise ValueError(f"Unknown host/scope: {host}/{scope}")
 
 
@@ -147,18 +154,18 @@ def install_one_skill(host, install_dir, skill_entry, dry_run):
 
 
 def install_target(host, scope, dry_run, explicit_destination, subdir=None):
-    if host not in ("codex", "claude", "opencode"):
+    if host not in ("codex", "claude", "opencode", "antigravity"):
         raise ValueError(f"Unsupported host for install: {host}. "
-                         "Grok is documented-experimental in v0.1 and is "
+                         "Grok is documented-experimental and is "
                          "not a valid --target value.")
     base_dir = host_install_dir(host, scope, explicit_destination)
     install_dir = base_dir / subdir if subdir else base_dir
     skillset = load_skillset()
     # Install only for hosts whose support level is supported or
-    # experimental. OpenCode is experimental and is a valid --target (it
-    # has a native adapter), while Grok is experimental with no native
-    # installer target yet; the manifest still records both levels for
-    # documentation.
+    # experimental. OpenCode and Antigravity are experimental but have
+    # native adapters and are valid --target values; Grok is experimental
+    # with no native installer target yet. The manifest records all
+    # levels for documentation.
     reports = []
     for entry in skillset["skills"]:
         if host not in entry.get("hosts", {}):
@@ -169,8 +176,8 @@ def install_target(host, scope, dry_run, explicit_destination, subdir=None):
 
 def main(argv=None):
     p = argparse.ArgumentParser(description="Install Intent to Outcome Loop skills.")
-    p.add_argument("--target", choices=["codex", "claude", "opencode", "both"], required=True,
-                   help="Which host to install for.")
+    p.add_argument("--target", choices=["codex", "claude", "opencode", "antigravity", "both"], required=True,
+                   help="Which host to install for. 'both' installs Codex + Claude only.")
     p.add_argument("--scope", choices=["user", "project"], default="user",
                    help="Install scope. Ignored when --destination is set.")
     p.add_argument("--dry-run", action="store_true",
