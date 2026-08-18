@@ -230,6 +230,49 @@ class TestV04Structure(unittest.TestCase):
         text = self._skill("reviewed-change")
         self.assertIn("Review round counting", text)
 
+    def test_shape_partial_confirmation_does_not_set_parameter(self):
+        # Case A regression (repeated drift): choosing a rule form
+        # ("fixed days" / "configurable threshold") confirms the form, not
+        # its material parameter — the skill must keep demanding the
+        # specific value or leave it explicitly unresolved.
+        text = self._skill("shape")
+        self.assertIn("A recommendation is not confirmation", text)
+        self.assertIn("confirms the form, not its parameter", text)
+
+    def test_shape_explicit_value_confirmation_is_enough(self):
+        # Case B regression: selecting a recommended option that names the
+        # specific value ("7-day window") IS confirmation — the skill must
+        # not re-ask it as unresolved.
+        text = self._skill("shape")
+        self.assertIn("explicit user choice settles a material value", text)
+        self.assertIn("choosing a recommended option that names the specific value", text)
+
+    def test_shape_unresolved_blocker_forbids_delivery_ready_brief(self):
+        # Case C regression: Shape discovers a material unresolved rule or
+        # blocking feasibility, then still calls the brief delivery-ready
+        # and offers task-router. The skill must forbid that completion.
+        text = self._skill("shape")
+        self.assertIn("before calling it delivery-ready or offering", text)
+        self.assertIn("able to overturn the solution or acceptance", text)
+
+    def test_shape_explicit_user_risk_acceptance_allows_continuation(self):
+        # Case D regression guard: the skill must not become so risk-averse
+        # that it forbids a user from explicitly accepting a blocking risk
+        # and continuing. Lock in the dual invariant.
+        text = self._skill("shape")
+        self.assertIn("get the user to explicitly accept carrying it", text)
+        self.assertIn("stated assumption/risk", text)
+
+    def test_shape_brief_self_check_blocks_delivery_ready(self):
+        # Case E regression: Shape forms a brief with material incompleteness
+        # or internal contradiction (e.g., business contract vs. acceptance
+        # scenario) and still calls it delivery-ready. The skill must check
+        # the brief once before handoff.
+        text = self._skill("shape")
+        self.assertIn("check it once", text)
+        self.assertIn("material incompleteness or contradiction", text)
+        self.assertIn("conflict between the business contract, acceptance scenarios", text)
+
     def test_reviewed_change_procedure_steps_in_order(self):
         text = self._skill("reviewed-change")
         lines = text.split("\n")
