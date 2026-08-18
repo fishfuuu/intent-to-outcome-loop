@@ -20,18 +20,23 @@ for full install instructions.
 | Host | Status | What works | What does not |
 | --- | --- | --- | --- |
 | OpenCode | Experimental | Native installer target `--target opencode` (user `~/.config/opencode/skills`, project `<cwd>/.opencode/skills`). Reads the canonical `SKILL.md` files; full package (references, supporting files) is copied. V2 suppresses `evaluate` auto-invocation via `metadata.opencode/autoinvoke`. | Stable/V1 has no per-skill auto-invocation suppression, so `evaluate` user-only is not enforced there. Real OpenCode runtime pilot pending. |
+| Antigravity | Experimental | Native installer target `--target antigravity` (user `~/.gemini/config/skills`, project `<cwd>/.agents/skills`). Reads the canonical `SKILL.md` files; full package (references, supporting files) is copied — no manual copy needed. | Antigravity exposes skills through model-driven discovery with no per-skill auto-invocation suppression, so `evaluate` user-only is a convention, not host-enforced behavior. Real runtime pilot pending. |
 | Grok | Experimental | Reads the canonical `SKILL.md` files directly. | No native installer target. v0.4 does not yet generate adapter metadata for Grok. Copy skills manually. |
 
-OpenCode and Grok can read the skills as plain markdown. The
-`evaluate` skill is *intended* to be user-only everywhere. For OpenCode,
+OpenCode, Antigravity, and Grok can read the skills as plain markdown.
+The `evaluate` skill is *intended* to be user-only everywhere. For OpenCode,
 the installer emits `metadata.opencode/autoinvoke: "false"` on the
 installed `evaluate` copy: OpenCode V2 honors it and hides the skill from
 model-facing discovery while still allowing explicit invocation.
 OpenCode stable/V1 accepts the `metadata` frontmatter but has no
 equivalent auto-invocation enforcement, so on stable/V1 treat "user-only"
-as a convention the operator must respect. Grok has no adapter metadata;
-on Grok treat "user-only" as a convention too, until a future version
-adds the metadata.
+as a convention the operator must respect. Antigravity's router discovers
+skills by matching the prompt against the `description` field and has no
+per-skill auto-invocation suppression, so on Antigravity `evaluate` is
+intended to be user-only but that is a convention rather than
+host-enforced behavior. Grok has no adapter metadata; on Grok treat
+"user-only" as a convention too, until a future version adds the
+metadata.
 
 ## Coordinate persistence across hosts
 
@@ -45,10 +50,10 @@ persistence (save one Handoff Markdown) modes.
   allow the write, `coordinate` reports that and writes nothing.
 - `evaluate` remains user-only on every host (see above).
 
-This repo does not claim that OpenCode, Grok, or any other host not
-listed above is fully compatible. They can read the canonical skills as
-plain markdown, but their handling of `coordinate` persistence and the
-`evaluate` user-only policy is unverified.
+This repo does not claim that OpenCode, Antigravity, Grok, or any other
+host not listed above is fully compatible. They can read the canonical
+skills as plain markdown, but their handling of `coordinate` persistence
+and the `evaluate` user-only policy is unverified.
 
 ## Why canonical frontmatter stays generic
 

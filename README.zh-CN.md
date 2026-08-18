@@ -118,6 +118,7 @@ python scripts/install.py --target claude --scope user
 - `--scope project` —— 安装到**当前项目**（cwd）而非用户目录。目标路径取决于 host：
   - Codex：`<project>/.agents/skills`
   - Claude Code：`<project>/.claude/skills`
+  - Antigravity：`<project>/.agents/skills`
 
   这里的项目指当前工作目录，绝不会是工具包自身位置或用户 home。
 - `--dry-run` —— 只报告将要写入什么，不实际写入或删除任何内容。
@@ -140,7 +141,7 @@ python scripts/validate.py
 python -m unittest discover -s tests -v
 ```
 
-## OpenCode 与 Grok（实验性）
+## OpenCode、Antigravity 与 Grok（实验性）
 
 ### OpenCode
 
@@ -151,6 +152,16 @@ python scripts/install.py --target opencode --scope user
 技能安装到 `~/.config/opencode/skills`（project scope：`.opencode/skills`）。安装时会复制完整的技能包，包括每个技能的 `references/` 及其它支持文件。安装后的 `evaluate` 副本带 `metadata.opencode/autoinvoke: "false"`，OpenCode V2 会据此把它从模型的自动发现列表中隐藏，同时仍允许显式调用。OpenCode 稳定版 V1 能接受该 metadata frontmatter，但没有自动调用抑制能力，因此在 V1 上 `evaluate` 的仅用户可调用是约定而非强制。
 
 OpenCode 目前仍为 **experimental**：原生适配器已通过机械验证，但真实运行时行为有待实际的 OpenCode pilot 验证。
+
+### Antigravity
+
+```bash
+python scripts/install.py --target antigravity --scope user
+```
+
+技能安装到 `~/.gemini/config/skills`（project scope：`<cwd>/.agents/skills`）。安装时会复制完整的技能包，包括每个技能的 `references/` 及其它支持文件——不再需要手工复制。安装后的副本保持 canonical frontmatter 与正文，不添加任何 Antigravity 专属 metadata。Antigravity 通过把提示词与每个技能的 `description` 语义匹配来发现技能，且没有 per-skill 自动调用抑制能力，因此 `evaluate` 的仅用户可调用策略是操作者必须遵守的约定，而非 host 强制行为。
+
+Antigravity 目前仍为 **experimental**：原生适配器已通过机械验证，但真实运行时行为有待实际的 Antigravity pilot 验证。
 
 ### Grok
 

@@ -163,6 +163,7 @@ so the agent cannot auto-invoke it; only an explicit user call runs it.
   instead of the user directory. The target path depends on the host:
   - Codex: `<project>/.agents/skills`
   - Claude Code: `<project>/.claude/skills`
+  - Antigravity: `<project>/.agents/skills`
 
   The project is the current working directory, never the toolkit's own
   location or the user home.
@@ -195,7 +196,7 @@ non-zero on errors.
 python -m unittest discover -s tests -v
 ```
 
-## OpenCode and Grok (experimental)
+## OpenCode, Antigravity, and Grok (experimental)
 
 ### OpenCode
 
@@ -214,6 +215,25 @@ user-only is enforced on V2 and is a convention on stable/V1.
 
 OpenCode remains **experimental**: the native adapter is mechanically
 verified, but real runtime behavior awaits a genuine OpenCode pilot.
+
+### Antigravity
+
+```bash
+python scripts/install.py --target antigravity --scope user
+```
+
+Installs the skills into `~/.gemini/config/skills` (project scope:
+`<cwd>/.agents/skills`). The full skill package is copied, including each
+skill's `references/` and other supporting files — no manual copying
+needed. Installed copies keep the canonical frontmatter and body; no
+Antigravity-specific metadata is added. Antigravity discovers skills by
+matching the prompt against each skill's `description`, and it has no
+per-skill auto-invocation suppression, so the `evaluate` user-only policy
+is a convention the operator must respect rather than host-enforced
+behavior.
+
+Antigravity remains **experimental**: the native adapter is mechanically
+verified, but real runtime behavior awaits a genuine Antigravity pilot.
 
 ### Grok
 

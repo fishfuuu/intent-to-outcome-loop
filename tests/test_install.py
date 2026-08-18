@@ -189,6 +189,87 @@ class TestInstall(unittest.TestCase):
             self.assertEqual(body_only(repo), body_only(inst),
                              f"body drift: {name}")
 
+    def test_antigravity_user_scope_is_gemini_config_skills(self):
+        home = Path(os.path.expanduser("~"))
+        d = install.host_install_dir("antigravity", "user", None)
+        self.assertEqual(d, home / ".gemini" / "config" / "skills")
+
+    def test_antigravity_project_scope_is_cwd_agents_skills(self):
+        # project scope must resolve to <cwd>/.agents/skills, never the
+        # user home or the toolkit's own location.
+        home = Path(os.path.expanduser("~"))
+        d = install.host_install_dir("antigravity", "project", None)
+        self.assertEqual(d, Path(os.getcwd()) / ".agents" / "skills")
+        self.assertNotEqual(d, home / ".agents" / "skills",
+                            "antigravity project scope must not use "
+                            "the codex user path")
+        self.assertNotEqual(d, home / ".gemini" / "config" / "skills",
+                            "antigravity project scope must not use "
+                            "the antigravity user path")
+
+    def test_antigravity_install_to_destination(self):
+        code, out = self._run("--target", "antigravity", "--destination",
+                              str(self.dest))
+        self.assertEqual(code, 0, out)
+        # Seven Core install, with the full package recursed (references
+        # must be carried, not just SKILL.md).
+        for name in ALL_SKILLS:
+            self.assertTrue((self.dest / name / "SKILL.md").exists(),
+                            f"missing {name}")
+        self.assertTrue((self.dest / "shape" / "references"
+                         / "delivery-ready.md").exists(),
+                        "shape reference not copied")
+        self.assertTrue((self.dest / "reviewed-change" / "references"
+                         / "review-discipline.md").exists(),
+                        "reviewed-change reference not copied")
+        # evaluate keeps its Codex policy file (canonical supporting file).
+        self.assertTrue((self.dest / "evaluate" / "agents"
+                         / "openai.yaml").exists())
+
+    def test_antigravity_installed_body_matches_canonical(self):
+        # Antigravity has no host-specific frontmatter: installed SKILL.md
+        # bodies must equal the canonical bodies exactly.
+        def body_only(text):
+            _, _, b = text.partition("---\n\n") if "\n\n" in text \
+                else text.partition("---")
+            return b
+        code, out = self._run("--target", "antigravity", "--destination",
+                              str(self.dest))
+        self.assertEqual(code, 0, out)
+        for name in ALL_SKILLS:
+            repo = (REPO_ROOT / "skills" / name / "SKILL.md").read_text(
+                encoding="utf-8")
+            inst = (self.dest / name / "SKILL.md").read_text(
+                encoding="utf-8")
+            self.assertEqual(body_only(repo), body_only(inst),
+                             f"body drift: {name}")
+
+    def test_antigravity_no_host_specific_frontmatter(self):
+        # No Claude disable-model-invocation, no OpenCode
+        # metadata.opencode/autoinvoke, no invented Antigravity metadata.
+        code, out = self._run("--target", "antigravity", "--destination",
+                              str(self.dest))
+        self.assertEqual(code, 0, out)
+        for name in ALL_SKILLS:
+            text = (self.dest / name / "SKILL.md").read_text(
+                encoding="utf-8")
+            self.assertNotIn("disable-model-invocation", text,
+                             f"{name}: claude overlay leaked")
+            self.assertNotIn("opencode/autoinvoke", text,
+                             f"{name}: opencode overlay leaked")
+            self.assertNotIn("metadata:", text,
+                             f"{name}: unexpected metadata block")
+
+    def test_both_still_excludes_antigravity(self):
+        # 'both' remains codex + claude only; no antigravity view.
+        code, out = self._run("--target", "both", "--destination",
+                              str(self.dest))
+        self.assertEqual(code, 0, out)
+        self.assertTrue((self.dest / "codex").exists())
+        self.assertTrue((self.dest / "claude").exists())
+        self.assertFalse((self.dest / "antigravity").exists(),
+                         "both must not install an antigravity view")
+
 
 class TestProjectScope(unittest.TestCase):
     """--scope project resolves against the current project (cwd), not the
