@@ -17,3 +17,8 @@ Thumbs.db
 # Build artifacts should not be committed; this repo ships source only
 dist/
 build/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
