@@ -19,14 +19,19 @@ for full install instructions.
 
 | Host | Status | What works | What does not |
 | --- | --- | --- | --- |
-| OpenCode | Experimental | Reads the canonical `SKILL.md` files directly. | v0.4 does not yet generate adapter metadata for OpenCode. Copy skills manually. |
-| Grok | Experimental | Reads the canonical `SKILL.md` files directly. | v0.4 does not yet generate adapter metadata for Grok. Copy skills manually. |
+| OpenCode | Experimental | Native installer target `--target opencode` (user `~/.config/opencode/skills`, project `<cwd>/.opencode/skills`). Reads the canonical `SKILL.md` files; full package (references, supporting files) is copied. V2 suppresses `evaluate` auto-invocation via `metadata.opencode/autoinvoke`. | Stable/V1 has no per-skill auto-invocation suppression, so `evaluate` user-only is not enforced there. Real OpenCode runtime pilot pending. |
+| Grok | Experimental | Reads the canonical `SKILL.md` files directly. | No native installer target. v0.4 does not yet generate adapter metadata for Grok. Copy skills manually. |
 
 OpenCode and Grok can read the skills as plain markdown. The
-`evaluate` skill is *intended* to be user-only everywhere, but v0.4 has
-not yet generated the per-host adapter metadata that would enforce that
-on OpenCode and Grok. On those hosts, treat "user-only" as a convention
-the operator must respect until a future version adds the metadata.
+`evaluate` skill is *intended* to be user-only everywhere. For OpenCode,
+the installer emits `metadata.opencode/autoinvoke: "false"` on the
+installed `evaluate` copy: OpenCode V2 honors it and hides the skill from
+model-facing discovery while still allowing explicit invocation.
+OpenCode stable/V1 accepts the `metadata` frontmatter but has no
+equivalent auto-invocation enforcement, so on stable/V1 treat "user-only"
+as a convention the operator must respect. Grok has no adapter metadata;
+on Grok treat "user-only" as a convention too, until a future version
+adds the metadata.
 
 ## Coordinate persistence across hosts
 

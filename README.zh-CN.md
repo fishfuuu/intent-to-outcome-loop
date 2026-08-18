@@ -142,7 +142,19 @@ python -m unittest discover -s tests -v
 
 ## OpenCode 与 Grok（实验性）
 
-OpenCode 与 Grok 可以直接以纯 markdown 读取 canonical 的 `SKILL.md` 文件——把 `skills/` 树手工复制到你的 host 技能目录。v0.4 尚未为这些 host 生成适配器元数据，因此在未来版本加入该元数据之前，`evaluate` 的仅用户可调用策略是操作者必须遵守的约定。完整兼容性表见 [docs/compatibility.md](docs/compatibility.md)。
+### OpenCode
+
+```bash
+python scripts/install.py --target opencode --scope user
+```
+
+技能安装到 `~/.config/opencode/skills`（project scope：`.opencode/skills`）。安装时会复制完整的技能包，包括每个技能的 `references/` 及其它支持文件。安装后的 `evaluate` 副本带 `metadata.opencode/autoinvoke: "false"`，OpenCode V2 会据此把它从模型的自动发现列表中隐藏，同时仍允许显式调用。OpenCode 稳定版 V1 能接受该 metadata frontmatter，但没有自动调用抑制能力，因此在 V1 上 `evaluate` 的仅用户可调用是约定而非强制。
+
+OpenCode 目前仍为 **experimental**：原生适配器已通过机械验证，但真实运行时行为有待实际的 OpenCode pilot 验证。
+
+### Grok
+
+Grok 可以直接以纯 markdown 读取 canonical 的 `SKILL.md` 文件——把 `skills/` 树手工复制到你的 host 技能目录。v0.4 尚未为 Grok 生成适配器元数据，因此在未来版本加入该元数据之前，`evaluate` 的仅用户可调用策略是操作者必须遵守的约定。完整兼容性表见 [docs/compatibility.md](docs/compatibility.md)。
 
 ## 许可证
 

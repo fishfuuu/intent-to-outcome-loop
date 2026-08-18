@@ -10,8 +10,12 @@ values, where:
     install.py, never to canonical files) are written as the bare YAML
     words true / false / null.
 
-Anything else is rejected. This keeps frontmatter provably valid YAML
-without depending on PyYAML, and without growing a YAML emulator.
+The emitter additionally allows one level of nested mapping (e.g. an
+OpenCode metadata block), emitted with two-space indentation. The strict
+parser does not read nested values back — canonical files stay flat, and
+nested host metadata is only ever produced by install.py on installed
+copies. Anything else is rejected. This keeps frontmatter provably valid
+YAML without depending on PyYAML, and without growing a YAML emulator.
 """
 
 import json
@@ -122,9 +126,18 @@ def emit_scalar(value):
 
 
 def emit_frontmatter(mapping):
-    """Emit an ordered mapping as fenced frontmatter text."""
+    """Emit an ordered mapping as fenced frontmatter text.
+
+    Top-level values may be scalars or one-level nested mappings. Nested
+    mappings are emitted with two-space indentation and scalar values.
+    """
     lines = ["---"]
     for key, value in mapping.items():
-        lines.append(f"{key}: {emit_scalar(value)}")
+        if isinstance(value, dict):
+            lines.append(f"{key}:")
+            for nkey, nvalue in value.items():
+                lines.append(f"  {nkey}: {emit_scalar(nvalue)}")
+        else:
+            lines.append(f"{key}: {emit_scalar(value)}")
     lines.append("---")
     return "\n".join(lines) + "\n"

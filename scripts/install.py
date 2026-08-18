@@ -33,6 +33,14 @@ CLAUDE_FRONTMATTER_OVERRIDES = {
     "evaluate": {"disable-model-invocation": True},
 }
 
+# OpenCode host-specific frontmatter. evaluate must be user-only: the
+# metadata.opencode/autoinvoke field (V2) hides it from automatic model
+# discovery while still allowing explicit user invocation. The value is a
+# JSON double-quoted string per opencode's documented form.
+OPENCODE_FRONTMATTER_OVERRIDES = {
+    "evaluate": {"metadata": {"opencode/autoinvoke": "false"}},
+}
+
 
 def load_skillset():
     with open(SKILLSET, encoding="utf-8") as f:
@@ -62,6 +70,11 @@ def host_install_dir(host, scope, explicit_destination):
             return home / ".claude" / "skills"
         if scope == "project":
             return cwd / ".claude" / "skills"
+    if host == "opencode":
+        if scope == "user":
+            return home / ".config" / "opencode" / "skills"
+        if scope == "project":
+            return cwd / ".opencode" / "skills"
     raise ValueError(f"Unknown host/scope: {host}/{scope}")
 
 
@@ -88,6 +101,9 @@ def build_installed_skill(host, skill_name, source_rel):
     fm, body = load_canonical_skill(source_rel)
     if host == "claude" and skill_name in CLAUDE_FRONTMATTER_OVERRIDES:
         for k, v in CLAUDE_FRONTMATTER_OVERRIDES[skill_name].items():
+            fm[k] = v
+    if host == "opencode" and skill_name in OPENCODE_FRONTMATTER_OVERRIDES:
+        for k, v in OPENCODE_FRONTMATTER_OVERRIDES[skill_name].items():
             fm[k] = v
     return yaml_subset.emit_frontmatter(fm) + body
 
@@ -131,16 +147,18 @@ def install_one_skill(host, install_dir, skill_entry, dry_run):
 
 
 def install_target(host, scope, dry_run, explicit_destination, subdir=None):
-    if host not in ("codex", "claude"):
+    if host not in ("codex", "claude", "opencode"):
         raise ValueError(f"Unsupported host for install: {host}. "
-                         "OpenCode and Grok are documented-experimental in v0.1.")
+                         "Grok is documented-experimental in v0.1 and is "
+                         "not a valid --target value.")
     base_dir = host_install_dir(host, scope, explicit_destination)
     install_dir = base_dir / subdir if subdir else base_dir
     skillset = load_skillset()
     # Install only for hosts whose support level is supported or
-    # experimental. OpenCode and Grok are experimental in v0.1 and are
-    # not valid --target values (install_target rejects them above), but
-    # the manifest still records their level for documentation.
+    # experimental. OpenCode is experimental and is a valid --target (it
+    # has a native adapter), while Grok is experimental with no native
+    # installer target yet; the manifest still records both levels for
+    # documentation.
     reports = []
     for entry in skillset["skills"]:
         if host not in entry.get("hosts", {}):
@@ -151,7 +169,7 @@ def install_target(host, scope, dry_run, explicit_destination, subdir=None):
 
 def main(argv=None):
     p = argparse.ArgumentParser(description="Install Intent to Outcome Loop skills.")
-    p.add_argument("--target", choices=["codex", "claude", "both"], required=True,
+    p.add_argument("--target", choices=["codex", "claude", "opencode", "both"], required=True,
                    help="Which host to install for.")
     p.add_argument("--scope", choices=["user", "project"], default="user",
                    help="Install scope. Ignored when --destination is set.")

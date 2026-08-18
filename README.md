@@ -197,11 +197,31 @@ python -m unittest discover -s tests -v
 
 ## OpenCode and Grok (experimental)
 
-OpenCode and Grok can read the canonical `SKILL.md` files directly as
-plain markdown — copy the `skills/` tree into your host's skill
-directory manually. v0.4 does not yet generate adapter metadata for
-these hosts, so the `evaluate` user-only policy is a convention the
-operator must respect until a future version adds the metadata. See
+### OpenCode
+
+```bash
+python scripts/install.py --target opencode --scope user
+```
+
+Installs the skills into `~/.config/opencode/skills` (project scope:
+`.opencode/skills`). The full skill package is copied, including each
+skill's `references/` and other supporting files. The installed copy of
+`evaluate` carries `metadata.opencode/autoinvoke: "false"`, which
+OpenCode V2 uses to hide it from automatic model discovery while still
+allowing explicit invocation. OpenCode stable/V1 accepts the metadata
+frontmatter but has no auto-invocation suppression, so `evaluate`
+user-only is enforced on V2 and is a convention on stable/V1.
+
+OpenCode remains **experimental**: the native adapter is mechanically
+verified, but real runtime behavior awaits a genuine OpenCode pilot.
+
+### Grok
+
+Grok can read the canonical `SKILL.md` files directly as plain markdown —
+copy the `skills/` tree into your host's skill directory manually. v0.4
+does not yet generate adapter metadata for Grok, so the `evaluate`
+user-only policy is a convention the operator must respect until a future
+version adds the metadata. See
 [docs/compatibility.md](docs/compatibility.md) for the full compatibility
 table.
 

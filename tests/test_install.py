@@ -133,10 +133,61 @@ class TestInstall(unittest.TestCase):
         self.assertEqual(code, 0, out)
         self.assertIn("would overwrite: SKILL.md", out)
 
-    def test_invalid_target_rejected(self):
-        # OpenCode is experimental and not a valid --target in v0.1.
+    def test_grok_target_rejected(self):
+        # Grok is experimental with no native installer target.
         with self.assertRaises(ValueError):
-            install.install_target("opencode", "user", True, None)
+            install.install_target("grok", "user", True, None)
+
+    def test_opencode_install_to_destination(self):
+        code, out = self._run("--target", "opencode", "--destination",
+                              str(self.dest))
+        self.assertEqual(code, 0, out)
+        # All seven skills install, and the full package recurses (the
+        # shape reference must be carried, not just SKILL.md).
+        for name in ALL_SKILLS:
+            self.assertTrue((self.dest / name / "SKILL.md").exists(),
+                            f"missing {name}")
+        self.assertTrue((self.dest / "shape" / "references"
+                         / "delivery-ready.md").exists(),
+                        "shape reference not copied")
+
+    def test_opencode_evaluate_has_autoinvoke_metadata(self):
+        code, out = self._run("--target", "opencode", "--destination",
+                              str(self.dest))
+        self.assertEqual(code, 0, out)
+        text = (self.dest / "evaluate" / "SKILL.md").read_text(
+            encoding="utf-8")
+        self.assertIn("metadata:", text)
+        self.assertIn('opencode/autoinvoke: "false"', text)
+
+    def test_opencode_non_evaluate_has_no_metadata(self):
+        code, out = self._run("--target", "opencode", "--destination",
+                              str(self.dest))
+        self.assertEqual(code, 0, out)
+        text = (self.dest / "shape" / "SKILL.md").read_text(
+            encoding="utf-8")
+        self.assertNotIn("metadata:", text)
+        self.assertNotIn("opencode/autoinvoke", text)
+
+    def test_opencode_installed_body_matches_canonical(self):
+        # Host metadata is added only to evaluate's frontmatter; every
+        # installed skill body must otherwise equal the canonical body.
+        # Compare the body after the frontmatter, not via the strict parser,
+        # because evaluate's installed copy carries a nested metadata block.
+        def body_only(text):
+            _, _, b = text.partition("---\n\n") if "\n\n" in text \
+                else text.partition("---")
+            return b
+        code, out = self._run("--target", "opencode", "--destination",
+                              str(self.dest))
+        self.assertEqual(code, 0, out)
+        for name in ALL_SKILLS:
+            repo = (REPO_ROOT / "skills" / name / "SKILL.md").read_text(
+                encoding="utf-8")
+            inst = (self.dest / name / "SKILL.md").read_text(
+                encoding="utf-8")
+            self.assertEqual(body_only(repo), body_only(inst),
+                             f"body drift: {name}")
 
 
 class TestProjectScope(unittest.TestCase):
@@ -177,6 +228,14 @@ class TestProjectScope(unittest.TestCase):
         self.assertIn(expected, out,
                       "claude project scope must resolve to <project>/.claude/skills")
 
+    def test_opencode_project_scope_is_cwd_opencode_skills(self):
+        code, out = self._run_in(
+            self.project, "--target", "opencode", "--scope", "project", "--dry-run")
+        self.assertEqual(code, 0, out)
+        expected = str(self.project / ".opencode" / "skills")
+        self.assertIn(expected, out,
+                      "opencode project scope must resolve to <project>/.opencode/skills")
+
     def test_project_scope_not_inferred_from_toolkit_parent(self):
         # The project dir is unrelated to the repo where the toolkit lives.
         # Confirm resolution uses cwd, not REPO_ROOT.parent.
@@ -192,6 +251,13 @@ class TestProjectScope(unittest.TestCase):
         self.assertEqual(code, 0, out)
         self.assertNotIn(str(home / ".agents" / "skills"), out,
                          "project scope must not resolve to the user home")
+
+    def test_opencode_user_scope_is_config_dir(self):
+        # user scope must resolve under ~/.config/opencode/skills (not a
+        # temp dir, but host_install_dir itself is pure path resolution).
+        home = Path(os.path.expanduser("~"))
+        d = install.host_install_dir("opencode", "user", None)
+        self.assertEqual(d, home / ".config" / "opencode" / "skills")
 
 
 if __name__ == "__main__":
