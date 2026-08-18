@@ -306,6 +306,53 @@ class TestV04Structure(unittest.TestCase):
                           f"record doc missing section {section!r}")
         self.assertIn("Proposed approach / design", doc)
 
+    def test_reviewed_change_plan_review_blocking_needs_new_approved(self):
+        # Transition discipline: a blocking Plan Review is not cleared by
+        # the implementer's belief; production implementation stays
+        # forbidden until a NEW independent review says APPROVED.
+        text = self._skill("reviewed-change")
+        self.assertIn("new independent Plan Review", text)
+        self.assertIn("explicit APPROVED verdict", text)
+        self.assertIn("Findings fixed", text)
+
+    def test_reviewed_change_final_approval_freezes_diff(self):
+        # Transition discipline: Final Review approval freezes the reviewed
+        # production diff; a later production change invalidates it and
+        # requires re-review.
+        text = self._skill("reviewed-change")
+        self.assertIn("freezes the reviewed production diff", text)
+        self.assertIn("invalidating that approval", text)
+
+    def test_reviewed_change_non_blocking_not_auto_in_scope(self):
+        # Non-blocking findings stay suggestions; the implementer must not
+        # expand the current scope on their own.
+        text = self._skill("reviewed-change")
+        self.assertIn("do not implement it in the current scope by default", text)
+
+    def test_reviewed_change_evidence_fidelity(self):
+        # Evidence must match the promised method, not a cheaper proxy.
+        text = self._skill("reviewed-change")
+        self.assertIn("verification evidence", text)
+        ref = (REPO_ROOT / "skills" / "reviewed-change" / "references"
+               / "review-discipline.md").read_text(encoding="utf-8")
+        self.assertIn("browser", ref)
+        self.assertIn("Do not substitute a cheaper signal", ref)
+
+    def test_reviewed_change_authoritative_references_supported(self):
+        # Change Contract may carry authoritative references, and Final
+        # Review must use them when provided.
+        text = self._skill("reviewed-change")
+        self.assertIn("Authoritative references", text)
+        self.assertIn("review must check against them directly", text)
+
+    def test_review_discipline_reference_exists_and_is_referenced(self):
+        # The reference exists and the SKILL points to it.
+        ref = (REPO_ROOT / "skills" / "reviewed-change" / "references"
+               / "review-discipline.md")
+        self.assertTrue(ref.exists(), "missing review-discipline.md")
+        text = self._skill("reviewed-change")
+        self.assertIn("references/review-discipline.md", text)
+
     def test_no_governance_infrastructure_files(self):
         """A real repository-structure check, not a keyword scan.
 
