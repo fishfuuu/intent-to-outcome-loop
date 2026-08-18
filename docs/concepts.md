@@ -40,10 +40,12 @@ and — when the user explicitly asks — one Handoff Markdown from
 ## The two judgment skills
 
 - **Shape** — optional, before any engineering work. Defines the
-  problem, goal, smallest sufficient solution, boundary, and success
-  criteria. It may challenge a user's first solution and recommend a
-  smaller sufficient form. It answers *what* and *whether*, not *how* —
-  it shapes the solution but does not freeze implementation design.
+  problem, goal, smallest sufficient solution, the material business
+  semantics delivery must not re-invent, boundary, and success criteria.
+  It may challenge a user's first solution and recommend a smaller
+  sufficient form. It answers *what* and *whether* — it shapes the
+  solution and may recommend an implementation direction, but does not
+  freeze delivery's engineering decisions.
 - **Evaluate** — a user-invoked checkpoint during or after work.
   Returns CONTINUE, IMPROVE, PIVOT, STOP, or INSUFFICIENT_EVIDENCE. It
   never runs on its own.
@@ -54,8 +56,11 @@ and — when the user explicitly asks — one Handoff Markdown from
   Read-only. Classifies a task as Quick, Bounded, or Reviewed, fills in
   a short Route Brief, and — when the user asked for the work and nothing
   blocks it — hands off to the matching change skill in the same
-  conversation. Engineers who already know the tier can call a change
-  skill directly.
+  conversation. When material business semantics (data meaning, rules,
+  workflow, acceptance) are missing to a degree that would change the
+  solution or result, it routes back to `shape` rather than running a
+  second requirements interview. Engineers who already know the tier can
+  call a change skill directly.
 - **Coordinate** — writes handoff, review-request, and findings-summary
   packets so work can move between actors without losing context. It
   produces the packets; it does not send, dispatch, or track them.

@@ -7,9 +7,7 @@ description: "The default entry point for ordinary software tasks. Reads the tas
 
 ## Purpose
 
-Be the single entry point a normal user needs. Task Router reads the task and the affected code, decides Quick / Bounded / Reviewed, and hands control to the matching change skill — without forcing the user to know the three tiers or re-type a skill name. The router is read-only; "hand off" means the matching change skill takes over editing, not that the router edits.
-
-Engineers who already know the tier may call `quick-change`, `bounded-change`, or `reviewed-change` directly; the router is a convenience, not a gate.
+Be the single entry point a normal user needs. Task Router reads the task and the affected code, decides Quick / Bounded / Reviewed, and hands control to the matching change skill — without forcing the user to know the three tiers or re-type a skill name. The router is read-only; "hand off" means the matching change skill takes over editing, not that the router edits. Engineers who already know the tier may call a change skill directly; the router is a convenience, not a gate. It classifies engineering fit and risk, not business requirements: business data meaning, judgment/calculation rules, workflow/permission semantics, and acceptance behavior come from the user or from `shape`, not from router-led discovery. Fully clear small tasks still route straight to a change skill; only missing material requirements route back to `shape`.
 
 ## Use when
 
@@ -30,19 +28,20 @@ Engineers who already know the tier may call `quick-change`, `bounded-change`, o
 ## Procedure
 
 1. Read the task and the affected files. Do not modify anything.
-2. Decide what is unclear, and handle each kind differently (see below): a goal or intended outcome that cannot be identified, an engineering boundary that needs a design, or missing information needed to judge risk. Do not conflate these three.
+2. Decide what is unclear, and handle each kind differently (see below): a goal that cannot be identified, an engineering boundary that needs a design, insufficient engineering-risk information, or material business semantics that are missing. Do not conflate these kinds.
 3. Classify into Quick / Bounded / Reviewed using the rules below, or route to `shape`, or ask up to three focused questions — whichever the kind of uncertainty calls for.
 4. Fill the Route Brief: Route, Goal, Boundary / must-not-change, Risk reason, Verification approach, Blocking question (only if one genuinely exists), Next change skill.
 5. Decide whether to continue in the same conversation:
    - User asked only to classify or advise → output the Route Brief and stop.
    - User asked for the task to be done and nothing blocks it → output the Route Brief, then enter the matching change skill in the same conversation. Do not ask the user to re-type the skill name for an obvious route.
-   - A real outcome, scope, or value choice blocks the work → ask at most three focused questions, then continue once answered.
+   - A material outcome, scope, value, business-rule, data-semantic, workflow, permission, or acceptance choice blocks the work → route to `shape`; do not resolve it through router-led requirements questioning.
 
 ## Handling uncertainty
 
-- **Goal or problem is unclear** (you cannot tell what is being solved) → recommend `shape`, or ask at most three truly blocking questions. Do not guess the goal, and do not pick a change path on an assumed goal.
+- **Goal or task is unclear** (you cannot tell what is being solved) → ask up to three focused questions only for shallow task identification or engineering routing; if resolving the uncertainty needs a product, business-rule, data-semantic, workflow, permission, material scope/value, or acceptance decision, route to `shape`. Do not guess the goal, and do not pick a change path on an assumed goal.
 - **Goal is clear, but the engineering boundary, technical path, or impact scope needs a design before it can be determined** → Route = Reviewed. "Needs a design" is itself a Reviewed reason; this is not the same as stopping on an unclear goal.
-- **Information is insufficient to tell whether a security, data, interface, or other risk exists** → ask at most three focused questions, then classify from the answers. Do not default to a lighter path because the risk is unknown.
+- **Insufficient engineering-risk information** (a security, data, interface, or other risk may exist) → investigate the code and environment first, then ask at most three focused questions, then classify from the answers. Do not default to a lighter path because the risk is unknown.
+- **Material business semantics are missing** — the solution depends on business data meaning, a judgment / calculation / threshold rule, workflow / permission behavior, or user-acceptance behavior that delivery would have to invent — → do not run a second requirements interview. Route back to `shape` so the requirement is shaped, then classify the shaped brief. The router's focused questions are for engineering routing only; they never re-derive the business contract.
 
 ## Classification
 
@@ -61,7 +60,7 @@ Engineers who already know the tier may call `quick-change`, `bounded-change`, o
 ## Stop conditions
 
 - A Route Brief is returned. If the user asked for classification only, stop here.
-- The goal or intended outcome cannot be identified and cannot be clarified → recommend `shape` and stop; do not classify on an assumed goal.
+- The goal or intended outcome cannot be identified, or material business semantics that could change the solution or result are missing → route to `shape`; do not proceed on an assumed goal or business contract.
 - You have asked your focused questions and the answers still do not resolve the kind of uncertainty you face → say so and stop; do not pick a lighter path by default.
 
 ## Output contract

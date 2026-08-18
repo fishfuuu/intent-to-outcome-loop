@@ -22,9 +22,9 @@ small, consistent vocabulary for those parts.
 
 | Skill | What it does | State |
 | --- | --- | --- |
-| `shape` | Optional. Clarifies an unclear problem into a brief: problem, goal, the smallest sufficient solution, boundary, and success criteria. May challenge an over-heavy proposed solution. | None |
+| `shape` | Optional. Clarifies an unclear problem into a delivery-ready brief: problem, goal, the smallest sufficient solution, the material business semantics delivery must not re-invent, boundary, and success criteria. May challenge an over-heavy proposed solution. Stops after the brief and does not auto-enter a change skill. | None |
 | `evaluate` | User-invoked checkpoint. Returns CONTINUE / IMPROVE / PIVOT / STOP / INSUFFICIENT_EVIDENCE. Never auto-runs. | None |
-| `task-router` | The default entry point. Classifies a task as Quick, Bounded, or Reviewed and hands off to the matching change skill. Read-only. | None |
+| `task-router` | The default entry point. Classifies a task as Quick, Bounded, or Reviewed and hands off to the matching change skill. When material business semantics are missing, routes back to `shape` rather than re-interviewing. Read-only. | None |
 | `quick-change` | Docs, copy, comments, formatting, behavior-neutral edits. | None |
 | `bounded-change` | Local behavior-affecting change with a clear boundary and a verify loop. | None |
 | `reviewed-change` | Architecture, data, security, interface, cross-module changes. Change Contract → Falsification / RED → Plan Review → slices → Verification → independent review. | Optional record |
@@ -61,6 +61,8 @@ Need to switch person/agent/session or request review?   coordinate
 How it stays user-driven:
 
 - **shape** is for when the requirement is unclear — not a required first step.
+  It ends with a delivery-ready brief and does not auto-hand off into a change
+  skill; it hands off only when you asked for the work to proceed.
 - **task-router** is the default entry when you want a task done; it hands
   off to a change skill in the same conversation. Engineers who already
   know the tier can call a change skill directly.
