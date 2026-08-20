@@ -61,7 +61,7 @@ Split multi-part changes into the smallest end-to-end observable slices. **A sli
 
 Four categories; do not add a lifecycle:
 
-- **IMPLEMENTATION_DEFECT** — contract clear, code does not meet it; fix in scope.
+- **IMPLEMENTATION_DEFECT** — contract clear, code does not meet it; fix in scope. A frozen user-observable behavior absent from the running/rendered result is an IMPLEMENTATION_DEFECT even when supporting code and automated tests exist.
 - **TEST_DEFECT** — contract clear, but the check cannot verify it; fix the check, then continue.
 - **SPECIFICATION_GAP** — a necessary behavior is undefined; stop, amend the contract, re-run Plan Review.
 - **FUTURE_ENHANCEMENT** — valuable but not a current acceptance condition; record as a later suggestion, do not expand scope.
@@ -69,6 +69,8 @@ Four categories; do not add a lifecycle:
 ### 7. Final Independent Review
 
 The reviewer must be independent of the implementer, and reviews against the Change Contract, the actual diff, the verification evidence, and any authoritative references. Cover at least two axes — Contract/Spec and Standards/Quality (defined in `references/review-discipline.md`); the same reviewer may do both, no two reviewers or parallel agents required. Tests passing does not equal acceptance complete — see the reference for review depth, evidence fidelity, and risk focus. No independent reviewer available → report BLOCKED; do not self-approve.
+
+**Observed-outcome evidence.** For every frozen acceptance check or User Acceptance Scenario, identify the evidence that proves its observable result. If the acceptance is user-observable (rendered, interactive, or otherwise visible in the running system), the evidence must observe that result directly — code presence or automated tests alone cannot prove a rendered or interactive outcome. **A frozen user-observable acceptance condition without observed-outcome evidence blocks APPROVED**: Final Review reports BLOCKED or a blocking finding until the evidence exists. Evidence method follows acceptance type (see the reference) — this is evidence fidelity, not a browser mandate.
 
 ### 8. Findings and re-review
 

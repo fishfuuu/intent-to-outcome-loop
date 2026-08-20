@@ -345,6 +345,47 @@ class TestV04Structure(unittest.TestCase):
         self.assertIn("Authoritative references", text)
         self.assertIn("review must check against them directly", text)
 
+    def test_reviewed_change_observable_evidence_required(self):
+        # Repeated runtime failure (~3 times): Final Review APPROVED on
+        # code + automated tests, but the frozen user-observable behavior
+        # was visibly absent in the running page. The main SKILL must state
+        # at high salience that a frozen user-observable acceptance needs
+        # observed-outcome evidence, and that without it Final Review
+        # cannot APPROVED.
+        text = self._skill("reviewed-change")
+        self.assertIn("Observed-outcome evidence", text)
+        self.assertIn("user-observable", text)
+        self.assertIn("observed-outcome evidence", text)
+        self.assertIn("blocks APPROVED", text)
+        # Code/tests alone cannot stand in for a rendered/interactive result.
+        self.assertIn("cannot prove a rendered or interactive outcome", text)
+
+    def test_reviewed_change_observable_absence_is_defect(self):
+        # A frozen user-observable behavior absent from the running result
+        # is an IMPLEMENTATION_DEFECT even when code and automated tests
+        # exist (guards against "tests green => APPROVED" drift).
+        text = self._skill("reviewed-change")
+        self.assertIn("absent from the running/rendered result", text)
+        self.assertIn("IMPLEMENTATION_DEFECT", text)
+
+    def test_reviewed_change_evidence_type_mismatch_in_reference(self):
+        # The reference must explain that evidence type follows acceptance
+        # type, and that a type mismatch (UI outcome "verified" by a data
+        # test) blocks APPROVED. Also pins that this is not a browser
+        # mandate.
+        ref = (REPO_ROOT / "skills" / "reviewed-change" / "references"
+               / "review-discipline.md").read_text(encoding="utf-8")
+        self.assertIn("Evidence type follows acceptance type", ref)
+        self.assertIn("browser mandate", ref)
+        self.assertIn("type mismatch", ref)
+        self.assertIn("blocks Final Review APPROVED", ref)
+        # Code/tests alone cannot prove a rendered/interactive outcome.
+        self.assertIn("cannot prove a rendered or interactive outcome", ref)
+        # User acceptance is not weakened: reviewer approval still != user
+        # acceptance, which lives in the main SKILL.
+        text = self._skill("reviewed-change")
+        self.assertIn("Reviewer approval is not user acceptance", text)
+
     def test_review_discipline_reference_exists_and_is_referenced(self):
         # The reference exists and the SKILL points to it.
         ref = (REPO_ROOT / "skills" / "reviewed-change" / "references"
