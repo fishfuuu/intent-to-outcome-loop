@@ -20,7 +20,19 @@ Use the verification method the Change Contract promised. Do not substitute a ch
 - financial / business calculation acceptance ≠ "the endpoint returns HTTP 200"
 - migration safety ≠ "the schema compiles"
 
-If a check cannot be run as promised, do not silently replace it: record the limitation and use an explicit alternative evidence method. Passing an easier proxy does not satisfy a different acceptance method, and a green suite does not override a Contract/Standards finding.
+Code presence or automated tests alone cannot prove a rendered or interactive outcome. If a check cannot be run as promised, do not silently replace it: record the limitation and use an explicit alternative evidence method. Passing an easier proxy does not satisfy a different acceptance method, and a green suite does not override a Contract/Standards finding.
+
+### Evidence type follows acceptance type
+
+Evidence method follows what the frozen acceptance actually claims, not a blanket browser mandate:
+
+- **Pure calculation / data semantics** (SUM(gmv)/SUM(cost), a window delta, a permission-boundary function) — automated tests can be primary, even sufficient. Do not force a browser for a financial formula.
+- **API / permission / runtime behavior** — automated tests plus API/runtime evidence, sized to risk; not every API must be clicked by hand.
+- **UI / rendered / interactive behavior** ("each row shows a sparkline", "expand shows child rows", "filter leaves only bound stores", "click enters a given state") — direct observation of the running result: browser/rendered verification, a manual runtime check by the implementing agent, or other direct observation of the running UI. The tool is not fixed; the requirement is that the evidence actually observes what the user is supposed to see or do.
+
+### Acceptance → evidence mapping
+
+For every frozen acceptance check or User Acceptance Scenario, the reviewer states which evidence proves it. Judge evidence type, not just whether some check passed: a spark-data unit test proves data logic, not a rendered sparkline. A type mismatch (UI outcome "verified" by a data test) is evidence insufficient for that acceptance, so verification is incomplete and Final Review cannot APPROVED yet — return to Verification, it is not a finding merely because the evidence is wrong type. If the behavior is actually observed and is absent or wrong, that is an IMPLEMENTATION_DEFECT (blocking finding).
 
 ## 3. Review focus by risk
 
@@ -43,4 +55,4 @@ Four categories only (see the main SKILL). One rule is decisive:
 
 > If the implementation fails an existing Contract, User Acceptance Scenario, or authoritative reference, it is **not** "non-blocking" merely because the fix is small.
 
-If the contract says role switching affects the visible scope but the UI selector changes nothing, that is an IMPLEMENTATION_DEFECT, not a non-blocking polish item. A non-blocking finding stays a suggestion; do not implement it in the current scope by default.
+If the contract says role switching affects the visible scope but the UI selector changes nothing, that is an IMPLEMENTATION_DEFECT, not a non-blocking polish item. Likewise, if the contract says each row shows a sparkline but the rendered row shows "—" while the spark-data unit test is green, that is an IMPLEMENTATION_DEFECT — the rendered outcome is absent. A non-blocking finding stays a suggestion; do not implement it in the current scope by default. If evidence is simply missing and the implementation has not yet been shown wrong, verification is incomplete and Final Review cannot approve yet, but it is not yet a finding.
