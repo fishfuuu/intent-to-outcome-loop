@@ -356,29 +356,39 @@ class TestV04Structure(unittest.TestCase):
         self.assertIn("Observed-outcome evidence", text)
         self.assertIn("user-observable", text)
         self.assertIn("observed-outcome evidence", text)
-        self.assertIn("blocks APPROVED", text)
+        self.assertIn("cannot receive Final Review APPROVED", text)
+        # Missing evidence is verification incomplete -> return to
+        # Verification, NOT BLOCKED and NOT a finding merely for absence.
+        self.assertIn("verification is incomplete", text)
+        self.assertIn("return to Verification", text)
+        self.assertIn("not BLOCKED", text)
+        self.assertIn("not a finding merely because the evidence is missing", text)
         # Code/tests alone cannot stand in for a rendered/interactive result.
         self.assertIn("cannot prove a rendered or interactive outcome", text)
 
     def test_reviewed_change_observable_absence_is_defect(self):
-        # A frozen user-observable behavior absent from the running result
-        # is an IMPLEMENTATION_DEFECT even when code and automated tests
-        # exist (guards against "tests green => APPROVED" drift).
+        # A frozen user-observable behavior actually observed and absent
+        # from the running result is an IMPLEMENTATION_DEFECT (blocking
+        # finding), even when code and automated tests exist.
         text = self._skill("reviewed-change")
         self.assertIn("absent from the running/rendered result", text)
         self.assertIn("IMPLEMENTATION_DEFECT", text)
+        self.assertIn("blocking finding", text)
 
     def test_reviewed_change_evidence_type_mismatch_in_reference(self):
         # The reference must explain that evidence type follows acceptance
         # type, and that a type mismatch (UI outcome "verified" by a data
-        # test) blocks APPROVED. Also pins that this is not a browser
-        # mandate.
+        # test) means verification incomplete / cannot APPROVED yet (not a
+        # finding merely for wrong evidence type). Also pins that this is
+        # not a browser mandate.
         ref = (REPO_ROOT / "skills" / "reviewed-change" / "references"
                / "review-discipline.md").read_text(encoding="utf-8")
         self.assertIn("Evidence type follows acceptance type", ref)
         self.assertIn("browser mandate", ref)
         self.assertIn("type mismatch", ref)
-        self.assertIn("blocks Final Review APPROVED", ref)
+        self.assertIn("verification is incomplete", ref)
+        self.assertIn("cannot APPROVED yet", ref)
+        self.assertIn("not a finding merely because the evidence is wrong type", ref)
         # Code/tests alone cannot prove a rendered/interactive outcome.
         self.assertIn("cannot prove a rendered or interactive outcome", ref)
         # User acceptance is not weakened: reviewer approval still != user
