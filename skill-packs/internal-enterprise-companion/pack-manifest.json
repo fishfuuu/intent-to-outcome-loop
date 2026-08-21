@@ -1,0 +1,52 @@
+{
+  "pack_name": "internal-enterprise-companion",
+  "version": "0.2.0",
+  "status": "provisional",
+  "status_note": "Optional companion skill pack for internal enterprise delivery. Not installed by default, and not part of the Core install surface or the Core skillset.json.",
+  "skills": [
+    {
+      "name": "observe-real-work",
+      "entry": "skills/observe-real-work/SKILL.md",
+      "canonical_files": [
+        "skills/observe-real-work/SKILL.md"
+      ]
+    },
+    {
+      "name": "discover-business-contract",
+      "entry": "skills/discover-business-contract/SKILL.md",
+      "canonical_files": [
+        "skills/discover-business-contract/SKILL.md"
+      ]
+    },
+    {
+      "name": "worth-building-now",
+      "entry": "skills/worth-building-now/SKILL.md",
+      "canonical_files": [
+        "skills/worth-building-now/SKILL.md"
+      ]
+    },
+    {
+      "name": "bounded-validation",
+      "entry": "skills/bounded-validation/SKILL.md",
+      "canonical_files": [
+        "skills/bounded-validation/SKILL.md"
+      ]
+    },
+    {
+      "name": "smallest-real-deployment",
+      "entry": "skills/smallest-real-deployment/SKILL.md",
+      "canonical_files": [
+        "skills/smallest-real-deployment/SKILL.md"
+      ]
+    },
+    {
+      "name": "adopted-not-released",
+      "entry": "skills/adopted-not-released/SKILL.md",
+      "canonical_files": [
+        "skills/adopted-not-released/SKILL.md"
+      ]
+    }
+  ],
+  "dependencies": [],
+  "installed": false
+}

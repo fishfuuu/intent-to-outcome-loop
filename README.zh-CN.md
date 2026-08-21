@@ -81,6 +81,11 @@ Companion Skills 是推荐而非依赖——Core 从不要求某个特定的第�
 - 推荐：`frontend-design`
 - 可选：`ui-ux-pro-max`、浏览器 / E2E 测试、`prototype`、`research`
 
+**可选仓库内置 Skill Packs**：
+
+- `internal-enterprise-companion`（[skill-packs/internal-enterprise-companion/README.md](skill-packs/internal-enterprise-companion/README.md)）——面向企业交付的可选业务发现与现场调研技能包。
+- `windows-agent-safety` ——面向 Windows 环境的终端安全与文本编码防护。
+
 各技能的覆盖范围与选择方式见 [docs/companion-skills.md](docs/companion-skills.md)。
 
 ## Quick vs Bounded vs Reviewed

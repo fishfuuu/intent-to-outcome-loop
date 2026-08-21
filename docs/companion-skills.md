@@ -73,6 +73,13 @@ product people, designers, and solo builders.
   technical question rather than go straight to production.
 - **research** — when real external facts are unknown before prototyping.
 
+## Optional Skill Packs (In-repo)
+
+This repository maintains optional, self-contained skill packs that can be installed alongside Core for specialized environments:
+
+- **[internal-enterprise-companion](../skill-packs/internal-enterprise-companion/README.md)** — fieldwork and business discovery methods for enterprise IT, data, automation, and AI/Agent delivery (`observe-real-work`, `discover-business-contract`, `worth-building-now`, `bounded-validation`, `smallest-real-deployment`, `adopted-not-released`).
+- **windows-agent-safety** — terminal safety and encoding guards for Windows agent environments.
+
 ## How to choose
 
 - **Recommended** — high-frequency, general-purpose; worth installing long-term.
