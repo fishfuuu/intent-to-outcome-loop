@@ -120,6 +120,11 @@ Two common starting points:
 - Recommended: `frontend-design`
 - Optional: `ui-ux-pro-max`, browser / E2E testing, `prototype`, `research`
 
+**Optional in-repo Skill Packs**:
+
+- `internal-enterprise-companion` ([skill-packs/internal-enterprise-companion/README.md](skill-packs/internal-enterprise-companion/README.md)) — optional business discovery and fieldwork companion skills for enterprise delivery.
+- `windows-agent-safety` — terminal safety and text encoding guards for Windows.
+
 See [docs/companion-skills.md](docs/companion-skills.md) for what each covers and how to choose.
 
 ## Quick vs Bounded vs Reviewed
