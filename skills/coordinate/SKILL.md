@@ -35,6 +35,7 @@ Produce clean handoff and review artifacts so work moves between a person and an
 1. Decide the packet type: handoff, review-request, or findings-summary.
 2. Gather only what the receiver needs, using the field lists below. Omit history the receiver cannot act on; omit fields that carry nothing.
 3. Write the packet as self-contained text: a receiver who was not present should understand it without follow-up questions.
+   - When relationships materially affect the receiver's next action, surface them explicitly — for example dependency relationships, change-impact relationships, source or authority relationships, or before/after state transitions. Use the simplest representation that preserves the needed understanding; do not add diagrams or extra structure for presentation only.
 4. Name the concrete next action the receiver should take.
 5. Choose the output mode (see below). Default is in-conversation; persistence only when the user explicitly asked to save.
 
