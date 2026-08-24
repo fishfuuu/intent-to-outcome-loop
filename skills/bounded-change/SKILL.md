@@ -15,6 +15,8 @@ Make a behavior-affecting change that stays within one local boundary — a func
 - The boundary is clear: you can name what changes and what must stay the same.
 - There is a verification method (a test, a repro, a command, or a concrete manual check).
 
+"Looks small" is not a Bounded reason. Bounded requires evidence that the affected scope is known, the dependencies are understood, and the verification is sufficient. If the impact surface is uncertain or crosses a data, business-logic, permission, or integration boundary, route to `reviewed-change`.
+
 ## Do not use when
 
 - Behavior-neutral → `quick-change`.

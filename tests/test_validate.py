@@ -580,5 +580,50 @@ class TestValidatorFailureCases(unittest.TestCase):
                         f"errors: {validate.errors}")
 
 
+class TestRoutingEscalationDiscipline(unittest.TestCase):
+    """Regression guards for the Impact Surface First routing discipline.
+
+    These are structural checks on the skill text: the router must state
+    that implementation scope does not determine risk, name the escalation
+    signals (data, business logic, permission/security, integration,
+    uncertainty), and forbid downgrading on an unknown impact surface.
+    Bounded must reject "looks small" as a reason, and reviewed-change's
+    Plan Review must consider the impact surface. They do not simulate the
+    router's runtime classification.
+    """
+
+    def _skill(self, name):
+        return (REPO_ROOT / "skills" / name / "SKILL.md").read_text(
+            encoding="utf-8")
+
+    def test_router_scope_does_not_determine_risk(self):
+        text = self._skill("task-router")
+        self.assertIn("Implementation scope does not determine change risk",
+                      text)
+        self.assertIn("impact surface is uncertain", text)
+        self.assertIn("prefer Reviewed Change", text)
+
+    def test_router_escalation_signals_present(self):
+        text = self._skill("task-router")
+        for signal in ("Data", "Business logic", "Permission / security",
+                       "Integration", "Uncertainty"):
+            self.assertIn(signal, text, f"missing escalation signal {signal!r}")
+        self.assertIn("do not downgrade on an unknown", text)
+
+    def test_bounded_rejects_looks_small(self):
+        text = self._skill("bounded-change")
+        self.assertIn('"Looks small" is not a Bounded reason', text)
+        self.assertIn("affected scope is known", text)
+        self.assertIn("dependencies are understood", text)
+        self.assertIn("verification is sufficient", text)
+
+    def test_reviewed_plan_review_considers_impact_surface(self):
+        text = self._skill("reviewed-change")
+        self.assertIn("impact surface", text)
+        self.assertIn("data, security/permission, migration, operational, "
+                      "and test impact", text)
+        self.assertIn("not a mandatory document", text)
+
+
 if __name__ == "__main__":
     unittest.main()

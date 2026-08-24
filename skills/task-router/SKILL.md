@@ -51,6 +51,17 @@ Be the single entry point a normal user needs. Task Router reads the task and th
 
 **Reviewed** (any one) — architecture or cross-module behavior; data structure, persistence, schema, or migration; permissions, auth, security, or privacy; financial, accounting, or business-critical computation; public API, shared interface, or compatibility; new workflow, new business capability; external callback or third-party integration; transaction, compensation, or rollback; irreversible or hard-to-recover operation; deploy/release or large blast radius; the engineering boundary is not clear enough to implement safely and needs a design first. A new page alone is not a Reviewed trigger — only when it introduces one of these risks; a standalone, low-risk page with a clear boundary and verification method is Bounded.
 
+## Impact Surface First
+
+Implementation scope does not determine change risk. A small diff can still cross a high-impact surface; if the impact surface is uncertain or crosses an important boundary, prefer Reviewed Change.
+
+Escalation signals (guidance, not a checklist) — any one may justify Reviewed:
+- **Data** — metric/calculation change, field business meaning, data source, historical data, migration.
+- **Business logic** — business rule, financial/inventory/order computation, approval condition, state transition.
+- **Permission / security** — permission change, data access scope, sensitive data.
+- **Integration** — API contract, ERP, third-party system, external dependency.
+- **Uncertainty** — you cannot explain why the impact surface is controlled; do not downgrade on an unknown.
+
 ## Escalation
 
 - Quick implementation reveals a behavior impact → escalate to Bounded.
