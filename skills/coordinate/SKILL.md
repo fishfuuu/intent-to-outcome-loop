@@ -55,7 +55,8 @@ Produce clean handoff and review artifacts so work moves between a person and an
 
 ## Packet shapes
 
-- **Handoff:** Outcome; Current slice / state; Confirmed facts and rules; Artifacts and locations; Evidence; Limitations and risks; Specific ask / recommended next step; Open questions.
+- **Handoff:** a continuation-context transfer, not a change summary. The grain follows what the receiver needs to continue acting — a current change, broader project state, or a session resume — and broader context is added only when it helps the receiver act. Fields: Outcome; Current slice / state; Confirmed facts and rules; Artifacts and locations; Evidence; Limitations and risks; Specific ask / recommended next step; Open questions.
+  - To decide the grain, consider the receiver's existing context and intended next action — what does the receiver already know, and what will they do next? Do not ask the user to name a handoff type; infer the grain from those two.
 - **Review-request:** goal / change contract; scope and non-goals; acceptance checks (each with its verification method); changed files / diff location; verification evidence; reviewer focus; the exact requested verdict.
 - **Findings-summary:** each finding — the finding; blocking or non-blocking; evidence; required or suggested resolution; resolution status; re-review required (yes/no).
 
