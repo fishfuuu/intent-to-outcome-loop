@@ -110,6 +110,16 @@ python scripts/install.py --target codex --scope user
 
 技能安装到 `~/.agents/skills`。`evaluate` 的仅用户可调用策略通过 `skills/evaluate/agents/openai.yaml` 强制执行。
 
+### Pi
+
+```bash
+python scripts/install.py --target pi --scope user
+```
+
+技能以 canonical 形式安装到 `~/.agents/skills`；这是 Pi 官方支持的全局技能发现目录。project scope 使用 `<project>/.agents/skills`，并在项目受信任后加载。该方案刻意与 Codex 共享同一份安装视图，因此已有安装无需再复制到 `~/.pi/agent/skills`，也不会制造同名技能冲突。
+
+Pi 支持 `disable-model-invocation`，但安装器不会向 Codex/Pi 共享副本注入 Pi 专属 frontmatter。因此在 Pi 中，`evaluate` 的仅用户调用约束来自技能描述和 procedure，而不是 host 级硬隔离；请用 `/skill:evaluate` 显式调用。
+
 ### Claude Code
 
 ```bash
@@ -122,6 +132,7 @@ python scripts/install.py --target claude --scope user
 
 - `--scope project` —— 安装到**当前项目**（cwd）而非用户目录。目标路径取决于 host：
   - Codex：`<project>/.agents/skills`
+  - Pi：`<project>/.agents/skills`
   - Claude Code：`<project>/.claude/skills`
   - Antigravity：`<project>/.agents/skills`
 
@@ -129,6 +140,7 @@ python scripts/install.py --target claude --scope user
 - `--dry-run` —— 只报告将要写入什么，不实际写入或删除任何内容。
 - `--destination <dir>` —— 安装到显式目录，用于测试与非标准 host。覆盖基于 scope 的解析。使用单个 `--target` 时，技能直接写到 `<dir>` 下。
 - `--target both --destination <dir>` —— 为 Codex 与 Claude **分别**安装到子目录 `<dir>/codex/` 与 `<dir>/claude/`，两个 host 视图互不覆盖。
+  `both` 仍严格表示 Codex + Claude；Pi 请显式使用 `--target pi`。
 
 安装器**绝不删除**目标目录中不相关的技能。它只写入自己拥有的技能。若目标技能已存在，安装器会报告哪些文件将被覆盖。
 

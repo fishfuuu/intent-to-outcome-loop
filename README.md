@@ -152,6 +152,23 @@ python scripts/install.py --target codex --scope user
 Installs the skills into `~/.agents/skills`. The `evaluate` user-only
 policy is enforced via `skills/evaluate/agents/openai.yaml`.
 
+### Pi
+
+```bash
+python scripts/install.py --target pi --scope user
+```
+
+Installs the canonical skills into `~/.agents/skills`, which Pi officially
+discovers as a global skill location. Project scope uses
+`<project>/.agents/skills` after the project is trusted. This deliberately
+shares the same installed view as Codex, so an existing installation there
+does not need a duplicate under `~/.pi/agent/skills`.
+
+Pi supports `disable-model-invocation`, but this installer does not inject
+Pi-only frontmatter into the shared Codex/Pi copy. On Pi, `evaluate` therefore
+remains user-only by its explicit skill description and procedure rather than
+by a host-level hard block; invoke it explicitly with `/skill:evaluate`.
+
 ### Claude Code
 
 ```bash
@@ -167,6 +184,7 @@ so the agent cannot auto-invoke it; only an explicit user call runs it.
 - `--scope project` — install into the **current project** (cwd)
   instead of the user directory. The target path depends on the host:
   - Codex: `<project>/.agents/skills`
+  - Pi: `<project>/.agents/skills`
   - Claude Code: `<project>/.claude/skills`
   - Antigravity: `<project>/.agents/skills`
 
@@ -180,6 +198,7 @@ so the agent cannot auto-invoke it; only an explicit user call runs it.
 - `--target both --destination <dir>` — install for both Codex and
   Claude into **separate subdirectories** `<dir>/codex/` and
   `<dir>/claude/`, so the two host views never overwrite each other.
+  `both` remains exactly Codex + Claude; use `--target pi` explicitly for Pi.
 
 The installer **never deletes** unrelated skills in the target
 directory. It only writes the skills it owns. If a target skill already

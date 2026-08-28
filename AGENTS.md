@@ -38,6 +38,7 @@ Run, and make sure all pass:
 python scripts/validate.py
 python -m unittest discover -s tests -v
 python scripts/install.py --target codex --scope user --dry-run
+python scripts/install.py --target pi --scope user --dry-run
 python scripts/install.py --target claude --scope user --dry-run
 python scripts/install.py --target antigravity --scope user --dry-run
 python scripts/install.py --target both --destination <tmpdir>

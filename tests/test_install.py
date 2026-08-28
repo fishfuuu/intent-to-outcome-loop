@@ -79,6 +79,33 @@ class TestInstall(unittest.TestCase):
             encoding="utf-8")
         self.assertNotIn("disable-model-invocation", text)
 
+    def test_pi_install_to_destination(self):
+        code, out = self._run("--target", "pi", "--destination",
+                              str(self.dest))
+        self.assertEqual(code, 0, out)
+        for name in ALL_SKILLS:
+            self.assertTrue((self.dest / name / "SKILL.md").exists(),
+                            f"missing {name}")
+        self.assertTrue((self.dest / "shape" / "references"
+                         / "delivery-ready.md").exists(),
+                        "shape reference not copied")
+
+    def test_pi_installed_skills_match_canonical(self):
+        import yaml_subset
+        code, out = self._run("--target", "pi", "--destination",
+                              str(self.dest))
+        self.assertEqual(code, 0, out)
+        for name in ALL_SKILLS:
+            repo = (REPO_ROOT / "skills" / name / "SKILL.md").read_text(
+                encoding="utf-8")
+            inst = (self.dest / name / "SKILL.md").read_text(
+                encoding="utf-8")
+            repo_fm, repo_body = yaml_subset.parse_frontmatter(repo)
+            inst_fm, inst_body = yaml_subset.parse_frontmatter(inst)
+            self.assertEqual(repo_fm, inst_fm,
+                             f"frontmatter drift: {name}")
+            self.assertEqual(repo_body, inst_body, f"body drift: {name}")
+
     def test_dry_run_writes_nothing(self):
         code, out = self._run("--target", "codex", "--destination",
                               str(self.dest), "--dry-run")
@@ -269,6 +296,8 @@ class TestInstall(unittest.TestCase):
         self.assertTrue((self.dest / "claude").exists())
         self.assertFalse((self.dest / "antigravity").exists(),
                          "both must not install an antigravity view")
+        self.assertFalse((self.dest / "pi").exists(),
+                         "both must not install a Pi view")
 
 
 class TestProjectScope(unittest.TestCase):
@@ -339,6 +368,15 @@ class TestProjectScope(unittest.TestCase):
         home = Path(os.path.expanduser("~"))
         d = install.host_install_dir("opencode", "user", None)
         self.assertEqual(d, home / ".config" / "opencode" / "skills")
+
+    def test_pi_user_scope_is_shared_agents_skills(self):
+        home = Path(os.path.expanduser("~"))
+        d = install.host_install_dir("pi", "user", None)
+        self.assertEqual(d, home / ".agents" / "skills")
+
+    def test_pi_project_scope_is_cwd_agents_skills(self):
+        d = install.host_install_dir("pi", "project", None)
+        self.assertEqual(d, Path(os.getcwd()) / ".agents" / "skills")
 
 
 if __name__ == "__main__":
