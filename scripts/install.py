@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Install Intent to Outcome Loop skills into a host's skill directory.
 
-Standard library only. Supports Codex, Claude Code, and Antigravity
+Standard library only. Supports Codex, Claude Code, Pi, and Antigravity
 (user/project scope), OpenCode (experimental, user/project scope),
 dry-run, and an explicit destination for tests and non-standard hosts.
 
 Usage:
     python scripts/install.py --target codex --scope user
     python scripts/install.py --target claude --scope project
+    python scripts/install.py --target pi --scope user
     python scripts/install.py --target antigravity --scope user
     python scripts/install.py --target both --destination <dir>
     python scripts/install.py --target codex --scope user --dry-run
@@ -62,7 +63,10 @@ def host_install_dir(host, scope, explicit_destination):
 
     home = Path(os.path.expanduser("~"))
     cwd = Path(os.getcwd())
-    if host == "codex":
+    # Pi officially discovers the same global and project `.agents/skills`
+    # locations as Codex, so the two hosts share one canonical installed
+    # view instead of creating duplicate skills and collision warnings.
+    if host in ("codex", "pi"):
         if scope == "user":
             return home / ".agents" / "skills"
         if scope == "project":
@@ -154,7 +158,7 @@ def install_one_skill(host, install_dir, skill_entry, dry_run):
 
 
 def install_target(host, scope, dry_run, explicit_destination, subdir=None):
-    if host not in ("codex", "claude", "opencode", "antigravity"):
+    if host not in ("codex", "claude", "pi", "opencode", "antigravity"):
         raise ValueError(f"Unsupported host for install: {host}. "
                          "Grok is documented-experimental and is "
                          "not a valid --target value.")
@@ -176,7 +180,7 @@ def install_target(host, scope, dry_run, explicit_destination, subdir=None):
 
 def main(argv=None):
     p = argparse.ArgumentParser(description="Install Intent to Outcome Loop skills.")
-    p.add_argument("--target", choices=["codex", "claude", "opencode", "antigravity", "both"], required=True,
+    p.add_argument("--target", choices=["codex", "claude", "pi", "opencode", "antigravity", "both"], required=True,
                    help="Which host to install for. 'both' installs Codex + Claude only.")
     p.add_argument("--scope", choices=["user", "project"], default="user",
                    help="Install scope. Ignored when --destination is set.")

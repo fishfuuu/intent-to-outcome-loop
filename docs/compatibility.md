@@ -11,9 +11,18 @@ into the canonical files.
 | --- | --- | --- |
 | OpenAI Codex | `python scripts/install.py --target codex --scope user` | The `evaluate` user-only policy lives in `skills/evaluate/agents/openai.yaml`. |
 | Claude Code | `python scripts/install.py --target claude --scope user` | The installer adds `disable-model-invocation: true` to the installed copy of `evaluate` so it cannot auto-invoke. |
+| Pi | `python scripts/install.py --target pi --scope user` | Pi officially discovers `~/.agents/skills` and project `.agents/skills`. The Pi target shares that canonical installed view with Codex, avoiding duplicate skill names. |
 
-Both hosts support `--scope project` and `--dry-run`. See the README
+All three hosts support `--scope project` and `--dry-run`. See the README
 for full install instructions.
+
+Pi supports the Agent Skills format used by the canonical files, including
+recursive discovery of directories containing `SKILL.md`. Although Pi also
+supports `disable-model-invocation`, the installer does not inject Pi-only
+frontmatter into the shared Codex/Pi directory. Pi therefore treats
+`evaluate` as user-only by instruction rather than by host-enforced hiding;
+users should invoke it explicitly with `/skill:evaluate`. See the
+[official Pi Skills documentation](https://pi.dev/docs/latest/skills).
 
 ## Experimentally compatible (v0.4)
 
@@ -40,7 +49,7 @@ metadata.
 
 ## Coordinate persistence across hosts
 
-The Codex and Claude installed copies read the same `coordinate` skill
+The Codex, Claude, and Pi installed copies read the same `coordinate` skill
 instructions, including the default (in-conversation packet) and
 persistence (save one Handoff Markdown) modes.
 

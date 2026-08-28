@@ -42,8 +42,11 @@ class TestValidate(unittest.TestCase):
         self.assertEqual(len(data["skills"]), 7)
         # New schema: per-skill hosts map + top-level hosts map.
         self.assertIn("hosts", data)
+        self.assertEqual(data["hosts"].get("pi", {}).get("support"),
+                         "supported")
         for s in data["skills"]:
             self.assertIn("hosts", s)
+            self.assertEqual(s["hosts"].get("pi"), "supported")
             self.assertNotIn("supported_hosts", s)
 
     def test_line_budgets(self):
