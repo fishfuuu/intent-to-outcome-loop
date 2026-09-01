@@ -27,9 +27,10 @@ anyone changing it.
   includes drive-letter paths, home-directory paths, and any path tied to
   a developer's machine or to another repository on the same machine.
   Use repo-relative paths or host-neutral placeholders instead.
-- Word budget: ~1300 words per skill (reviewed-change may go to ~2000),
-  ~9200 words total across all seven. Per-line density capped at 90 words
-  to enforce scannability. The validator enforces all three.
+- Word budget: target ~1300 words per skill (reviewed-change may target up to
+  ~2000), with a hard maximum of 2000 per skill and 9200 total. Per-line
+  density has a hard maximum of 90 words. The validator enforces the hard
+  limits.
 
 ## After a change
 

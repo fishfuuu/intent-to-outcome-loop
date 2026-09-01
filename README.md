@@ -158,7 +158,8 @@ Core is judgment discipline, not a document-production lifecycle:
   its keep or the user asks.
 - **Wrong:** rename the implementer as “reviewer” in the same context.
   **Right:** use an independent reviewer, or honestly label a
-  user-accepted limited non-independent review.
+  user-accepted limited non-independent review as supplemental diagnostic
+  evidence with independent approval still blocked.
 
 Do not add registries, status files, or manual skill-state maintenance.
 
