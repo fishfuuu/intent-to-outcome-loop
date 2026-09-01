@@ -338,6 +338,19 @@ class TestV04Structure(unittest.TestCase):
         text = self._skill("reviewed-change")
         self.assertIn("do not implement it in the current scope by default", text)
 
+    def test_reviewed_change_failure_claims_bound_evidence(self):
+        # Reliability claims need an explicit failure boundary so RED is not
+        # over-read as proof of general reliability.
+        text = self._skill("reviewed-change")
+        self.assertIn("failure-sensitive claims", text)
+        self.assertIn("bounded failure model", text)
+        self.assertIn("failure points covered", text)
+        self.assertIn("failure points not covered", text)
+        self.assertIn("does not prove reliability beyond that model", text)
+        ref = (REPO_ROOT / "skills" / "reviewed-change" / "references"
+               / "review-discipline.md").read_text(encoding="utf-8")
+        self.assertIn("Treat important untested failure points as residual limitations", ref)
+
     def test_reviewed_change_evidence_fidelity(self):
         # Evidence must match the promised method, not a cheaper proxy.
         text = self._skill("reviewed-change")
@@ -426,6 +439,20 @@ class TestV04Structure(unittest.TestCase):
         self.assertIn("baseline or control", text)
         self.assertIn("counterexample or failure case", text)
         self.assertIn("metric be satisfied without the outcome", text)
+
+    def test_evaluate_materiality_requires_business_basis(self):
+        # Materiality is a business judgment: when it changes the verdict,
+        # both the anchor and the authority represented by it are required.
+        text = self._skill("evaluate")
+        self.assertIn("When materiality changes the verdict", text)
+        self.assertIn("business anchor or constraint", text)
+        self.assertIn("role or authority", text)
+        self.assertIn(
+            "If either the anchor or the representing role/authority is missing, "
+            "do not confidently classify the finding as material or non-material; "
+            "return INSUFFICIENT_EVIDENCE when that gap prevents a verdict.",
+            text,
+        )
 
     def test_reviewer_independence_and_limited_review(self):
         text = self._skill("reviewed-change")

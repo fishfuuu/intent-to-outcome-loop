@@ -50,6 +50,8 @@ Use the verification method the Change Contract promised. Do not substitute a ch
 
 Code presence or automated tests alone cannot prove a rendered or interactive outcome. If a check cannot be run as promised, do not silently replace it: record the limitation and use an explicit alternative evidence method. Passing an easier proxy does not satisfy a different acceptance method, and a green suite does not override a Contract/Standards finding.
 
+For failure-sensitive acceptance claims — such as recovery, durability, idempotency, retry safety, or no-loss behavior — review the bounded failure model and the failure points covered by the evidence. RED proves that a check can catch a counterexample; it does not prove reliability beyond that model. Treat important untested failure points as residual limitations, and do not approve a broader claim than the evidence supports.
+
 ### Evidence type follows acceptance type
 
 Evidence method follows what the frozen acceptance actually claims, not a blanket browser mandate:

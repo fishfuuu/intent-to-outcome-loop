@@ -7,7 +7,7 @@ description: "Handles architecture, data shape, security, public interface, cros
 
 ## Purpose
 
-Handle changes too risky for one pass: architecture, data shape, security, public interfaces, anything spanning modules, or anything whose boundary is not yet clear. A second perspective checks the result before it ships. This is the only change path that may persist a record.
+Handle changes too risky for one pass: architecture, data shape, security, public interfaces, anything spanning modules, or an unclear boundary. A second perspective checks the result. This is the only change path that may persist a record.
 
 ## Use when
 
@@ -19,7 +19,7 @@ Handle changes too risky for one pass: architecture, data shape, security, publi
 
 ## Required inputs
 
-A change description naming the risk dimension; access to the affected code and context; a reviewer who did not implement the change (another agent or a person).
+A change naming the risk dimension; access to affected code and context; a reviewer who did not implement the change (agent or person).
 
 **Reviewer independence** requires separate context and no visibility into the implementer's reasoning. Minimum: different agent session, ideally different model or host. Same-session role-switching is not independent. When no independent reviewer is available, the user may explicitly accept a **limited non-independent review** that does not claim independent approval and is recorded as such.
 
@@ -35,11 +35,11 @@ These always hold:
 
 ## Procedure
 
-Change Contract → Falsification / RED → Plan Review → Implementation slices → Verification → Final Independent Review → Findings Resolution → Re-review when required → User decision / commit only when requested. For non-trivial changes, read `references/review-discipline.md` before Plan Review and again before Final Review; apply only what fits the change's risk.
+Change Contract → Falsification / RED → Plan Review → Implementation slices → Verification → Final Independent Review → Findings Resolution → Re-review when required → User decision / commit only when requested. For non-trivial changes, read `references/review-discipline.md` before Plan and Final Review; apply only relevant risk.
 
 ### 1. Change Contract
 
-Before implementing, form one compact contract (conversation is fine; write `record.md` only for audit, async teams, or when asked). User Acceptance Scenarios and the Card are conversation-only — no separate acceptance file or registry.
+Before implementing, form one compact contract (conversation is fine; write `record.md` only for audit, async teams, or when asked). User Acceptance Scenarios and the Card stay in conversation — no separate acceptance file or registry.
 
 - **Outcome.**
 - **Proposed approach / design** — implementation path, key technical boundaries, and relevant data/state ownership; only what the reviewer needs, not a standalone Design Specification.
@@ -47,7 +47,7 @@ Before implementing, form one compact contract (conversation is fine; write `rec
 - **Non-goals.**
 - **Risk dimensions.**
 - **Affected boundaries/files.**
-- **Acceptance checks**, each with a verification method (automated test / manual check / evidence review); note which automated checks form RED and which cannot (with alternative evidence). Manual and evidence-review checks need no automated RED.
+- **Acceptance checks**, each with a verification method (automated test / manual check / evidence review); note which automated checks form RED and which cannot, with alternative evidence. Manual and evidence-review checks need no automated RED.
 - **User Acceptance Scenarios** (only when user-observable; skip for pure internal refactors): 1–5 concrete business scenarios the user will manually accept, each as actor → action → observable business result, drawn from the confirmed Outcome / business decisions, not implementation details.
 - **Authoritative references (when they constrain the requested result)** — the prototype, DESIGN.md, existing behavior, contract, or other source the result must match. Final review must check against them directly, so a user's original reference is not silently shrunk into the contract alone.
 - **Reviewer.**
@@ -56,6 +56,8 @@ Before implementing, form one compact contract (conversation is fine; write `rec
 ### 2. Falsification / RED
 
 Build the verification signal before Plan Review. For each practical automated acceptance check, prove it fails on the pre-existing, missing, or counterexample behavior (RED), or record why and the alternative evidence; fix TEST_DEFECTs until the signal is real — green alone is not proof the check could catch the defect. Before Plan Review, verification code may change; production behavior may not.
+
+For failure-sensitive claims (recovery, durability, idempotency, retry safety, or no-loss behavior), state the bounded failure model, the failure points covered by evidence, and important failure points not covered. RED proves a check can catch a counterexample; it does not prove reliability beyond that model. Do not make a broader claim than the evidence supports.
 
 ### 3. Plan Review
 
@@ -73,11 +75,11 @@ Consider the change's impact surface — data, security/permission, migration, o
 
 ### 4. Semantic freeze
 
-Production implementation starts only after Plan Review passes. The Change Contract becomes the implementation baseline — no state file is created. Stop, amend the contract, and re-run Plan Review if any of these change: outcome or user-visible behavior; must-preserve or non-goals; acceptance meaning (or a User Acceptance Scenario's actor, action, observable result, or material business meaning); risk level rises; file, module, or system boundary grows; or a necessary behavior is undefined.
+Production implementation starts only after Plan Review. The Change Contract is the baseline; amend it and re-run Plan Review if outcome, user-visible behavior, must-preserve/non-goals, acceptance meaning, risk, boundaries, or necessary behavior changes.
 
 ### 5. Vertical thin slices
 
-Split multi-part changes into the smallest end-to-end observable slices. **A slice is one observable behavior, not one technical layer** — good: one aggregate → API → UI → rendered verification; bad: all backend, then all frontend, then QA at the end. Each slice satisfies at least one acceptance check; verify one before starting the next.
+Split multi-part changes into the smallest end-to-end observable slices. A slice is one observable behavior, not one technical layer; each slice satisfies an acceptance check and is verified before the next.
 
 ### 6. Finding categories
 
@@ -92,7 +94,7 @@ Four categories; do not add a lifecycle:
 
 The reviewer must be independent of the implementer (see Required inputs for independence criteria), and reviews against the Change Contract, the actual diff, the verification evidence, and any authoritative references.
 
-Cover at least two axes — Contract/Spec and Standards/Quality (defined in `references/review-discipline.md`); the same reviewer may do both, no two reviewers or parallel agents required. Tests passing does not equal acceptance complete — see the reference for review depth, evidence fidelity, and risk focus.
+Cover at least two axes — Contract/Spec and Standards/Quality (defined in `references/review-discipline.md`); the same reviewer may do both. Tests passing does not equal acceptance complete — see the reference for review depth, evidence fidelity, and risk focus.
 
 No independent reviewer available → offer limited non-independent review (user accepts the limitation) or report BLOCKED; do not silently self-approve.
 
@@ -102,17 +104,18 @@ No independent reviewer available → offer limited non-independent review (user
 - **A frozen user-observable acceptance condition without observed-outcome evidence cannot receive Final Review APPROVED**: verification is incomplete, so return to Verification until matching evidence exists — this is not BLOCKED (reserved for unavailable independent review) and not a finding merely because the evidence is missing.
 - If the behavior is actually observed and is absent or wrong, that is an IMPLEMENTATION_DEFECT (blocking finding).
 - Evidence method follows acceptance type (see the reference) — this is evidence fidelity, not a browser mandate.
+- For failure-sensitive claims, check that the claim does not exceed the failure model and covered points. Treat untested points as residual limitations, not as silently passed behavior.
 
 ### 8. Findings and re-review
 
 - **Blocking** — violates the contract, an acceptance check, a safety boundary, an authoritative reference, or makes the result unacceptable. Fix, re-run the affected verification, and return to the independent reviewer; "implementer says fixed" is not closed until the reviewer explicitly passes it.
-- **Non-blocking** — an improvement or future enhancement; report as a suggestion, do not implement it in the current scope by default. If the user includes it, update the contract when material, verify, and re-review as required.
+- **Non-blocking** — an improvement or future enhancement; report it as a suggestion and do not implement it in the current scope by default. If the user includes it, update the contract when material, verify, and re-review as required.
 
 **Review round counting.** Each independent reviewer verdict is one round; the first blocking verdict is round 1, a re-review reporting the same blocker is round 2. If the same blocking root cause is still open after round 2, ask the user to change the design, narrow the scope, or pause.
 
 ### 9. User and commit boundary
 
-**Final Review approval freezes the reviewed production diff.** Once approved, do not change production code, config, migrations, or user-visible behavior without invalidating that approval — re-verify and get a new independent Final Review.
+**Final Review approval freezes the reviewed production diff.** Later changes to production code, config, migrations, or user-visible behavior require invalidating that approval; re-verify and get a new independent Final Review.
 
 Reviewer approval is not user acceptance. When User Acceptance Scenarios exist, only after a valid Final Review hand the user a **User Acceptance Card**: a conversation-only table of the frozen scenarios (actor → action → observable result) plus a line that automated verification and independent review are done and the user should now manually accept each scenario in their real business role. It restates scenarios frozen before implementation, not a new acceptance standard — do not claim the user's business acceptance has passed.
 
