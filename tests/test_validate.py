@@ -49,18 +49,24 @@ class TestValidate(unittest.TestCase):
             self.assertEqual(s["hosts"].get("pi"), "supported")
             self.assertNotIn("supported_hosts", s)
 
-    def test_line_budgets(self):
+    def test_word_budgets(self):
         total = 0
         for skill in (REPO_ROOT / "skills").iterdir():
             if not skill.is_dir():
                 continue
             text = (skill / "SKILL.md").read_text(encoding="utf-8")
-            lines = text.count("\n") + (0 if text.endswith("\n") else 1)
-            self.assertLessEqual(lines, validate.MAX_LINES_PER_SKILL,
-                                 f"{skill.name}: {lines} lines")
-            total += lines
-        self.assertLessEqual(total, validate.MAX_TOTAL_SKILL_LINES,
-                             f"total {total} lines")
+            lines = text.split("\n")
+            words = sum(len(line.split()) for line in lines)
+            self.assertLessEqual(words, validate.MAX_WORDS_PER_SKILL,
+                                 f"{skill.name}: {words} words")
+            total += words
+            # Check per-line density.
+            for i, line in enumerate(lines, 1):
+                line_words = len(line.split())
+                self.assertLessEqual(line_words, validate.MAX_WORDS_PER_LINE,
+                                     f"{skill.name} line {i}: {line_words} words")
+        self.assertLessEqual(total, validate.MAX_TOTAL_SKILL_WORDS,
+                             f"total {total} words")
 
     def test_canonical_frontmatter_exactly_name_description(self):
         for skill in (REPO_ROOT / "skills").iterdir():
@@ -407,6 +413,39 @@ class TestV04Structure(unittest.TestCase):
         text = self._skill("reviewed-change")
         self.assertIn("references/review-discipline.md", text)
 
+    def test_minimum_path_invariants_present(self):
+        for name in ("shape", "quick-change", "bounded-change",
+                     "reviewed-change"):
+            text = self._skill(name)
+            self.assertIn("## Minimum Path (invariants)", text)
+            self.assertIn("These always hold", text)
+
+    def test_evaluate_checks_evidence_fitness(self):
+        text = self._skill("evaluate")
+        self.assertIn("Check evidence fitness before judging", text)
+        self.assertIn("baseline or control", text)
+        self.assertIn("counterexample or failure case", text)
+        self.assertIn("metric be satisfied without the outcome", text)
+
+    def test_reviewer_independence_and_limited_review(self):
+        text = self._skill("reviewed-change")
+        self.assertIn("Same-session role-switching is not independent", text)
+        self.assertIn("limited non-independent review", text)
+        ref = (REPO_ROOT / "skills" / "reviewed-change" / "references"
+               / "review-discipline.md").read_text(encoding="utf-8")
+        self.assertIn("Separate context", ref)
+        self.assertIn("counterexample or failure path", ref)
+        self.assertIn("what was reviewed and what was not reviewed", ref)
+        self.assertIn("`coordinate`'s review-request packet", ref)
+
+    def test_process_theater_antipatterns_documented(self):
+        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        concepts = (REPO_ROOT / "docs" / "concepts.md").read_text(
+            encoding="utf-8")
+        self.assertIn("## Avoid process theater", readme)
+        self.assertIn("### Anti-patterns", concepts)
+        self.assertIn("same-context role switching", concepts)
+
     def test_no_governance_infrastructure_files(self):
         """A real repository-structure check, not a keyword scan.
 
@@ -541,6 +580,21 @@ class TestValidatorFailureCases(unittest.TestCase):
         self.assertTrue(any("extra keys" in e for e in validate.errors),
                         f"errors: {validate.errors}")
 
+    def test_skill_word_budget_rejected(self):
+        body = (("word " * 20).rstrip() + "\n") * 101
+        self._write_skill(self._good_fm(), body)
+        self.assertNotEqual(self._run_patched(), 0)
+        self.assertTrue(any("bad:" in e and "words exceeds budget" in e
+                            for e in validate.errors),
+                        f"errors: {validate.errors}")
+
+    def test_per_line_word_density_rejected(self):
+        body = ("word " * (validate.MAX_WORDS_PER_LINE + 1)).rstrip() + "\n"
+        self._write_skill(self._good_fm(), body)
+        self.assertNotEqual(self._run_patched(), 0)
+        self.assertTrue(any("per-line limit" in e for e in validate.errors),
+                        f"errors: {validate.errors}")
+
     def test_root_level_machine_path_rejected(self):
         # A machine path in a root-level markdown file (README) is caught.
         (self.root / "README.md").write_text(
@@ -612,6 +666,18 @@ class TestRoutingEscalationDiscipline(unittest.TestCase):
                        "Integration", "Uncertainty"):
             self.assertIn(signal, text, f"missing escalation signal {signal!r}")
         self.assertIn("do not downgrade on an unknown", text)
+
+    def test_router_downgrade_requires_positive_evidence(self):
+        text = self._skill("task-router")
+        self.assertIn("Downgrade when evidence confirms", text)
+        self.assertIn("Requires positive evidence of containment", text)
+        self.assertIn("not absence of evidence of risk", text)
+
+    def test_quick_runtime_config_escalates(self):
+        text = self._skill("quick-change")
+        self.assertIn("A config value that changes runtime behavior is not Quick",
+                      text)
+        self.assertIn("escalate to `bounded-change`", text)
 
     def test_bounded_rejects_looks_small(self):
         text = self._skill("bounded-change")

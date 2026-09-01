@@ -27,8 +27,9 @@ anyone changing it.
   includes drive-letter paths, home-directory paths, and any path tied to
   a developer's machine or to another repository on the same machine.
   Use repo-relative paths or host-neutral placeholders instead.
-- Line budget: ~120 lines per skill (reviewed-change may go to ~160),
-  ~650 lines total across all seven. The validator enforces the total.
+- Word budget: ~1300 words per skill (reviewed-change may go to ~2000),
+  ~9200 words total across all seven. Per-line density capped at 90 words
+  to enforce scannability. The validator enforces all three.
 
 ## After a change
 

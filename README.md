@@ -137,7 +137,30 @@ Pick the **lightest** path that is still safe:
 
 Escalation is built in: a Quick change that affects behavior becomes
 Bounded; a Bounded change that grows past its boundary becomes
-Reviewed.
+Reviewed. A Reviewed route may downgrade only when positive evidence
+shows the impact surface is controlled.
+
+## Avoid process theater
+
+Core is judgment discipline, not a document-production lifecycle:
+
+- **Wrong:** write a Change Contract for a CSS copy edit. **Right:** use
+  Quick and verify only the stated, behavior-neutral change.
+- **Wrong:** keep a behavior-affecting config edit in Quick because the
+  diff is one line. **Right:** escalate to Bounded or Reviewed according
+  to the impact surface.
+- **Wrong:** call a brief delivery-ready while a default, rejection path,
+  authoritative data source, or acceptance result is still undefined.
+  **Right:** resolve it or record the user's explicit risk acceptance.
+- **Wrong:** save every Route Brief, review step, or acceptance card as
+  permanent state. **Right:** keep only the minimum evidence the current
+  risk needs; artifacts remain in conversation unless persistence earns
+  its keep or the user asks.
+- **Wrong:** rename the implementer as “reviewer” in the same context.
+  **Right:** use an independent reviewer, or honestly label a
+  user-accepted limited non-independent review.
+
+Do not add registries, status files, or manual skill-state maintenance.
 
 ## Install
 

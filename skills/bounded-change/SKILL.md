@@ -29,6 +29,16 @@ Make a behavior-affecting change that stays within one local boundary — a func
 - The boundary: what changes, and what must not change.
 - A verification method: a test, a repro command, or a concrete manual check.
 
+## Minimum Path (invariants)
+
+These always hold:
+
+1. State the expected behavior, boundary, and verification method.
+2. Record a baseline or reproduce the defect before changing anything.
+3. Make the change within the stated boundary only.
+4. Verify using the same method as the baseline.
+5. Confirm the boundary held; escalate if a Reviewed risk appears.
+
 ## Procedure
 
 1. State the expected behavior and the boundary. If you cannot name a verification method, stop and say so.

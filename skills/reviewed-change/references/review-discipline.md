@@ -2,7 +2,35 @@
 
 How to review a non-trivial Reviewed Change with discipline. Read this before Plan Review and again before Final Review, and apply only the parts that fit the change's risk. For a small, low-risk reviewed change, rely on the main SKILL's Procedure.
 
-## 1. Transition discipline
+## 1. Reviewer independence
+
+**Minimum independence criteria:**
+
+- Separate context: the reviewer cannot see the implementer's reasoning, intermediate attempts, or conversation history.
+- Different session: same-session role-switching is not independent.
+- Ideally different model or host: the strongest independence comes from a different reasoning system.
+
+**Minimum reviewer evidence** (every review must show these):
+
+1. Restate the Change Contract in the reviewer's own words.
+2. Identify one counterexample or failure path not covered by the implementer's verification.
+3. Compare the actual diff against the contract and verification evidence.
+4. State explicitly what was reviewed and what was not reviewed.
+
+**Limited non-independent review:**
+
+When no independent reviewer is available (solo developer, blocked access), the user may explicitly accept a **limited non-independent review**:
+
+- The implementer performs a structured self-review using the four evidence items above.
+- The review verdict is recorded as "limited non-independent review, not independently approved."
+- This is an honest downgrade, not a claim of independence.
+- Use only when the alternative is no review at all or indefinite blocking.
+
+**Coordinate integration:**
+
+When requesting review across sessions or agents, use `coordinate`'s review-request packet as the transport format. The packet must include the Change Contract, diff location, acceptance checks, and verification evidence so the reviewer has sufficient context.
+
+## 2. Transition discipline
 
 The two review transitions are real stop/re-start points, not paperwork:
 
@@ -10,7 +38,7 @@ The two review transitions are real stop/re-start points, not paperwork:
 - **Final Review approval freezes the reviewed production diff** — once approved, changing production code, config, migrations, or user-visible behavior invalidates that approval: re-verify, then get a new independent Final Review.
 - The implementer saying "fixed" is never reviewer closure. Only the independent reviewer's explicit verdict closes a finding.
 
-## 2. Evidence sufficiency
+## 3. Evidence sufficiency
 
 Use the verification method the Change Contract promised. Do not substitute a cheaper signal for the actual acceptance evidence:
 
@@ -34,13 +62,13 @@ Evidence method follows what the frozen acceptance actually claims, not a blanke
 
 For every frozen acceptance check or User Acceptance Scenario, the reviewer states which evidence proves it. Judge evidence type, not just whether some check passed: a spark-data unit test proves data logic, not a rendered sparkline. A type mismatch (UI outcome "verified" by a data test) is evidence insufficient for that acceptance, so verification is incomplete and Final Review cannot APPROVED yet — return to Verification, it is not a finding merely because the evidence is wrong type. If the behavior is actually observed and is absent or wrong, that is an IMPLEMENTATION_DEFECT (blocking finding).
 
-## 3. Review focus by risk
+## 4. Review focus by risk
 
 - **UI / user-visible** — when the contract names a prototype, screenshot, DESIGN.md, or existing product reference, review the rendered result directly: hierarchy, layout/density, composition, interaction, states, and visual consistency against the reference. Using an existing component does not make a UI correct.
 - **Data / business-critical calculation** — check data semantics, aggregation, thresholds, exceptions, scope/permission, and calculation correctness.
 - **Architecture / integration** — check ownership, interface boundaries, failure behavior, blast radius, and compatibility.
 
-## 4. Final Review depth
+## 5. Final Review depth
 
 The two review axes:
 
@@ -49,7 +77,7 @@ The two review axes:
 
 The same reviewer may do both; no two reviewers or parallel agents are required, and this is not a new gate. Tests passing does not equal acceptance complete — manual and evidence-review checks must also run. Map each frozen User Acceptance Scenario to its evidence, and check authoritative references directly.
 
-## 5. Finding classification
+## 6. Finding classification
 
 Four categories only (see the main SKILL). One rule is decisive:
 
