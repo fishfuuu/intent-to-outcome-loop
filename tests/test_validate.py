@@ -440,30 +440,53 @@ class TestV04Structure(unittest.TestCase):
         self.assertIn("counterexample or failure case", text)
         self.assertIn("metric be satisfied without the outcome", text)
 
-    def test_evaluate_materiality_requires_business_basis(self):
-        # Materiality is a business judgment: when it changes the verdict,
-        # both the anchor and the authority represented by it are required.
+    def test_evaluate_materiality_requires_authoritative_basis(self):
+        # An explicit evaluation anchor may settle materiality without a
+        # business role; authority is needed only for unsettled stakeholder
+        # judgment, and a missing required basis blocks the verdict.
         text = self._skill("evaluate")
-        self.assertIn("When materiality changes the verdict", text)
-        self.assertIn("business anchor or constraint", text)
-        self.assertIn("role or authority", text)
+        self.assertIn("evaluation anchor or another authoritative constraint", text)
+        self.assertIn("not already settled by the evaluation anchor", text)
+        self.assertIn("relevant role or authority", text)
         self.assertIn(
-            "If either the anchor or the representing role/authority is missing, "
-            "do not confidently classify the finding as material or non-material; "
-            "return INSUFFICIENT_EVIDENCE when that gap prevents a verdict.",
+            "If the required basis is missing and that gap prevents a verdict, "
+            "return INSUFFICIENT_EVIDENCE.",
             text,
         )
+        self.assertNotIn("business anchor or constraint", text)
 
     def test_reviewer_independence_and_limited_review(self):
         text = self._skill("reviewed-change")
         self.assertIn("Same-session role-switching is not independent", text)
         self.assertIn("limited non-independent review", text)
+        self.assertIn("supplemental diagnostic evidence only", text)
+        self.assertIn(
+            "does not satisfy the independent Plan Review or Final Independent Review",
+            text,
+        )
+        self.assertIn("independent approval remains BLOCKED", text)
+        self.assertNotIn(
+            "offer limited non-independent review (user accepts the limitation) "
+            "or report BLOCKED",
+            text,
+        )
         ref = (REPO_ROOT / "skills" / "reviewed-change" / "references"
                / "review-discipline.md").read_text(encoding="utf-8")
         self.assertIn("Separate context", ref)
-        self.assertIn("counterexample or failure path", ref)
-        self.assertIn("what was reviewed and what was not reviewed", ref)
+        self.assertIn("actively attempt to identify a material counterexample", ref)
+        self.assertIn("no material uncovered path was identified", ref)
+        self.assertIn("Do not invent an uncovered path", ref)
+        self.assertNotIn(
+            "Identify one counterexample or failure path not covered by the "
+            "implementer's verification.",
+            ref,
+        )
+        self.assertIn("supplemental diagnostic evidence only", ref)
         self.assertIn("`coordinate`'s review-request packet", ref)
+
+    def test_task_router_new_page_guidance_is_not_duplicated(self):
+        text = self._skill("task-router")
+        self.assertEqual(text.count("A new page alone is not a Reviewed trigger"), 1)
 
     def test_process_theater_antipatterns_documented(self):
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")

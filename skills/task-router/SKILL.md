@@ -57,8 +57,6 @@ It classifies engineering fit and risk, not business requirements: business data
 
 A new page alone is not a Reviewed trigger — only when it introduces one of these risks; a standalone, low-risk page with a clear boundary and verification method is Bounded.
 
-A new page alone is not a Reviewed trigger — only when it introduces one of these risks; a standalone, low-risk page with a clear boundary and verification method is Bounded.
-
 ## Impact Surface First
 
 Implementation scope does not determine change risk. A small diff can still cross a high-impact surface; if the impact surface is uncertain or crosses an important boundary, prefer Reviewed Change.

@@ -13,7 +13,7 @@ How to review a non-trivial Reviewed Change with discipline. Read this before Pl
 **Minimum reviewer evidence** (every review must show these):
 
 1. Restate the Change Contract in the reviewer's own words.
-2. Identify one counterexample or failure path not covered by the implementer's verification.
+2. The reviewer must actively attempt to identify a material counterexample or failure path. Report any found; if none, say no material uncovered path was identified. Do not invent an uncovered path.
 3. Compare the actual diff against the contract and verification evidence.
 4. State explicitly what was reviewed and what was not reviewed.
 
@@ -21,10 +21,10 @@ How to review a non-trivial Reviewed Change with discipline. Read this before Pl
 
 When no independent reviewer is available (solo developer, blocked access), the user may explicitly accept a **limited non-independent review**:
 
-- The implementer performs a structured self-review using the four evidence items above.
-- The review verdict is recorded as "limited non-independent review, not independently approved."
-- This is an honest downgrade, not a claim of independence.
-- Use only when the alternative is no review at all or indefinite blocking.
+- It is supplemental diagnostic evidence only.
+- It does not satisfy the independent Plan Review or Final Independent Review; it cannot authorize shipping, completion, commit, or deployment.
+- Record the limitation; it is not independent approval.
+- Use only when no review is the alternative or blocking is indefinite.
 
 **Coordinate integration:**
 
