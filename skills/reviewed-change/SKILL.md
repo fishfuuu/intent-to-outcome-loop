@@ -96,7 +96,7 @@ The reviewer must be independent of the implementer (see Required inputs for ind
 
 Cover at least two axes — Contract/Spec and Standards/Quality (defined in `references/review-discipline.md`); the same reviewer may do both. Tests passing does not equal acceptance complete — see the reference for review depth, evidence fidelity, and risk focus.
 
-No independent reviewer available → report BLOCKED. A user-accepted limited non-independent review may provide supplemental diagnostic evidence only; it does not satisfy either independent review gate or authorize completion. Do not silently self-approve.
+No independent reviewer available → report BLOCKED (see Required inputs): a limited non-independent review is supplemental evidence only, never approval. Do not silently self-approve.
 
 **Observed-outcome evidence.** For every frozen acceptance check or User Acceptance Scenario, identify the evidence that proves its observable result.
 
@@ -126,7 +126,7 @@ Destructive, irreversible, security, privacy, financial, or real-production writ
 - Plan Review blocking — do not implement until a new independent Plan Review returns an explicit APPROVED verdict.
 - Change Contract drifted semantically — amend and re-run Plan Review before continuing.
 - A necessary behavior is undefined (SPECIFICATION_GAP) — amend the contract, re-run Plan Review.
-- No independent reviewer available → report BLOCKED. A user-accepted limited non-independent review may provide supplemental diagnostic evidence only; it does not satisfy either independent review gate or authorize completion. Do not silently self-approve.
+- No independent reviewer available → report BLOCKED; a limited non-independent review is supplemental evidence only and cannot authorize completion. Do not silently self-approve. Next paths: obtain independence, or re-shape and re-route only if evidence shows impact surface falls within Bounded boundaries; never split work to bypass review.
 - Same blocking root cause open after two review rounds — ask the user to change the design, narrow scope, or pause.
 - Production code changed after a Final Review — prior approval is stale; re-verify and get a new independent Final Review.
 - High-risk operation (destructive, irreversible, security, privacy, financial, or real-production write) — stop and ask the user.
