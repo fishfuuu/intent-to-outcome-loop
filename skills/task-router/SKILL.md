@@ -7,7 +7,11 @@ description: "The default entry point for ordinary software tasks. Reads the tas
 
 ## Purpose
 
-Be the single entry point a normal user needs. Task Router reads the task and the affected code, decides Quick / Bounded / Reviewed, and hands control to the matching change skill — without forcing the user to know the three tiers or re-type a skill name. The router is read-only; "hand off" means the matching change skill takes over editing, not that the router edits. Engineers who already know the tier may call a change skill directly; the router is a convenience, not a gate. It classifies engineering fit and risk, not business requirements: business data meaning, judgment/calculation rules, workflow/permission semantics, and acceptance behavior come from the user or from `shape`, not from router-led discovery. Fully clear small tasks still route straight to a change skill; only missing material requirements route back to `shape`.
+Be the single entry point a normal user needs. Task Router reads the task and the affected code, decides Quick / Bounded / Reviewed, and hands control to the matching change skill — without forcing the user to know the three tiers or re-type a skill name.
+
+The router is read-only; "hand off" means the matching change skill takes over editing, not that the router edits. Engineers who already know the tier may call a change skill directly; the router is a convenience, not a gate.
+
+It classifies engineering fit and risk, not business requirements: business data meaning, judgment/calculation rules, workflow/permission semantics, and acceptance behavior come from the user or from `shape`, not from router-led discovery. Fully clear small tasks still route straight to a change skill; only missing material requirements route back to `shape`.
 
 ## Use when
 
@@ -49,7 +53,11 @@ Be the single entry point a normal user needs. Task Router reads the task and th
 
 **Bounded** — affects behavior; confined to one function, module, small feature, or local interaction; clear boundary; a concrete verification method; no Reviewed risk.
 
-**Reviewed** (any one) — architecture or cross-module behavior; data structure, persistence, schema, or migration; permissions, auth, security, or privacy; financial, accounting, or business-critical computation; public API, shared interface, or compatibility; new workflow, new business capability; external callback or third-party integration; transaction, compensation, or rollback; irreversible or hard-to-recover operation; deploy/release or large blast radius; the engineering boundary is not clear enough to implement safely and needs a design first. A new page alone is not a Reviewed trigger — only when it introduces one of these risks; a standalone, low-risk page with a clear boundary and verification method is Bounded.
+**Reviewed** (any one) — architecture or cross-module behavior; data structure, persistence, schema, or migration; permissions, auth, security, or privacy; financial, accounting, or business-critical computation; public API, shared interface, or compatibility; new workflow, new business capability; external callback or third-party integration; transaction, compensation, or rollback; irreversible or hard-to-recover operation; deploy/release or large blast radius; the engineering boundary is not clear enough to implement safely and needs a design first.
+
+A new page alone is not a Reviewed trigger — only when it introduces one of these risks; a standalone, low-risk page with a clear boundary and verification method is Bounded.
+
+A new page alone is not a Reviewed trigger — only when it introduces one of these risks; a standalone, low-risk page with a clear boundary and verification method is Bounded.
 
 ## Impact Surface First
 
@@ -66,7 +74,8 @@ Escalation signals (guidance, not a checklist) — any one may justify Reviewed:
 
 - Quick implementation reveals a behavior impact → escalate to Bounded.
 - Bounded implementation reveals a Reviewed risk → escalate to Reviewed.
-- An escalation must state the reason. Never silently widen the process.
+- **Downgrade when evidence confirms the impact surface is controlled:** if investigation shows a Reviewed-routed change stays within one module with no cross-boundary risk, state the evidence and downgrade to Bounded. Requires positive evidence of containment, not absence of evidence of risk.
+- An escalation or downgrade must state the reason. Never silently widen or narrow the process.
 
 ## Stop conditions
 

@@ -31,15 +31,17 @@ A deliberate checkpoint the user invokes to judge an effort or an existing targe
 
 1. Restate the evaluation anchor in a sentence — the expected outcome and its success signals, or the evaluation question about the target. If no target or anchor can be identified, say so and return INSUFFICIENT_EVIDENCE.
 2. Gather the evidence that actually exists; do not infer results that were not observed or measured. Stop once more evidence is unlikely to change the verdict or the smallest sufficient response.
-3. For each finding, judge whether the evidence is **direct** (observed) or **indirect** (inferred), and whether it is **material** — does it change the judgment against the anchor (for an outcome checkpoint: the outcome or a success signal)?
-4. Apply materiality: only a material finding should drive action. A finding is not automatically a task or a backlog item.
-5. If action is warranted, recommend the **smallest sufficient response** — a direction that addresses the material finding, without prescribing the exact implementation.
-6. Return exactly one verdict — one of the five — and a short rationale tied to the evidence.
+3. **Check evidence fitness before judging.** Evidence that looks complete can still not deserve a confident verdict. Ask: who and what period does it cover, and is that the business's real rhythm? Is there a baseline or control to compare against? Which counterexample or failure case was excluded, and was that exclusion justified? Could the metric be satisfied without the outcome being met? A demonstration of success cases is not evidence of the outcome. If fitness is too weak to support any verdict, return INSUFFICIENT_EVIDENCE and name the sampling gap.
+4. For each finding, judge whether the evidence is **direct** (observed) or **indirect** (inferred), and whether it is **material** — does it change the judgment against the anchor (for an outcome checkpoint: the outcome or a success signal)?
+5. Apply materiality: only a material finding should drive action. A finding is not automatically a task or a backlog item.
+6. If action is warranted, recommend the **smallest sufficient response** — a direction that addresses the material finding, without prescribing the exact implementation.
+7. Return exactly one verdict — one of the five — and a short rationale tied to the evidence.
 
 ## Stop conditions
 
 - A verdict is returned.
 - Evidence is too thin to support any verdict → return INSUFFICIENT_EVIDENCE and list what evidence is missing.
+- Evidence exists but its fitness cannot support a verdict (unrepresentative period, no baseline, unexplained excluded counterexample, gameable metric) → return INSUFFICIENT_EVIDENCE and name the sampling gap.
 - More evidence is unlikely to change the verdict or the smallest sufficient response → stop gathering findings.
 
 ## Output contract
@@ -67,5 +69,6 @@ See `docs/compatibility.md` for how each host enforces this.
 
 > **Expected:** alerts reach the on-call channel within 15 minutes for all off-hours replies. **Success signals:** ≥99% within 15 min; zero lost on worker crash.
 > **Evidence:** one-week trial — 94% within 15 min; six late, all in one outage; zero alerts lost on the one replayed crash.
-> **Materiality:** the lost-alert signal is clean (non-material). The latency gap is material — it affects the outcome.
+> **Evidence fitness:** one week covers a normal roster cycle but only one outage, so crash behavior rests on a single replay — enough for the latency signal, thin for the loss signal.
+> **Materiality:** the lost-alert signal is clean but weakly sampled (non-material to the verdict, noted as a gap). The latency gap is material — it affects the outcome.
 > **Verdict: IMPROVE** — direction is right; the smallest sufficient response is tightening the queue drain, not redesigning delivery.

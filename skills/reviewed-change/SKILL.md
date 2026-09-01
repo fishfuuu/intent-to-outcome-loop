@@ -21,6 +21,18 @@ Handle changes too risky for one pass: architecture, data shape, security, publi
 
 A change description naming the risk dimension; access to the affected code and context; a reviewer who did not implement the change (another agent or a person).
 
+**Reviewer independence** requires separate context and no visibility into the implementer's reasoning. Minimum: different agent session, ideally different model or host. Same-session role-switching is not independent. When no independent reviewer is available, the user may explicitly accept a **limited non-independent review** that does not claim independent approval and is recorded as such.
+
+## Minimum Path (invariants)
+
+These always hold:
+
+1. Form a Change Contract with outcome, approach, acceptance checks, and reviewer.
+2. Prove acceptance checks can fail (RED) before implementing.
+3. Get independent Plan Review approval before touching production code.
+4. Implement in vertical slices; verify each before the next.
+5. Get independent Final Review approval; resolve blocking findings and re-review. The user decides on commit/deploy; do not self-accept.
+
 ## Procedure
 
 Change Contract → Falsification / RED → Plan Review → Implementation slices → Verification → Final Independent Review → Findings Resolution → Re-review when required → User decision / commit only when requested. For non-trivial changes, read `references/review-discipline.md` before Plan Review and again before Final Review; apply only what fits the change's risk.
@@ -47,7 +59,17 @@ Build the verification signal before Plan Review. For each practical automated a
 
 ### 3. Plan Review
 
-A reviewer who is not the implementer reviews the contract and the falsification evidence: do the outcome and the proposed approach / design agree; is the approach sound (boundaries, data/state ownership, risks); do acceptance checks cover the necessary behaviors with each automated check's falsification proven (RED or documented alternative evidence)? Without RED or alternative evidence, or with a blocking finding, do not approve or start implementing. **A blocking Plan Review is not cleared because the implementer believes the findings were fixed** — resolve or amend, run a **new** independent Plan Review, and keep production forbidden until that review returns an explicit **APPROVED** verdict. "Findings fixed" is not "review passed." Consider the change's impact surface — data, security/permission, migration, operational, and test impact — as part of the review; these are considerations, not a mandatory document.
+A reviewer who is not the implementer reviews the contract and the falsification evidence:
+
+- Do the outcome and the proposed approach / design agree?
+- Is the approach sound (boundaries, data/state ownership, risks)?
+- Do acceptance checks cover the necessary behaviors, with each automated check's falsification proven (RED or documented alternative evidence)?
+
+Without RED or alternative evidence, or with a blocking finding, do not approve or start implementing.
+
+**A blocking Plan Review is not cleared because the implementer believes the findings were fixed** — resolve or amend, run a **new** independent Plan Review, and keep production forbidden until that review returns an explicit **APPROVED** verdict. "Findings fixed" is not "review passed."
+
+Consider the change's impact surface — data, security/permission, migration, operational, and test impact — as part of the review; these are considerations, not a mandatory document.
 
 ### 4. Semantic freeze
 
@@ -68,9 +90,18 @@ Four categories; do not add a lifecycle:
 
 ### 7. Final Independent Review
 
-The reviewer must be independent of the implementer, and reviews against the Change Contract, the actual diff, the verification evidence, and any authoritative references. Cover at least two axes — Contract/Spec and Standards/Quality (defined in `references/review-discipline.md`); the same reviewer may do both, no two reviewers or parallel agents required. Tests passing does not equal acceptance complete — see the reference for review depth, evidence fidelity, and risk focus. No independent reviewer available → report BLOCKED; do not self-approve.
+The reviewer must be independent of the implementer (see Required inputs for independence criteria), and reviews against the Change Contract, the actual diff, the verification evidence, and any authoritative references.
 
-**Observed-outcome evidence.** For every frozen acceptance check or User Acceptance Scenario, identify the evidence that proves its observable result. If the acceptance is user-observable (rendered, interactive, or otherwise visible in the running system), the evidence must observe that result directly — code presence or automated tests alone cannot prove a rendered or interactive outcome. **A frozen user-observable acceptance condition without observed-outcome evidence cannot receive Final Review APPROVED**: verification is incomplete, so return to Verification until matching evidence exists — this is not BLOCKED (reserved for unavailable independent review) and not a finding merely because the evidence is missing. If the behavior is actually observed and is absent or wrong, that is an IMPLEMENTATION_DEFECT (blocking finding). Evidence method follows acceptance type (see the reference) — this is evidence fidelity, not a browser mandate.
+Cover at least two axes — Contract/Spec and Standards/Quality (defined in `references/review-discipline.md`); the same reviewer may do both, no two reviewers or parallel agents required. Tests passing does not equal acceptance complete — see the reference for review depth, evidence fidelity, and risk focus.
+
+No independent reviewer available → offer limited non-independent review (user accepts the limitation) or report BLOCKED; do not silently self-approve.
+
+**Observed-outcome evidence.** For every frozen acceptance check or User Acceptance Scenario, identify the evidence that proves its observable result.
+
+- If the acceptance is user-observable (rendered, interactive, or otherwise visible in the running system), the evidence must observe that result directly — code presence or automated tests alone cannot prove a rendered or interactive outcome.
+- **A frozen user-observable acceptance condition without observed-outcome evidence cannot receive Final Review APPROVED**: verification is incomplete, so return to Verification until matching evidence exists — this is not BLOCKED (reserved for unavailable independent review) and not a finding merely because the evidence is missing.
+- If the behavior is actually observed and is absent or wrong, that is an IMPLEMENTATION_DEFECT (blocking finding).
+- Evidence method follows acceptance type (see the reference) — this is evidence fidelity, not a browser mandate.
 
 ### 8. Findings and re-review
 
@@ -81,14 +112,18 @@ The reviewer must be independent of the implementer, and reviews against the Cha
 
 ### 9. User and commit boundary
 
-**Final Review approval freezes the reviewed production diff.** Once approved, do not change production code, config, migrations, or user-visible behavior without invalidating that approval — re-verify and get a new independent Final Review. Reviewer approval is not user acceptance. When User Acceptance Scenarios exist, only after a valid Final Review hand the user a **User Acceptance Card**: a conversation-only table of the frozen scenarios (actor → action → observable result) plus a line that automated verification and independent review are done and the user should now manually accept each scenario in their real business role. It restates scenarios frozen before implementation, not a new acceptance standard — do not claim the user's business acceptance has passed. Destructive, irreversible, security, privacy, financial, or real-production writes need an explicit user decision. Do not commit or push unless asked; never discard or overwrite unrelated pre-existing user changes, and if committing is requested, scope it to this change only.
+**Final Review approval freezes the reviewed production diff.** Once approved, do not change production code, config, migrations, or user-visible behavior without invalidating that approval — re-verify and get a new independent Final Review.
+
+Reviewer approval is not user acceptance. When User Acceptance Scenarios exist, only after a valid Final Review hand the user a **User Acceptance Card**: a conversation-only table of the frozen scenarios (actor → action → observable result) plus a line that automated verification and independent review are done and the user should now manually accept each scenario in their real business role. It restates scenarios frozen before implementation, not a new acceptance standard — do not claim the user's business acceptance has passed.
+
+Destructive, irreversible, security, privacy, financial, or real-production writes need an explicit user decision. Do not commit or push unless asked; never discard or overwrite unrelated pre-existing user changes, and if committing is requested, scope it to this change only.
 
 ## Stop conditions
 
 - Plan Review blocking — do not implement until a new independent Plan Review returns an explicit APPROVED verdict.
 - Change Contract drifted semantically — amend and re-run Plan Review before continuing.
 - A necessary behavior is undefined (SPECIFICATION_GAP) — amend the contract, re-run Plan Review.
-- No independent reviewer — report BLOCKED; do not self-approve.
+- No independent reviewer available → offer limited non-independent review (user accepts the limitation) or report BLOCKED; do not silently self-approve.
 - Same blocking root cause open after two review rounds — ask the user to change the design, narrow scope, or pause.
 - Production code changed after a Final Review — prior approval is stale; re-verify and get a new independent Final Review.
 - High-risk operation (destructive, irreversible, security, privacy, financial, or real-production write) — stop and ask the user.

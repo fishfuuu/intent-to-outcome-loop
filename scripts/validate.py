@@ -10,7 +10,7 @@ Standard library only. Checks:
 - canonical frontmatter contains exactly `name` and `description`.
 - name matches the directory; description is non-empty and free of
   angle brackets and stray colons that break YAML.
-- line budgets per skill and across all skills.
+- word budgets per skill and across all skills, plus per-line density.
 - machine-specific absolute paths appear in no shipped markdown.
 - all relative markdown links in shipped markdown resolve.
 - the evaluate Codex policy file has the required nested structure.
@@ -33,8 +33,10 @@ import yaml_subset  # noqa: E402
 SKILLS_DIR = REPO_ROOT / "skills"
 SKILLSET = REPO_ROOT / "skillset.json"
 
-MAX_LINES_PER_SKILL = 160  # reviewed-change ceiling; others target ~120
-MAX_TOTAL_SKILL_LINES = 650
+# Word budgets replace line budgets to prevent density creep.
+MAX_WORDS_PER_SKILL = 2000  # reviewed-change ceiling; others target ~1300
+MAX_TOTAL_SKILL_WORDS = 9200
+MAX_WORDS_PER_LINE = 90  # force scannability; prevent 185-word paragraphs
 
 # Canonical SKILL.md frontmatter must contain exactly these keys.
 CANONICAL_FRONTMATTER_KEYS = {"name", "description"}
@@ -124,8 +126,8 @@ def check_manifest_matches_dir(declared):
 
 
 def check_skill_files(skillset):
-    total_lines = 0
-    line_counts = {}
+    total_words = 0
+    word_counts = {}
     for s in skillset["skills"]:
         name = s["name"]
         src = REPO_ROOT / s["source"]
@@ -133,11 +135,19 @@ def check_skill_files(skillset):
             err(f"{name}: SKILL.md missing at {s['source']}")
             continue
         text = src.read_text(encoding="utf-8")
-        lines = text.count("\n") + (0 if text.endswith("\n") else 1)
-        line_counts[name] = lines
-        total_lines += lines
-        if lines > MAX_LINES_PER_SKILL:
-            err(f"{name}: {lines} lines exceeds budget of {MAX_LINES_PER_SKILL}")
+        lines = text.split("\n")
+        words = sum(len(line.split()) for line in lines)
+        word_counts[name] = words
+        total_words += words
+        if words > MAX_WORDS_PER_SKILL:
+            err(f"{name}: {words} words exceeds budget of {MAX_WORDS_PER_SKILL}")
+
+        # Check per-line density to enforce scannability.
+        for i, line in enumerate(lines, 1):
+            line_words = len(line.split())
+            if line_words > MAX_WORDS_PER_LINE:
+                err(f"{name}: line {i} has {line_words} words, "
+                    f"exceeds per-line limit of {MAX_WORDS_PER_LINE}")
 
         # Parse frontmatter through the strict YAML subset. A parse
         # failure means the frontmatter is not valid YAML.
@@ -181,10 +191,10 @@ def check_skill_files(skillset):
                 err(f"{name}: canonical frontmatter must not contain "
                     f"host-specific key '{key}'")
 
-    if total_lines > MAX_TOTAL_SKILL_LINES:
-        err(f"Total skill lines {total_lines} exceeds budget "
-            f"of {MAX_TOTAL_SKILL_LINES}")
-    return line_counts, total_lines
+    if total_words > MAX_TOTAL_SKILL_WORDS:
+        err(f"Total skill words {total_words} exceeds budget "
+            f"of {MAX_TOTAL_SKILL_WORDS}")
+    return word_counts, total_words
 
 
 def check_local_paths_in_file(rel_label, text):

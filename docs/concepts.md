@@ -37,6 +37,25 @@ demand: a Reviewed Change record when a durable trail earns its keep,
 and — when the user explicitly asks — one Handoff Markdown from
 `coordinate` (a snapshot, not state).
 
+### Anti-patterns
+
+Core becomes process theater when its artifacts are treated as mandatory
+paperwork rather than risk-sized evidence:
+
+- Do not write a Change Contract for every typo, copy edit, or formatting
+  change; use Quick.
+- Do not keep a runtime-affecting config change in Quick because the diff
+  is small; impact surface outranks diff size.
+- Do not call a brief delivery-ready while a material default, exception,
+  data authority, workflow outcome, or acceptance result is unresolved.
+- Do not persist every Route Brief, review step, or User Acceptance Card,
+  or ask users to maintain skill states.
+- Do not treat same-context role switching as independent review; use an
+  independent context or label a user-accepted limited review honestly.
+
+Keep only the minimum evidence the current risk needs. Most artifacts stay
+in the conversation.
+
 ## The two judgment skills
 
 - **Shape** — optional, before any engineering work. Defines the

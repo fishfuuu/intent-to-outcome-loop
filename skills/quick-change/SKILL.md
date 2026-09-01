@@ -26,13 +26,23 @@ Make small, behavior-neutral edits quickly, with just enough verification to pro
 - The exact change, stated before editing.
 - Access to the target file(s).
 
+## Minimum Path (invariants)
+
+These always hold:
+
+1. State the exact change before editing.
+2. Make only the stated edit; do not reformat adjacent code.
+3. Verify behavior-neutrality with the appropriate check.
+4. If behavior impact appears, escalate to `bounded-change` (revert only if safely isolated).
+5. Report what changed and the verification result.
+
 ## Procedure
 
 1. State the exact change and the files it will touch, before editing.
 2. Make the edit. Change only what was stated; do not reformat or "improve" adjacent code.
 3. Verify the change does not alter behavior:
    - For docs and copy: re-read the result; confirm links and code blocks resolve; confirm no unintended edits leaked in.
-   - For config: confirm the file still parses; confirm no runtime-affecting value changed unless that was the stated change.
+   - For config: confirm the file still parses; confirm no runtime-affecting value changed. A config value that changes runtime behavior is not Quick — escalate to `bounded-change`.
 4. Report what changed and the verification result.
 
 ## Escalation (behavior impact found)
