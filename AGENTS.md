@@ -31,6 +31,10 @@ anyone changing it.
   ~2000), with a hard maximum of 2000 per skill and 9200 total. Per-line
   density has a hard maximum of 90 words. The validator enforces the hard
   limits.
+- `SKILL.md` carries the load-bearing judgment rules and boundaries needed
+  for correct use; `references/` carries deeper methods, examples, and
+  guidance loaded when relevant. The word budget is not a reason to move
+  required decision rules out of `SKILL.md`.
 
 ## After a change
 
