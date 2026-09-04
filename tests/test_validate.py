@@ -218,6 +218,61 @@ class TestV04Structure(unittest.TestCase):
                          "coordinate optional Data/AI template sections do not "
                          f"match; got:\n{opt_actual}")
 
+    def test_coordinate_handoff_preflight_rule(self):
+        # Regression for the stale-source-context handoff: session
+        # context can lag the authoritative artifacts (context says
+        # HEAD=B while the tree is already at C). The preflight rule is
+        # load-bearing and must live in the SKILL.md Procedure — not in
+        # a reference or a new section — and carry four semantics:
+        #   (A) refresh from authoritative artifacts accessible now,
+        #       never from session context alone (artifacts win);
+        #   (B) what cannot be re-verified is labeled last-known, not
+        #       presented as current;
+        #   (C) the refresh is gated on the receiver's next action;
+        #   (D) no search for context beyond what is accessible.
+        text = self._skill("coordinate")
+        rule_idx = text.find("refresh material mutable state")
+        self.assertGreaterEqual(rule_idx, 0,
+                                "coordinate missing the handoff preflight "
+                                "rule")
+        # The rule is a Procedure step, not a new section or a schema.
+        self.assertLess(rule_idx, text.find("## Packet shapes"),
+                        "preflight rule must live in the Procedure")
+        self.assertIn("authoritative artifacts accessible now", text)
+        self.assertIn("never from session context alone", text)
+        self.assertIn("whenever the receiver's next action depends on it",
+                      text)
+        self.assertIn("If it cannot be re-verified, label it last-known "
+                      "rather than current", text)
+
+    def test_coordinate_preflight_is_conditional_not_mechanical(self):
+        # The preflight must not decay into a mechanical git preflight,
+        # a freshness schema, a global project-state duty, or a blocker.
+        # Guarded behaviors:
+        #   (C) irrelevant handoffs — mutable state that does not affect
+        #       the receiver's next action — carry no forced commit /
+        #       branch / freshness metadata; the persistence template
+        #       stays the eight base sections plus two optional ones
+        #       (covered by test_coordinate_persistence_template_present);
+        #   (B) unverifiable state is labeled, not turned into a stop
+        #       condition;
+        #   (D) no cross-session reconciliation duty.
+        text = self._skill("coordinate")
+        self.assertNotIn("Freshness", text)
+        self.assertNotIn("must always", text)
+        self.assertNotIn("for every handoff", text)
+        # Not a stop condition and not a blocker: last-known lives in
+        # the Procedure only.
+        stop_idx = text.find("## Stop conditions")
+        self.assertGreaterEqual(stop_idx, 0)
+        self.assertNotIn("last-known", text[stop_idx:],
+                         "unverifiable state must be labeled, not stopped on")
+        # No duty to discover decisions no accessible artifact carries.
+        self.assertIn(
+            "Do not search for context beyond what is accessible", text)
+        self.assertNotIn("reconcile", text)
+        self.assertNotIn("other session", text)
+
     def test_reviewed_change_has_proposed_approach_in_contract(self):
         # Baseline regression: the Change Contract must define the design
         # field. (reviewed-change is in the v0.4 change set; this guards

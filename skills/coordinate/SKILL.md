@@ -7,7 +7,7 @@ description: "Generates handoff, review-request, and findings-summary packets fo
 
 ## Purpose
 
-Produce clean handoff and review artifacts so work moves between a person and an agent, or between two agents (for example Claude and Codex), without losing context. Coordinate writes the packets and, only when the user explicitly asks to save a handoff, writes one Markdown file. It does not send, dispatch, or track packets, and it does not write lifecycle state.
+Produce clean handoff and review artifacts so work moves between a person and an agent, or between two agents (for example Claude and Codex), without losing context. It does not send, dispatch, or track packets, and it does not write lifecycle state.
 
 ## Use when
 
@@ -34,15 +34,16 @@ Produce clean handoff and review artifacts so work moves between a person and an
 
 1. Decide the packet type: handoff, review-request, or findings-summary.
 2. Gather only what the receiver needs, using the field lists below. Omit history the receiver cannot act on; omit fields that carry nothing.
-3. Write the packet as self-contained text: a receiver who was not present should understand it without follow-up questions.
+3. Before finalizing a handoff, refresh material mutable state — for example the current code, diff, or verification results — from authoritative artifacts accessible now, never from session context alone, whenever the receiver's next action depends on it. If it cannot be re-verified, label it last-known rather than current. Do not search for context beyond what is accessible.
+4. Write the packet as self-contained text: a receiver who was not present should understand it without follow-up questions.
    - When relationships materially affect the receiver's next action, surface them explicitly — for example dependency relationships, change-impact relationships, source or authority relationships, or before/after state transitions. Use the simplest representation that preserves the needed understanding; do not add diagrams or extra structure for presentation only.
-4. Name the concrete next action the receiver should take.
-5. Choose the output mode (see below). Default is in-conversation; persistence only when the user explicitly asked to save.
+5. Name the concrete next action the receiver should take.
+6. Choose the output mode (see below).
 
 ### Default mode
 
 - Output the self-contained packet in the conversation.
-- Do not write a file. If the user did not explicitly ask to save, do not create one.
+- Do not write a file unless the user explicitly asked to save.
 
 ### Persistence mode (only when the user explicitly asks to save a handoff)
 
@@ -56,7 +57,7 @@ Produce clean handoff and review artifacts so work moves between a person and an
 ## Packet shapes
 
 - **Handoff:** a continuation-context transfer, not a change summary. The grain follows what the receiver needs to continue acting — a current change, broader project state, or a session resume — and broader context is added only when it helps the receiver act. Fields: Outcome; Current slice / state; Confirmed facts and rules; Artifacts and locations; Evidence; Limitations and risks; Specific ask / recommended next step; Open questions.
-  - To decide the grain, consider the receiver's existing context and intended next action — what does the receiver already know, and what will they do next? Do not ask the user to name a handoff type; infer the grain from those two.
+  - To decide the grain, consider the receiver's existing context and intended next action; infer the grain from those two — do not ask the user to name a handoff type.
 - **Review-request:** goal / change contract; scope and non-goals; acceptance checks (each with its verification method); changed files / diff location; verification evidence; reviewer focus; the exact requested verdict.
 - **Findings-summary:** each finding — the finding; blocking or non-blocking; evidence; required or suggested resolution; resolution status; re-review required (yes/no).
 
@@ -100,7 +101,7 @@ Omit sections the receiver does not need; do not leave empty mandatory sections.
 - **Default mode:** a single packet in the conversation, labeled by type, with a named next action.
 - **Persistence mode:** exactly one Handoff Markdown file at the agreed path, plus a report of the path and content scope.
 
-Coordinate does not send the packet, paste it to an external receiver, dispatch or schedule work, maintain a task board, write lifecycle state, approve, commit, or push. It does not auto-invoke `shape`, `task-router`, any change skill, or `evaluate`. It does not write state files — the single handoff Markdown is a snapshot, not state.
+Coordinate does not send the packet, paste it to an external receiver, dispatch or schedule work, maintain a task board, write lifecycle state, approve, commit, or push. It does not auto-invoke `shape`, `task-router`, any change skill, or `evaluate`.
 
 ## Example
 
