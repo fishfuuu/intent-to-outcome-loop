@@ -1,6 +1,6 @@
 # Review discipline reference
 
-How to review a non-trivial Reviewed Change with discipline. Read this before Plan Review and again before Final Review, and apply only the parts that fit the change's risk. For a small, low-risk reviewed change, rely on the main SKILL's Procedure.
+How to review a non-trivial Reviewed Change with discipline. Read this when first needed — before Plan Review — and refresh it when the change's content changes or the context is missing; apply only the parts that fit the change's risk. For a small, low-risk reviewed change, rely on the main SKILL's Procedure.
 
 ## 1. Reviewer independence
 

@@ -289,10 +289,16 @@ class TestV04Structure(unittest.TestCase):
                     "SPECIFICATION_GAP", "FUTURE_ENHANCEMENT"):
             self.assertIn(cat, text, f"missing finding category {cat!r}")
 
-    def test_reviewed_change_round_counting_present(self):
-        # Baseline regression: review round counting must be defined.
+    def test_reviewed_change_blocking_checkpoint(self):
+        # Baseline regression: a surviving blocker is a re-diagnosis
+        # checkpoint, not a mechanical two-round hand-off to the user.
         text = self._skill("reviewed-change")
-        self.assertIn("Review round counting", text)
+        self.assertIn("Blocking findings as a diagnosis checkpoint", text)
+        self.assertNotIn("Review round counting", text)
+        self.assertIn("involve the user only for a material business, ",
+                      text)
+        self.assertIn("The implementer never closes a blocking finding "
+                      "themselves", text)
 
     def test_shape_partial_confirmation_does_not_set_parameter(self):
         # Case A regression (repeated drift): choosing a rule form

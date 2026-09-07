@@ -1,6 +1,6 @@
 ---
 name: "reviewed-change"
-description: "Handles architecture, data shape, security, public interface, cross-module, and other high-risk changes. Uses a lightweight flow: Change Contract, Falsification / RED, Plan Review, vertical slices, Verification, Final Independent Review, findings resolution, and re-review when required. On demand, writes a change record under .agent-delivery/changes."
+description: "Handles architecture, data shape, security, public interface, cross-module, and other high-risk changes, with an independent Plan Review and an independent Final Review. On demand, writes a change record under .agent-delivery/changes."
 ---
 
 # Reviewed Change
@@ -21,7 +21,7 @@ Handle changes too risky for one pass: architecture, data shape, security, publi
 
 A change naming its risk; affected code and context; a non-implementing reviewer.
 
-**Reviewer independence** requires separate context and no visibility into the implementer's reasoning: a different agent session, ideally model or host. Same-session role-switching is not independent. Without an independent reviewer, the user may accept a **limited non-independent review** as supplemental diagnostic evidence only. It does not satisfy the independent Plan Review or Final Independent Review, cannot make the change delivery-ready, and independent approval remains BLOCKED.
+**Reviewer independence** requires separate context and no visibility into the implementer's reasoning: a different agent session, ideally model or host. Same-session role-switching is not independent. Without an independent reviewer, the user may accept a **limited non-independent review** as supplemental diagnostic evidence only. It does not satisfy the independent Plan Review or Final Independent Review and cannot make the change delivery-ready; independent approval remains BLOCKED.
 
 ## Minimum Path (invariants)
 
@@ -35,29 +35,29 @@ These always hold:
 
 ## Procedure
 
-Change Contract → Falsification / RED → Plan Review → Implementation slices → Verification → Final Independent Review → Findings Resolution → Re-review when required → User decision / commit only when requested. For non-trivial changes, read `references/review-discipline.md` before Plan and Final Review; apply only relevant risk.
+Change Contract → Falsification / RED → Plan Review → Implementation slices → Verification → Final Independent Review → Findings Resolution → Re-review when required → User decision / commit only when requested. For non-trivial changes, read `references/review-discipline.md` when first needed — before Plan Review; refresh it when the change's content changes or the context is missing. Apply only relevant risk.
 
 ### 1. Change Contract
 
-Before implementing, form one compact contract (conversation is fine; write `record.md` only for audit, async teams, or when asked). User Acceptance Scenarios and the Card stay in conversation — no separate acceptance file or registry.
+Form one compact contract in conversation; write `record.md` only for audit, async teams, or when asked. User Acceptance Scenarios and the Card stay in conversation — no separate acceptance file or registry.
 
 - **Outcome.**
-- **Proposed approach / design** — implementation path, key technical boundaries, and relevant data/state ownership; only what the reviewer needs, not a standalone Design Specification.
+- **Proposed approach / design** — implementation path, key technical boundaries, and relevant data/state ownership; keep it to what the reviewer needs.
 - **Must-preserve behaviors.**
 - **Non-goals.**
 - **Risk dimensions.**
 - **Affected boundaries/files.**
 - **Acceptance checks**, each with a verification method (automated test / manual check / evidence review); note which automated checks form RED and which cannot, with alternative evidence. Manual and evidence-review checks need no automated RED.
-- **User Acceptance Scenarios** (only when user-observable; skip for pure internal refactors): 1–5 concrete business scenarios the user will manually accept, each as actor → action → observable business result, drawn from the confirmed Outcome / business decisions, not implementation details.
+- **User Acceptance Scenarios** (only when user-observable; skip for pure internal refactors): 1–5 concrete business scenarios the user will manually accept, each as actor → action → observable business result, drawn from the confirmed Outcome, not implementation details.
 - **Authoritative references (when they constrain the requested result)** — the prototype, DESIGN.md, existing behavior, contract, or other source the result must match. Final review must check against them directly, so a user's original reference is not silently shrunk into the contract alone.
 - **Reviewer.**
 - **Unresolved decisions.**
 
 ### 2. Falsification / RED
 
-Build the verification signal before Plan Review. For each practical automated acceptance check, prove it fails on the pre-existing, missing, or counterexample behavior (RED), or record why and the alternative evidence; fix TEST_DEFECTs until the signal is real — green alone is not proof the check could catch the defect. Before Plan Review, verification code may change; production behavior may not.
+Build the verification signal before Plan Review. For each practical automated acceptance check, prove it fails on the pre-existing, missing, or counterexample behavior (RED), or record why and the alternative evidence; fix TEST_DEFECTs until the signal is real — green alone is not proof the check could catch the defect.
 
-For failure-sensitive claims (recovery, durability, idempotency, retry safety, or no-loss behavior), state the bounded failure model, the failure points covered by evidence, and important failure points not covered. RED proves a check can catch a counterexample; it does not prove reliability beyond that model. Do not make a broader claim than the evidence supports.
+For failure-sensitive claims (recovery, durability, idempotency, retry safety, or no-loss behavior), state the bounded failure model, the failure points covered by evidence, and important failure points not covered. RED proves a check can catch a counterexample; it does not prove reliability beyond that model.
 
 ### 3. Plan Review
 
@@ -75,11 +75,11 @@ Consider the change's impact surface — data, security/permission, migration, o
 
 ### 4. Semantic freeze
 
-Production implementation starts only after Plan Review. The Change Contract is the baseline; amend it and re-run Plan Review if outcome, user-visible behavior, must-preserve/non-goals, acceptance meaning, risk, boundaries, or necessary behavior changes.
+The Change Contract is the baseline; amend it and re-run Plan Review if outcome, user-visible behavior, must-preserve/non-goals, acceptance meaning, risk, boundaries, or necessary behavior changes.
 
 ### 5. Vertical thin slices
 
-Split multi-part changes into the smallest end-to-end observable slices. A slice is one observable behavior, not one technical layer; each slice satisfies an acceptance check and is verified before the next.
+Split multi-part changes into the smallest end-to-end observable slices: one observable behavior each, satisfying an acceptance check and verified before the next.
 
 ### 6. Finding categories
 
@@ -92,11 +92,11 @@ Four categories; do not add a lifecycle:
 
 ### 7. Final Independent Review
 
-The reviewer must be independent of the implementer (see Required inputs for independence criteria), and reviews against the Change Contract, the actual diff, the verification evidence, and any authoritative references.
+The reviewer must be independent (see Required inputs) and reviews against the Change Contract, the actual diff, the verification evidence, and any authoritative references.
 
-Cover at least two axes — Contract/Spec and Standards/Quality (defined in `references/review-discipline.md`); the same reviewer may do both. Tests passing does not equal acceptance complete — see the reference for review depth, evidence fidelity, and risk focus.
+Cover at least two axes — Contract/Spec and Standards/Quality (defined in `references/review-discipline.md`); the same reviewer may do both. Tests passing does not equal acceptance complete.
 
-No independent reviewer available → report BLOCKED (see Required inputs): a limited non-independent review is supplemental evidence only, never approval. Do not silently self-approve.
+No reviewer available → BLOCKED; see Required inputs. Do not silently self-approve.
 
 **Observed-outcome evidence.** For every frozen acceptance check or User Acceptance Scenario, identify the evidence that proves its observable result.
 
@@ -108,10 +108,10 @@ No independent reviewer available → report BLOCKED (see Required inputs): a li
 
 ### 8. Findings and re-review
 
-- **Blocking** — violates the contract, an acceptance check, a safety boundary, an authoritative reference, or makes the result unacceptable. Fix, re-run the affected verification, and return to the independent reviewer; "implementer says fixed" is not closed until the reviewer explicitly passes it.
+- **Blocking** — violates the contract, an acceptance check, a safety boundary, an authoritative reference, or makes the result unacceptable. The implementer never closes a blocking finding themselves: fix it, re-run the affected verification, and return to the independent reviewer; "implementer says fixed" is not closed until the reviewer explicitly passes it.
 - **Non-blocking** — an improvement or future enhancement; report it as a suggestion and do not implement it in the current scope by default. If the user includes it, update the contract when material, verify, and re-review as required.
 
-**Review round counting.** Each independent reviewer verdict is one round; the first blocking verdict is round 1, a re-review reporting the same blocker is round 2. If the same blocking root cause is still open after round 2, ask the user to change the design, narrow the scope, or pause.
+**Blocking findings as a diagnosis checkpoint.** When the same blocker survives re-review, re-diagnose before re-applying the same patch: confirm the finding against the current contract, check whether the fix missed the root cause, and re-evaluate the approach. Clear IMPLEMENTATION_DEFECT and TEST_DEFECT findings stay fixable in scope; involve the user only for a material business, scope, acceptance, or risk decision.
 
 ### 9. User and commit boundary
 
@@ -119,22 +119,24 @@ No independent reviewer available → report BLOCKED (see Required inputs): a li
 
 Reviewer approval is not user acceptance. When User Acceptance Scenarios exist, only after a valid Final Review hand the user a **User Acceptance Card**: a conversation-only table of the frozen scenarios (actor → action → observable result) plus a line that automated verification and independent review are done and the user should now manually accept each scenario in their real business role. It restates scenarios frozen before implementation, not a new acceptance standard — do not claim the user's business acceptance has passed.
 
-Destructive, irreversible, security, privacy, financial, or real-production writes need an explicit user decision. Do not commit or push unless asked; never discard or overwrite unrelated pre-existing user changes, and if committing is requested, scope it to this change only.
+Destructive, irreversible, security, privacy, financial, or real-production writes need an explicit user decision — judged by the operation's actual risk and the host's permission rules, not by the topic's domain name alone. Do not commit or push unless asked; working tree safety per `bounded-change` — never discard or overwrite unrelated pre-existing user changes, and scope any requested commit to this change only.
+
+Completion after Final Review: when the original request already authorized the work (for example, implement and verify), final verification and review passing let that authorized work finish and report — do not re-ask for the same authorization just because a review or skill transition completed. Re-ask only for a genuinely new decision.
 
 ## Stop conditions
 
 - Plan Review blocking — do not implement until a new independent Plan Review returns an explicit APPROVED verdict.
 - Change Contract drifted semantically — amend and re-run Plan Review before continuing.
 - A necessary behavior is undefined (SPECIFICATION_GAP) — amend the contract, re-run Plan Review.
-- No independent reviewer available → report BLOCKED; a limited non-independent review is supplemental evidence only and cannot authorize completion. Do not silently self-approve. Next paths: obtain independence, or re-shape and re-route only if evidence shows impact surface falls within Bounded boundaries; never split work to bypass review.
-- Same blocking root cause open after two review rounds — ask the user to change the design, narrow scope, or pause.
+- No independent reviewer available → report BLOCKED; a limited non-independent review is supplemental evidence only and cannot authorize completion. Do not silently self-approve. Next paths: obtain independence, or re-shape and re-route only with positive evidence of Bounded containment; never split work to bypass review.
+- A blocking finding survives re-review — re-diagnose it (is the finding still valid, did the fix miss the root cause, does the approach need re-evaluation); involve the user only for a material business, scope, acceptance, or risk decision.
 - Production code changed after a Final Review — prior approval is stale; re-verify and get a new independent Final Review.
-- High-risk operation (destructive, irreversible, security, privacy, financial, or real-production write) — stop and ask the user.
-- Final review passed and reported — wait for the user's decision; do not self-accept or commit.
+- High-risk operation (destructive, irreversible, security-, privacy-, financial-, or production-impacting write) — stop and ask the user unless already explicitly authorized; risk judged as in section 9, not by domain name alone.
+- Final review passed and reported — report completion; commit/deploy and business acceptance still wait on the user, but already-authorized work needs no re-asking.
 
 ## Record (on demand)
 
-If a durable trail earns its keep, write `.agent-delivery/changes/<change-id>/record.md` (short stable id, e.g. `2026-08-15-alert-queue`): the Change Contract (including the proposed approach / design), Plan Review verdict, slice + verification log, final review findings, and how each blocking finding was resolved and re-reviewed. Small changes can skip it.
+If a durable trail earns its keep, write `.agent-delivery/changes/<change-id>/record.md` (short stable id): the Change Contract, Plan Review verdict, slice + verification log, final review findings, and how each blocking finding was resolved and re-reviewed. Small changes can skip it.
 
 ## Output contract
 
@@ -149,7 +151,7 @@ If a durable trail earns its keep, write `.agent-delivery/changes/<change-id>/re
 ## Example
 
 > **Change:** move alert delivery from a synchronous loop to a queued worker; risk: architecture + data (new persistent queue).
-> **Contract:** Outcome — alerts delivered within 15 min; proposed approach / design — a durable queue table owned by `alerts` with one worker consuming idempotently by message key; must-preserve — no alert lost on worker crash; non-goals — SMS channel; acceptance — crash-recovery (automated), shutdown drain (automated), idempotency on retry (evidence review).
-> **Plan Review:** Codex — approved after the idempotency acceptance check was added and its falsification evidence reviewed.
-> **Final review:** Codex — approved after one blocking implementation finding (missing idempotency key) was fixed, verified, and re-reviewed; one non-blocking Standards/Quality note remained.
+> **Contract:** Outcome — alerts delivered within 15 min; approach — a durable queue table owned by `alerts`, consuming idempotently by message key; must-preserve — no alert lost on worker crash; acceptance — crash-recovery (automated), shutdown drain (automated), idempotency on retry (evidence review).
+> **Plan Review:** Codex — approved after the idempotency check was added and its falsification evidence reviewed.
+> **Final review:** Codex — approved after one blocking implementation finding (missing idempotency key) was fixed, verified, and re-reviewed.
 > **Record:** `.agent-delivery/changes/2026-08-15-alert-queue/record.md`

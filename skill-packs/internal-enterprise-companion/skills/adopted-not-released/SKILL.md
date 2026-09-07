@@ -1,6 +1,6 @@
 ---
 name: "adopted-not-released"
-description: "Use when something is \"live\", UAT-signed, or checklist-green, but it may not be part of real work: idle official tool, shadow Excel/ChatGPT, or usage that exists only while the project team is still chasing people. Adoption means target users, in the business's own rhythm, still complete the real job as intended without ongoing prompting, pairing, or human backfill. Do not use as Evaluate (no CONTINUE/PIVOT/STOP). A live unused system starts here; do not require other companions first. Use when the user runs /adopted-not-released. Triggers: 上线没人用, UAT过了, 验收, 影子Excel, 伴舞, adoption, go-live vs daily work, 项目组一走就停."
+description: "Use when something is \"live\", UAT-signed, or checklist-green, but it may not be part of real work: idle official tool, shadow Excel/ChatGPT, or usage that exists only while the project team is still chasing people. Do not use as Evaluate (no CONTINUE/PIVOT/STOP). A live unused system starts here. Use when the user runs /adopted-not-released. Triggers: 上线没人用, 验收, 影子Excel, 伴舞, 项目组一走就停."
 ---
 
 # Adopted, not merely released

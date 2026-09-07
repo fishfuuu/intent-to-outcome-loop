@@ -1,6 +1,6 @@
 ---
 name: "bounded-change"
-description: "Handles local, behavior-affecting changes with a clear boundary. Records a baseline or reproduction, verifies the same way before and after, iterates the implementation not the goal, and stops after two failed attempts at the same root cause. Creates no formal lifecycle or state files."
+description: "Handles local, behavior-affecting changes with a clear boundary and a verification method: records a baseline or reproduction and verifies the target behavior against the baseline. Routes to reviewed-change when the impact surface or boundary is uncertain. Creates no formal lifecycle or state files."
 ---
 
 # Bounded Change
@@ -36,24 +36,27 @@ These always hold:
 1. State the expected behavior, boundary, and verification method.
 2. Record a baseline or reproduce the defect before changing anything.
 3. Make the change within the stated boundary only.
-4. Verify using the same method as the baseline.
+4. Verify the target behavior with the baseline's method, or an alternative that verifies the same behavior.
 5. Confirm the boundary held; escalate if a Reviewed risk appears.
 
 ## Procedure
 
-1. State the expected behavior and the boundary. If you cannot name a verification method, stop and say so.
-2. **Record a baseline or reproduce the defect** before changing anything: capture the current output, the failing test result, or the reproduction. This is the "before" you will compare against.
-3. Make the change. Touch only what the boundary permits; do not refactor neighbors.
-4. **Verify the same way** — use the same test, command, script, or manual reproduction as the baseline to prove the before/after change.
+Walk the Minimum Path invariants in order:
+
+1. If you cannot name a verification method, stop and say so.
+2. Capture the baseline before any change and keep it for comparison. If the original method is unavailable, find an alternative that verifies the **same target behavior** and state the coverage difference; a weaker proxy signal is not acceptance.
+3. Make the change only within the boundary; do not refactor neighbors.
+4. Verify with the same method as the baseline, or an alternative when the original method is unavailable. For a bug fix, re-run the **original reproduction** when available; otherwise use the equivalent verification described above.
 5. Iterate the implementation — not the goal and not the boundary — until it passes.
-6. Confirm the boundary held: nothing outside the stated scope changed behavior.
-7. Report the change, the verification, and the boundary check.
+6. Confirm the boundary held and report the change, the verification, and the boundary check.
 
 ## Discipline
 
 - If an automated regression test is practical, first prove it fails for the target defect (red), then make it pass (green).
 - Do not make a result pass by weakening the test. The test must verify the behavior, not justify it.
 - Do not refactor adjacent code while you are in the file. Working tree safety: never discard or overwrite unrelated or pre-existing user changes; keep this change's edits distinct from the user's; if staging or committing is requested, scope it to this change only.
+- Prefer existing effective checks; add a test only when it adds necessary behavior evidence, not to mirror implementation internals.
+- Re-run or widen verification only for a new change, a failure, or an unresolved risk.
 - Iterate the implementation, not the goal or the boundary.
 
 ## Feedback loop quality
@@ -62,29 +65,31 @@ The baseline, reproduction, or check must actually reach the target behavior and
 
 Prefer verifying **externally observable behavior** at a behavioral seam, not only internal implementation details — a test that only asserts an internal state change can pass while the user-visible behavior is still wrong.
 
-For a **bug fix**, when practical: add or use a regression check at the correct behavioral seam; after the fix, re-run the **original reproduction**, not only a narrowed test or the whole suite. A green suite is not proof the bug is gone.
+For a **bug fix**, add or use a regression check at the correct behavioral seam.
 
-If you cannot build a feedback signal strong enough to distinguish success from failure, stop guessing and report what is missing — the environment, the inputs, the observation capability, or the manual verification needed.
+If you cannot build a feedback signal strong enough to distinguish success from failure, stop guessing and report what is missing — environment, inputs, observation capability, or manual verification.
 
 ## Manual verification
 
-When automation is not practical, you may use a manual check, but you must disclose what it does and does not prove: why an automated test was not practical; what the manual check covered (the exact steps and inputs run); what it did **not** cover and the residual limitations (the remaining risk it leaves open); and never present a single manual observation as a complete proof.
+When automation is not practical, a manual check must disclose: why automation was skipped, what was covered (the exact steps and inputs run), what was **not** covered, and that a single observation is not complete proof.
 
 ## When a fix does not work
 
-- First failure at a symptom is expected.
-- Before a second edit, state a few falsifiable hypotheses about the root cause and pick the one with the strongest evidence. If the second edit addresses the **same root cause** and still fails, stop and report. Do not keep blindly editing.
+- First failure at a symptom is expected; treat each failure as a diagnosis step, not a deadline.
+- Before the next edit, re-check the diagnosis: is the reproduction still valid, does the evidence still support the hypothesis, was the change actually applied where the symptom originates?
+- New evidence may justify continuing within the boundary; there is no fixed round count — iterate on evidence, not on attempts.
+- Pause and report only when no feasible next step exists, a key input is missing, or a material scope/business decision is needed.
 
 ## Escalation
 
-If implementation reveals a schema, security, shared-interface, cross-module, or new-workflow risk, stop and escalate to `reviewed-change`. State the reason; never silently widen the scope.
+If implementation reveals a schema, security, shared-interface, cross-module, or new-workflow risk, stop and escalate to `reviewed-change`: the remaining work continues under Reviewed's process. Escalation does not end the task or require the user to re-enter the skill name. State the reason; never silently widen the scope.
 
 ## Stop conditions
 
-- The expected behavior is verified (same method, green) and the boundary held.
-- Verification is impossible with the stated method → stop and report; do not widen the change silently.
+- The expected behavior is verified with the baseline method or an equivalent alternative, and the boundary held.
+- The stated method is unavailable and no alternative verifies the same target behavior → stop and report; a weaker proxy is not acceptance.
 - The feedback signal cannot distinguish success from failure (cannot reach or fail on the target behavior) → stop and report what is missing; do not guess.
-- Two rounds fail on the same root cause → stop and report.
+- No feasible next step, missing key input, or a needed material scope/business decision → pause and report.
 - The change grows past the boundary → stop and route to `reviewed-change`.
 
 ## Output contract
@@ -96,7 +101,7 @@ A short report, in plain text:
 - **Changed:** the files and the nature of the change.
 - **Verified:** the method used and its result (pass/fail, with the evidence).
 - **Boundary:** confirmation that nothing outside the stated scope changed.
-- **Residual limitations:** `none` for automated verification. For manual verification, state what was not covered and the residual risk; never describe one manual observation as a complete proof.
+- **Residual limitations:** report what the verification evidence does not cover, whether the check is automated or manual; if none is identified, say so in one clause — do not invent risk. Never describe a single observation as complete proof.
 - **Manual acceptance (only when the behavior is user-observable):** 1–3 lines projecting the verified Expected Behavior into how the user operates it and what they should see. No freeze, review, or record — a handoff, not a new mechanism.
 
 Do not create state files or a record. Do not commit unless the user asks.
@@ -108,4 +113,4 @@ Do not create state files or a record. Do not commit unless the user asks.
 > **Changed:** `src/duration.py` — added the seconds-unit branch to `parse_duration`.
 > **Verified:** `python -m pytest tests/test_duration.py -k parse_seconds` — first confirmed it failed (red), now passes (green); the case returns 90.
 > **Boundary:** no other units or callers changed; `parse_duration` is only called from `schedule.py`, whose tests still pass.
-> **Residual limitations:** none — automated regression test covers the target behavior.
+> **Residual limitations:** none identified — the automated regression test covers the target behavior.

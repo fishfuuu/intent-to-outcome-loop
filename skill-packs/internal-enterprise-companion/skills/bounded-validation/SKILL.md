@@ -1,6 +1,6 @@
 ---
 name: "bounded-validation"
-description: "Use when an internal team is about to start (or is stuck in) a PoC, pilot, \"exploration\", or \"we'll see\" initiative and it may never end. Before anyone claims business value was validated, name who judges, what real evidence counts, when to judge again, and what result means continue, expand, adjust, or stop. Do not use for Shape, for Reviewed Change / Plan Review, or to design the implementation. Triggers: PoC, 试点, 探索, 持续推进中, 毕业标准, 样例数据, mock, 概念验证, no end date, who decides this worked. Use when the user runs /bounded-validation."
+description: "Use when an internal team is about to start (or is stuck in) a PoC, pilot, \"exploration\", or \"we'll see\" initiative and it may never end. Before anyone claims business value was validated, name who judges, what evidence counts, when to judge again, and what the result means. Do not use for Shape, for Reviewed Change / Plan Review, or to design the implementation. Triggers: PoC, 试点, 探索, 持续推进中, 毕业标准, 样例数据, mock, 概念验证, no end date. Use when the user runs /bounded-validation."
 ---
 
 # Bounded validation

@@ -1,6 +1,6 @@
 ---
 name: "evaluate"
-description: "User-invoked outcome check. Evaluates one target against an evaluation anchor (an expected outcome and its success signals, or an evaluation question about the target), distinguishes direct evidence from inference, applies materiality so only material findings drive action, and returns CONTINUE, IMPROVE, PIVOT, STOP, or INSUFFICIENT_EVIDENCE. Never triggers implicitly; the user must call it."
+description: "User-invoked outcome check: judges one target against an expected outcome with success signals (or an evaluation question) and returns CONTINUE, IMPROVE, PIVOT, STOP, or INSUFFICIENT_EVIDENCE. Never self-triggers; the user must call it."
 ---
 
 # Evaluate

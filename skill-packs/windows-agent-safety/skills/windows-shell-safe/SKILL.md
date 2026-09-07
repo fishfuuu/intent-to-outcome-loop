@@ -1,6 +1,6 @@
 ---
 name: "windows-shell-safe"
-description: "Read-only diagnostic for Windows shell commands. Analyzes a user-supplied Windows shell command or structured subprocess invocation and emits deterministic, machine-verifiable JSON: shell family and dialect mismatches (PowerShell 5.1 vs 7+, CMD, Git Bash, WSL), unsupported operators, quoting and native-argv risks, WindowsApps stubs, destructive and recursive targets, reparse points, identity drift, and secret redaction. Never executes the analyzed command, never launches a shell, never writes files or registry, and never grants execution authority. Use before running or evaluating any Windows shell command, especially destructive or cross-dialect ones."
+description: "Read-only diagnostic for Windows shell commands. Returns a deterministic, machine-verifiable JSON risk readout; never executes, never launches a shell, never writes files or registry, and never grants execution authority. Use before destructive or high-impact operations, complex quoting or arguments, cross-shell commands, uncertain path or execution environments, or when the user asks for a command diagnosis — not for ordinary, clearly safe read-only commands."
 ---
 
 # windows-shell-safe
@@ -14,19 +14,16 @@ never touches the registry, and never grants execution authority.**
 
 ## Use when
 
-- You are about to run, or are asked to evaluate, a Windows shell command
-  and need a static risk readout first.
-- The command may be destructive, touch the registry, elevate privileges,
-  download or install, mix CMD / PowerShell / Git Bash / WSL syntax, or
-  carry quoting, expansion, or secret risk.
-- You want environment evidence (PowerShell edition/version, executable
-  resolution, target existence and reparse status) before deciding.
+- Destructive or high-impact operations: delete commands, registry, elevation, download/install, recursive or wide-scope targets.
+- Complex quoting or arguments — nested quotes, expansion, or secrets whose shell interpretation is not obvious.
+- Cross-shell commands (CMD / PowerShell / Git Bash / WSL mix) or uncertain path / execution environments (PowerShell edition, executable resolution, target existence and reparse status).
+- The user explicitly asks for a command risk diagnosis.
 
 ## Do not use when
 
+- Ordinary, unambiguous read-only commands — running on Windows alone is not a trigger.
 - The command is already running or done; there is nothing to analyze.
-- You need the command to be executed or authorized. This skill never does
-  either.
+- You need the command to be executed or authorized. This skill never does either.
 
 ## Required inputs
 

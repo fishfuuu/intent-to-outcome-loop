@@ -1,6 +1,6 @@
 ---
 name: "worth-building-now"
-description: "Use when a relatively clear internal problem exists and the question is whether it is worth further investment to validate or solve — not what the problem is, and not which product to build. Three questions: pain, impact/worthiness, feasibility. Do not use for Shape (problem vs solution form), for engineering design, or after the team has already decided to run a bounded real-world validation. Triggers: 值不值得做, 要不要投入, 痛点是真的但值不值得开发, go/no-go, investment worthiness, whether to validate, no business owner. Bare \"做个 Agent / 做个系统 / 做个 dashboard\" is shape unless problem and solution form are already sufficiently shaped and the live question is investment. Use when the user runs /worth-building-now."
+description: "Use when a relatively clear internal problem exists and the question is whether it is worth further investment to validate or solve — not what the problem is, and not which product to build. Do not use for Shape (problem vs solution form), for engineering design, or after the team has already decided to run a bounded real-world validation. Triggers: 值不值得做, 要不要投入, 痛点是真的但值不值得开发, go/no-go, no business owner. Use when the user runs /worth-building-now."
 ---
 
 # Worth building now

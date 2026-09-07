@@ -1,6 +1,6 @@
 ---
 name: "task-router"
-description: "The default entry point for ordinary software tasks. Reads the task and project context, classifies it as Quick, Bounded, or Reviewed, fills in goal, boundary, risk and verification, and emits a short Route Brief. When the user asks for the work to be done and nothing blocks it, hands off to the matching change skill in the same conversation. The router itself never edits files."
+description: "The default entry point for ordinary software tasks: classifies a task as Quick, Bounded, or Reviewed and emits a short Route Brief; when the user asked for the work and nothing blocks it, hands off to the matching change skill in the same conversation. The router never edits files."
 ---
 
 # Task Router
