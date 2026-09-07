@@ -144,7 +144,8 @@ class TestInternalEnterpriseCompanionPack(unittest.TestCase):
         self.assertIn("Name the referee.", text)
         self.assertIn("Name real-enough evidence.", text)
         self.assertIn("Name the next judgment moment.", text)
-        self.assertIn("Name four outcomes in advance", text)
+        self.assertIn("Name the outcome branches the decision needs", text)
+        self.assertIn("Two is fine", text)
 
         # Rejects synthetic/mock data as business value proof
         self.assertIn("Synthetic, mock, cherry-picked demo data", text)
@@ -154,9 +155,9 @@ class TestInternalEnterpriseCompanionPack(unittest.TestCase):
         text = (PACK_ROOT / "skills" / "smallest-real-deployment" / "SKILL.md").read_text(encoding="utf-8")
 
         # One path, real-enough data, business user operates/judges
-        self.assertIn("One path, full depth.", text)
-        self.assertIn("Real-enough data for the claim.", text)
-        self.assertIn("Business person does the thing.", text)
+        self.assertIn("one path, full depth", text)
+        self.assertIn("real-enough data for the claim", text)
+        self.assertIn("business person does the thing", text)
 
         # Does not implement code; hands to task-router
         self.assertIn("Do not implement here.", text)
@@ -176,7 +177,8 @@ class TestInternalEnterpriseCompanionPack(unittest.TestCase):
         # Standalone conditional handoff when external skills unavailable
         self.assertIn("if `change-three-roles` is available", text)
         self.assertIn("if `eval-driven-quality` is available", text)
-        self.assertIn("stop without fabricating the external skill", text)
+        self.assertIn("never fabricate the external skill", text)
+        self.assertIn("do not stop merely because the skill is missing", text)
 
     def test_pack_readme_installability_truth(self):
         readme_text = (PACK_ROOT / "README.md").read_text(encoding="utf-8")

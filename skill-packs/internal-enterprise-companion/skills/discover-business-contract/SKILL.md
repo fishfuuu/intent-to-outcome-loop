@@ -14,6 +14,9 @@ When the problem and solution direction are already sufficiently clear, but comp
 This skill answers:
 > "If engineering receives only the current prototype and source artifacts, what material business behavior would they still have to invent?"
 
+It deep-verifies complex prototypes, rules, data, and handoff gaps; it does not re-run a
+completed goal interview (that is `shape`'s job).
+
 This skill does **not** decide:
 - Whether this problem is real → `shape` / `observe-real-work`
 - Why to build or what solution form to adopt → `shape`
@@ -94,6 +97,19 @@ When inherited requirements, prototypes, stakeholder statements, SOPs, observed 
 5. **Identify the decision authority** who can decide intended future behavior.
 6. **Obtain/record explicit disposition if available.** If the decision authority is missing and the conflict changes material behavior, mark it **UNRESOLVED**; do not freeze that part of the contract.
 
+## Inheritance and unresolved handling
+
+Existing valid policy, already-confirmed business decisions, and existing behavior the user
+explicitly asked to preserve can be **inherited** into the contract without re-approving each
+item. Inheritance requires an applicable basis (a policy document, a confirmed decision, or an
+explicit user instruction) and no material conflict with the requested result. "The code
+currently does this" alone does not prove future policy — it is evidence, not authorization.
+
+When a material item is UNRESOLVED:
+- Pause speculation, freezing, and implementation that **depends on it**.
+- Continue verifying facts that do not depend on it.
+- Do not declare the affected behaviors engineering-ready, and do not bypass the conflict by splitting the work.
+
 ## Evidence discipline
 
 Tag material semantics with clear evidence boundaries:
@@ -113,7 +129,7 @@ Stop discovery when either of the following two bounded conditions is met:
 
 ### 1. Material UNRESOLVED still exists (Discovery paused / bounded)
 If there remains any material `UNRESOLVED` that affects user-visible business behavior, business rules/calculations, state transitions, permissions, responsibility/handoffs, data authority/semantics, decision rituals, or acceptance behavior:
-- **STOP further speculative discovery.** Do not keep expanding conversations endlessly.
+- **STOP further speculative discovery that depends on it.** You may continue verifying facts that do not depend on the unresolved item.
 - **Explicitly name**: the unresolved decision, why it matters (material impact), the decision authority, and the needed evidence or disposition.
 - **DO NOT mark affected behaviors as engineering-ready.**
 - **DO NOT let engineering choose or guess an answer.**
@@ -154,6 +170,7 @@ Plain text, structured and concise:
   - Status: `UNRESOLVED`
 - **Not Ready for Engineering:**
   - Explicit list of behaviors/flows that MUST NOT be implemented or frozen until authorized disposition is given.
+- **Partial readiness:** list confirmed-and-independent parts separately from blocked parts and their dependencies. Partial readiness is not whole readiness.
 *(Do not output an Engineering Handoff Note that suggests full implementation is ready).*
 
 **B. If no material UNRESOLVED remains (Ready for engineering):**
