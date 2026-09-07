@@ -38,15 +38,16 @@ evaluation criteria, and a designated referee.
 Do not mint a gate, registry, or stage file. Write the answers in the conversation.
 
 1. **Name the claim.** What business result would "this worked" mean, in one sentence, in the business's language — not "we deployed a model".
-2. **Name the referee.** Who will look at evidence and say continue / expand / adjust / stop. An IT liaison who cannot use the result is not enough to *claim value*. If no referee yet, you may keep **discovery/feasibility**; you may not claim value validation.
+2. **Name the referee.** Who will look at evidence and decide. An IT liaison who cannot use the result is not enough to *claim value*. If no referee yet, you may keep **discovery/feasibility**; you may not claim value validation.
 3. **Name real-enough evidence.** What data or working item would count. Synthetic, mock, cherry-picked demo data, or data transformed so heavily that material business conditions disappear **cannot** prove business value. A representative sample of real business data **may** count when it preserves the conditions relevant to the claim (distribution, exceptions, joins, missingness, business judgment). Masked/desensitized data is not automatically invalid — judge whether enough of those conditions remain. Mock or synthetic data may help test an interface, workflow, or technical hypothesis, but cannot establish that real business data exists, is accessible, or is fit for the validation claim.
+   For comparative claims (time saved, fewer errors, more efficiency), state the baseline or current method being compared against, and important confounders or evidence limits. A randomized control is not required; when a reliable comparison cannot be built, narrow the conclusion — do not fabricate a control and do not auto-stop for lack of a formal experiment design.
 4. **Name the next judgment moment.** Pick the soonest time when the business's own rhythm could produce a credible signal (a few daily closes; one month-end; not "next year"). The calendar is a judgment aid, not a stage gate.
-5. **Name four outcomes in advance:** continue, expand, adjust, stop — each tied to an observable result, not to "stakeholders felt good".
-6. **Use risk signals to narrow, not to auto-reject.** Treat as reasons to shrink and to doubt: no business owner, look-but-don't-touch on real data, universe-scale first scope. Two signals mean raise suspicion and tighten 2–5; they do **not** by themselves equal "refuse everything". Evidence still decides.
+5. **Name the outcome branches the decision needs.** Two is fine (adopt / drop); each branch must have an observable basis, not "stakeholders felt good". Do not force four outcomes.
+6. **Use risk signals to narrow, not to auto-reject.** Treat as reasons to shrink and to doubt: no business owner, look-but-don't-touch on real data, universe-scale first scope. Judge by the substance of each risk and its impact on the trial — there is no fixed signal count. Evidence still decides.
 
 ## Stop conditions
 
-- The five names above exist → output them; do not start a delivery program inside this skill.
+- The claim, referee, evidence bar, judgment moment, and outcome branches exist → output them; do not start a delivery program inside this skill.
 - People want to call mock/demo a business-value pass → refuse that claim; discovery may continue.
 - Nobody can judge results and nobody will look at real work items → you may list what discovery remains; you may not open a "value PoC".
 - The user wants Plan Review, test RED, or a Change Contract → stop and point to `reviewed-change`.
@@ -57,9 +58,9 @@ Plain text:
 
 - **Claim:** one business sentence.
 - **Referee:** role who will judge.
-- **Evidence that may count:** real enough vs explicitly "not yet, discovery only".
+- **Evidence that may count:** real enough vs explicitly "not yet, discovery only"; for comparative claims, the baseline or current method compared against.
 - **Next judgment moment:** when, and why that rhythm can falsify the claim.
-- **Continue / expand / adjust / stop:** each as an observable result.
+- **Outcome branches:** the branches the decision needs (two or more), each as an observable result.
 - **Open risks:** owner / data / scope — as suspicion, not as an automatic veto.
 
 Do not create workflow state. Do not return Evaluate verdicts.

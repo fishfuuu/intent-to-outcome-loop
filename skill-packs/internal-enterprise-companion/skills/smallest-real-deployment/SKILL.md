@@ -12,7 +12,8 @@ one end-to-end slice of coverage (not a thin fake of every module), the earliest
 falsification, and a business person operating or judging it.
 
 This is not a Reviewed Change vertical slice. A slice there proves an engineering behavior
-was implemented correctly. This skill proves a business result showed up.
+was implemented correctly. This skill proves a business result showed up — or designs the
+trial that would show it.
 
 This skill **defines and judges** the real-business validation path; it does **not** implement
 engineering changes.
@@ -42,21 +43,22 @@ already enough. That is a finding about the path, not this skill building the th
 
 ## Procedure
 
-1. **One path, full depth.** Cut coverage (one ticket type, one plant, one close packet), not value. An end-to-end path a business user can point to beats "every module at 30%".
-2. **Real-enough data for the claim.** If you will say "this helped the close", you need close data the business trusts. Synthetic, mock, or cherry-picked demo data cannot pass this skill. A representative sample of real business data may count when it preserves the conditions relevant to the claim. Masked data is not automatically invalid.
-3. **Shortest credible falsification, not a fixed week/month rule.** Use the business's own rhythm:
-   - daily recon may falsify in a few days;
-   - month-end may need one real close;
-   - seasonal replenishment may need its natural cycle.
-   Do not stretch the trial to look complete. Do not crush a monthly job into five days and call it proof.
-4. **Business person does the thing.** Demo to IT against a checklist is not the trial. The user of the path clicks, runs, or signs the result.
-5. **Allow a small existing mechanism to win.** If a query, spreadsheet, or existing-screen tweak produces the result, record that as success of the *path*, not as failure to ship a product.
-6. **Do not implement here.** If the path needs a script, SQL, page, API, config, integration, or automation, define the path in this skill, hand implementation to `task-router` / a change skill, then return to judge whether value happened. Do not write code, run Plan Review, or run the Reviewed lifecycle in this skill.
-7. **Decide in the open:** expand coverage, adjust the path, or stop calling it valuable. Do not silently extend into the next quarter.
+1. **Decide the mode from the request and existing evidence:** design a trial path (not yet run) or evaluate an already-run path. Do not make the user pick a mode name; infer it from what they ask and what evidence already exists.
+2. **Design mode — one path, full depth.** Cut coverage (one ticket type, one plant, one close packet), not value. An end-to-end path a business user can point to beats "every module at 30%".
+3. **Design mode — real-enough data for the claim.** If you will say "this helped the close", you need close data the business trusts. Synthetic, mock, or cherry-picked demo data cannot pass this skill. A representative sample of real business data may count when it preserves the conditions relevant to the claim. Masked data is not automatically invalid.
+4. **Design mode — shortest credible falsification, not a fixed week/month rule.** Use the business's own rhythm: daily recon may falsify in a few days; month-end may need one real close; seasonal replenishment may need its natural cycle. Do not stretch the trial to look complete. Do not crush a monthly job into five days and call it proof.
+5. **Design output.** Name the path, the planned data, the business participants, the execution method, the cycle, and the observation & judgment conditions. State explicitly that the trial has **not been executed** — do not fill in "what the business person did" or "value appeared". A complete design satisfies a design request; you do not have to wait for the real business cycle to end to deliver it.
+6. **Evaluate mode — business person does the thing.** When the path has run: the user of the path clicked, ran, or signed the result; demo to IT against a checklist is not the trial. Real items operated and real data used do not by themselves prove business value appeared — conclusion strength must match the evidence.
+7. **Evaluate mode — compare to baseline.** State the relevant comparison to the baseline or current method, the evidence limits, and the next step. If a missing baseline or unresolved confounders prevent a reliable comparison, narrow the conclusion to what the evidence supports; report insufficient evidence for claims that cannot be judged, without fabricating a control (see step 11).
+8. **Allow a small existing mechanism to win.** If a query, spreadsheet, or existing-screen tweak produces the result, record that as success of the *path*, not as failure to ship a product.
+9. **Do not implement here.** If the path needs a script, SQL, page, API, config, integration, or automation, define the path in this skill, hand implementation to `task-router` / a change skill per the original authorization, then return to judge whether value happened. When the user only asked for trial design, do not auto-implement. Do not write code, run Plan Review, or run the Reviewed lifecycle in this skill.
+10. **Reuse what bounded-validation already fixed.** If the claim, referee, and judgment conditions already exist, use them directly; do not re-ask and do not require running both skills in series.
+11. **Decide in the open:** expand coverage, adjust the path, stop calling it valuable, or — when the evidence cannot yet judge value — report **insufficient evidence**: deliver the known facts, the key gaps, and the minimal evidence-completion suggestions, then end the current evaluation. Do not classify insufficient evidence as value-not-shown or mixed, do not auto-extend the trial, and do not execute the evidence completion. Do not silently extend into the next quarter.
 
 ## Stop conditions
 
-- The path ran on real-enough data, a business person judged it, and you can say expand / adjust / stop.
+- Design mode: the design names path, planned data, participants, execution method, cycle, and observation/judgment conditions → output the design and stop; do not claim value has appeared.
+- Evaluate mode: the path ran on real-enough data, a business person judged it, and you can say expand / adjust / stop — or, when the evidence cannot yet judge value (e.g., the baseline is missing or important confounders remain), report **insufficient evidence** with the known facts, key gaps, and minimal evidence-completion suggestions, then end the current evaluation.
 - Still on mock data while claiming business value → refuse the claim; point at `bounded-validation` if the trial has no end.
 - Scope is still "the whole company" with no one path → do not schedule this trial.
 - The work has become implementation (script, SQL, page, API, config, integration) → stop implementing; hand to `task-router`. This skill resumes only to judge whether value happened.
@@ -65,12 +67,9 @@ already enough. That is a finding about the path, not this skill building the th
 
 Plain text:
 
-- **Path:** one sentence the business user would recognize.
-- **Data:** what was real enough, what was not used as proof.
-- **Rhythm:** why this length can falsify (not "because the project plan said so").
-- **What the business person did.**
-- **Result:** value showed up / did not / mixed — with the observable.
-- **Next:** expand coverage, adjust, stop, or "Excel/SQL/existing change is enough".
+- **Mode:** design or evaluate.
+- **Design:** path; planned data; business participants; execution method; cycle; observation & judgment conditions; **not yet executed**.
+- **Evaluate:** path; data (what was real enough, what was not used as proof); rhythm; what the business person did; result (value showed up / did not / mixed / **insufficient evidence** — with the observable); comparison to baseline or current method; limits; next (expand coverage, adjust, stop, "Excel/SQL/existing change is enough", or the minimal evidence-completion suggestions when evidence is insufficient).
 
 Do not implement. Do not write a Change Contract. Do not return Evaluate verdicts.
 

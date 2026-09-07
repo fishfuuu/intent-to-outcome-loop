@@ -14,12 +14,12 @@ Do not treat this pack as a mandatory linear lifecycle (`shape → observe → d
 
 | Skill | When to use | Primary output |
 |---|---|---|
-| `observe-real-work` | When second-hand descriptions or PRDs are not enough to see the real job. Follow one complete business cycle to capture actual actions, trusted data sources, exceptions, and workarounds. | First-line evidence of actual work (no solution design). |
+| `observe-real-work` | When second-hand descriptions or PRDs are not enough to see the real job. Cover one complete business cycle by the most direct lawful method to capture actual actions, trusted data sources, exceptions, and workarounds. | First-line evidence of actual work (no solution design). |
 | `discover-business-contract` | When problem and solution direction are already stable, but prototypes, documents, or handoffs leave material business semantics (rules, data definitions, state transitions, permissions, decision rituals) that engineering would otherwise have to guess. | Frozen material business contract, or explicit unresolved decision blocks. |
-| `worth-building-now` | When a real problem is identified, but the team needs to judge whether it justifies internal resource investment before scheduling implementation. | Recommendation: *Worth validating*, *Discovery only*, or *Not now*. |
-| `bounded-validation` | When an internal exploration, PoC, or pilot lacks an end condition, real-enough data, or a referee to judge business value. | Five boundings: claim, referee, evidence bar, judgment moment, and four observable outcomes. |
-| `smallest-real-deployment` | When an internal team will try a change in the real business to prove value on one end-to-end path with real-enough data and a business user operating or judging it. | Proof of business value on one path (does not implement code). |
-| `adopted-not-released` | When a system or tool is live or UAT-passed, diagnosing why it remains unused or whether target users naturally use it without ongoing project team chasing. | Primary adoption blockage classification and smallest recommended adoption move. |
+| `worth-building-now` | When a real problem is identified, but the team needs to judge whether it justifies internal resource investment before scheduling implementation. | Recommendation: *Worth a small change*, *Worth validating*, *Discovery only*, or *Not now*. |
+| `bounded-validation` | When an internal exploration, PoC, or pilot lacks an end condition, real-enough data, or a referee to judge business value. | Boundings: claim, referee, evidence bar, judgment moment, and the outcome branches the decision needs. |
+| `smallest-real-deployment` | When an internal team will try a change in the real business to prove value on one end-to-end path with real-enough data and a business user operating or judging it. | Design or evaluate a real-business trial path (does not implement code). |
+| `adopted-not-released` | When a system or tool is live or UAT-passed, diagnosing why it remains unused or whether target users naturally use it without ongoing project team chasing. | Adoption state judgment (stable use / blockage / insufficient evidence) and smallest recommended move. |
 
 ## Status
 
