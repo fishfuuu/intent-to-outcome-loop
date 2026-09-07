@@ -1,6 +1,6 @@
 ---
 name: "smallest-real-deployment"
-description: "Use when an internal team will try a change in the real business — not a demo — and needs one end-to-end value path, real-enough data, the shortest cycle that can credibly falsify the claim, and a business person actually using or judging it. Do not use for Reviewed vertical slices (engineering correctness), endless PoCs, or company-wide first releases. Triggers: 最小验证, 真实数据, 一条路径, 端到端, MVD, 样例验收, 全公司第一期, Excel already enough, earliest credible feedback. Use when the user runs /smallest-real-deployment."
+description: "Use when an internal team will try a change in the real business — not a demo — and needs one end-to-end value path, real-enough data, the shortest cycle that can credibly falsify the claim, and a business person actually using or judging it. Do not use for Reviewed vertical slices (engineering correctness), endless PoCs, or company-wide first releases. Triggers: 最小验证, 真实数据, 一条路径, 端到端, MVD, 样例验收, 全公司第一期, Excel already enough. Use when the user runs /smallest-real-deployment."
 ---
 
 # Smallest real deployment

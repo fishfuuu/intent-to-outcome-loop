@@ -1,6 +1,6 @@
 ---
 name: "shape"
-description: "Use when the request is vague, contradictory, or could mean several different things; names a solution before the problem is clear; or success is not measurable. Clarify the real problem, the smallest sufficient solution, and the business semantics delivery must not re-invent — do not implement or freeze implementation design."
+description: "Use when the request is vague, contradictory, or could mean several different things; names a solution before the problem is clear; or success is not measurable. Turns it into the real problem, the smallest sufficient solution, and the business semantics delivery must not re-invent. Does not implement."
 ---
 
 # Shape

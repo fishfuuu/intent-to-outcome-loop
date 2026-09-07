@@ -1,6 +1,6 @@
 ---
 name: "observe-real-work"
-description: "Use when a PRD, interview notes, IT/procurement restatement, or \"just start from the spec\" is about to become the work order, but nobody has watched the actual job. Follow one complete business cycle; capture actual actions, the data source people actually trust, key exceptions, and any workarounds if they exist. Do not use when the real work is already observed; when the need is Shape (problem vs solution form); for pure technical debugging; or to design a system/Agent. Triggers: 影子观察, 二手需求, PRD开工, 变通, workaround, 这事得问老王, translated requirements, follow the real work, job shadow, official process vs actual work. Use when the user runs /observe-real-work."
+description: "Use when a PRD, interview notes, IT/procurement restatement, or \"just start from the spec\" is about to become the work order, but nobody has watched the actual job. Get first-line evidence of the real job: actual actions, the data source people actually trust, key exceptions, workarounds. Do not use when the real work is already observed; when the need is Shape (problem vs solution form); for pure technical debugging; or to design a system/Agent. Triggers: 影子观察, 二手需求, PRD开工, 变通, 这事得问老王, official process vs actual work. Use when the user runs /observe-real-work."
 ---
 
 # Observe real work

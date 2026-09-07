@@ -70,17 +70,20 @@ Reviewer + verdict, and the findings split into:
 
 ## Findings resolution
 For each blocking finding: the fix, the verification re-run, and the
-reviewer's re-review verdict ("implementer says fixed" is not closed).
-Each independent reviewer verdict is one review round; the first blocking
-verdict is round 1, a re-review reporting the same blocker is round 2. If
-the same blocking root cause is still open after round 2, the change is
-paused and the user is asked to choose: change the design, narrow the
-scope, or pause. Non-blocking findings are recorded as later suggestions
-and must not be sneaked into scope.
+reviewer's re-review verdict ("implementer says fixed" is not closed; the
+implementer never closes a blocking finding themselves). When the same
+blocker survives re-review, re-diagnose it — is the finding still valid,
+did the fix miss the root cause, does the approach need re-evaluation —
+and keep fixing in scope. Involve the user only for a material business,
+scope, acceptance, or risk decision; there is no automatic round-count
+pause. Non-blocking findings are recorded as later suggestions and must
+not be sneaked into scope.
 
 ## Stop or handoff
-The final state (resolved / paused / handed back to the user) and, if
-relevant, the user decision that was required.
+The final state (resolved / paused / waiting on a user decision for a
+material scope, acceptance, or risk choice) and, if relevant, the decision
+that was required. Already-authorized work that completes without a new
+decision is reported as resolved.
 ```
 
 ## Rules

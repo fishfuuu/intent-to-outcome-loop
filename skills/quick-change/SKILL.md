@@ -1,6 +1,6 @@
 ---
 name: "quick-change"
-description: "Handles docs, copy, comments, formatting, and clearly behavior-neutral small edits. Makes the change and verifies it does not alter behavior. If a behavior impact appears, escalates to bounded-change without forcing a blanket rollback. Creates no persistent state."
+description: "Handles docs, copy, comments, formatting, and other clearly behavior-neutral small edits, verified not to alter behavior. Escalates to bounded-change if a behavior impact appears. Creates no persistent state."
 ---
 
 # Quick Change
@@ -38,19 +38,17 @@ These always hold:
 
 ## Procedure
 
-1. State the exact change and the files it will touch, before editing.
-2. Make the edit. Change only what was stated; do not reformat or "improve" adjacent code.
-3. Verify the change does not alter behavior:
-   - For docs and copy: re-read the result; confirm links and code blocks resolve; confirm no unintended edits leaked in.
-   - For config: confirm the file still parses; confirm no runtime-affecting value changed. A config value that changes runtime behavior is not Quick — escalate to `bounded-change`.
-4. Report what changed and the verification result.
+Walk the Minimum Path invariants in order. For verification (step 3):
+
+- For docs and copy: re-read the result; confirm links and code blocks resolve; confirm no unintended edits leaked in.
+- For config: confirm the file still parses; confirm no runtime-affecting value changed. A config value that changes runtime behavior is not Quick — escalate to `bounded-change`.
 
 ## Escalation (behavior impact found)
 
 If the edit turns out to be behavior-affecting:
 
 - Only revert **this skill's own edits**, and only when they can be isolated safely.
-- If the edits cannot be cleanly isolated, or reverting would overwrite the user's own changes, stop, leave the working tree as-is, and report. Working tree safety: never discard or overwrite unrelated or pre-existing user changes; keep this change's edits distinct from the user's; if staging or committing is requested, scope it to this change only.
+- If the edits cannot be cleanly isolated, or reverting would overwrite the user's own changes, stop, leave the working tree as-is, and report. Working tree safety follows `bounded-change`: never discard or overwrite unrelated or pre-existing user changes.
 - Then hand off to `bounded-change`, naming why the change is behavior-affecting.
 
 Do not perform a blanket "stop, revert" without checking isolation and the user's own changes.

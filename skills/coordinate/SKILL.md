@@ -1,6 +1,6 @@
 ---
 name: "coordinate"
-description: "Generates handoff, review-request, and findings-summary packets for people-and-agent and agent-and-agent collaboration. Produces clear, self-contained text with the fields a receiver needs to act. Outputs a packet in the conversation by default; when the user explicitly asks, saves one Handoff Markdown file. Does not send, dispatch, schedule, maintain a task board, write lifecycle state, or auto-invoke other skills."
+description: "Generates handoff, review-request, and findings-summary packets for people-and-agent and agent-and-agent collaboration. Outputs a packet in the conversation by default; saves one Handoff Markdown file only when the user explicitly asks. Does not send, dispatch, schedule, or write lifecycle state."
 ---
 
 # Coordinate

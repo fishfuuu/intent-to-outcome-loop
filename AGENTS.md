@@ -27,18 +27,18 @@ anyone changing it.
   includes drive-letter paths, home-directory paths, and any path tied to
   a developer's machine or to another repository on the same machine.
   Use repo-relative paths or host-neutral placeholders instead.
-- Word budget: target ~1300 words per skill (reviewed-change may target up to
-  ~2000), with a hard maximum of 2000 per skill and 9200 total. Per-line
-  density has a hard maximum of 90 words. The validator enforces the hard
-  limits.
+- Word budget: a size budget, not a target to fill. Hard maximum of 2000 words
+  per skill and 9200 total; per-line density has a hard maximum of 90 words.
+  The validator enforces the hard limits.
 - `SKILL.md` carries the load-bearing judgment rules and boundaries needed
   for correct use; `references/` carries deeper methods, examples, and
-  guidance loaded when relevant. The word budget is not a reason to move
+  guidance loaded when relevant. The size budget is not a reason to move
   required decision rules out of `SKILL.md`.
 
 ## After a change
 
-Run, and make sure all pass:
+After a group of related changes is complete — not after every small edit —
+run, and make sure all pass:
 
 ```bash
 python scripts/validate.py

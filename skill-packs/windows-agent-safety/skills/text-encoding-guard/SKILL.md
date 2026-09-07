@@ -1,6 +1,6 @@
 ---
 name: "text-encoding-guard"
-description: "Read-only guard for text file encoding integrity. Inspects raw bytes (UTF-8, BOM, UTF-16, GBK/GB18030, Big5, mojibake, U+FFFD, question-mark replacement, CRLF/LF/mixed newlines, trailing newline, bidi and zero-width controls, NUL bytes) and reports deterministic, machine-verifiable JSON; compare reports encoding, BOM, newline, U+FFFD, CJK and mojibake drift between an edit and its inspect baseline. Never writes files, never converts encoding, and never auto-selects an ambiguous legacy encoding. Use before and after editing files that contain Chinese, Japanese, Korean, or other non-ASCII text, PowerShell-written files, or files that have shown mojibake, U+FFFD, question-mark replacement, or newline anomalies."
+description: "Read-only guard for text file encoding integrity: inspects raw bytes and reports deterministic, machine-verifiable JSON; compares reports to detect encoding, BOM, newline, or mojibake drift after an edit. Never writes files, never converts encoding, never auto-selects an ambiguous legacy encoding. Use before and after editing files with CJK or other non-ASCII text, PowerShell-written files, or files that have shown mojibake or newline anomalies."
 ---
 
 # text-encoding-guard
