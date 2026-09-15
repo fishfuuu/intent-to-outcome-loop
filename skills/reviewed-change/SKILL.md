@@ -69,7 +69,7 @@ A reviewer who is not the implementer reviews the contract and the falsification
 
 Without RED or alternative evidence, or with a blocking finding, do not approve or start implementing.
 
-**A blocking Plan Review is not cleared because the implementer believes the findings were fixed** — resolve or amend, run a **new** independent Plan Review, and keep production forbidden until that review returns an explicit **APPROVED** verdict. "Findings fixed" is not "review passed."
+**A blocking Plan Review is not cleared because the implementer believes the findings were fixed** — resolve or amend, then run a **new** independent Plan Review; production stays forbidden until it returns an explicit **APPROVED** verdict. "Findings fixed" is not "review passed."
 
 Consider the change's impact surface — data, security/permission, migration, operational, and test impact — as part of the review; these are considerations, not a mandatory document.
 
@@ -85,7 +85,7 @@ Split multi-part changes into the smallest end-to-end observable slices: one obs
 
 Four categories; do not add a lifecycle:
 
-- **IMPLEMENTATION_DEFECT** — contract clear, code does not meet it; fix in scope. A frozen user-observable behavior absent from the running/rendered result is an IMPLEMENTATION_DEFECT even when supporting code and automated tests exist.
+- **IMPLEMENTATION_DEFECT** — contract clear, code does not meet it; fix in scope. A frozen user-observable behavior absent from the running/rendered result is an IMPLEMENTATION_DEFECT even when code and automated tests exist.
 - **TEST_DEFECT** — contract clear, but the check cannot verify it; fix the check, then continue.
 - **SPECIFICATION_GAP** — a necessary behavior is undefined; stop, amend the contract, re-run Plan Review.
 - **FUTURE_ENHANCEMENT** — valuable but not a current acceptance condition; record as a later suggestion, do not expand scope.
@@ -98,13 +98,13 @@ Cover at least two axes — Contract/Spec and Standards/Quality (defined in `ref
 
 No reviewer available → BLOCKED; see Required inputs. Do not silently self-approve.
 
-**Observed-outcome evidence.** For every frozen acceptance check or User Acceptance Scenario, identify the evidence that proves its observable result.
+**Observed-outcome evidence.** For every frozen acceptance check or User Acceptance Scenario, identify the evidence proving its observable result.
 
 - If the acceptance is user-observable (rendered, interactive, or otherwise visible in the running system), the evidence must observe that result directly — code presence or automated tests alone cannot prove a rendered or interactive outcome.
 - **A frozen user-observable acceptance condition without observed-outcome evidence cannot receive Final Review APPROVED**: verification is incomplete, so return to Verification until matching evidence exists — this is not BLOCKED (reserved for unavailable independent review) and not a finding merely because the evidence is missing.
 - If the behavior is actually observed and is absent or wrong, that is an IMPLEMENTATION_DEFECT (blocking finding).
-- Evidence method follows acceptance type (see the reference) — this is evidence fidelity, not a browser mandate.
-- For failure-sensitive claims, check that the claim does not exceed the failure model and covered points. Treat untested points as residual limitations, not as silently passed behavior.
+- Evidence method follows acceptance type — evidence fidelity, not a browser mandate.
+- For failure-sensitive claims, check the claim against the failure model and covered points; treat untested points as residual limitations.
 
 ### 8. Findings and re-review
 
@@ -113,26 +113,29 @@ No reviewer available → BLOCKED; see Required inputs. Do not silently self-app
 
 **Blocking findings as a diagnosis checkpoint.** When the same blocker survives re-review, re-diagnose before re-applying the same patch: confirm the finding against the current contract, check whether the fix missed the root cause, and re-evaluate the approach. Clear IMPLEMENTATION_DEFECT and TEST_DEFECT findings stay fixable in scope; involve the user only for a material business, scope, acceptance, or risk decision.
 
+**Convergence.** Plan Review should converge; repetition alone never justifies splitting. Materially new blockers across separable semantics or boundaries suggest an over-broad contract — re-diagnose rather than patch it again.
+Rule out reviewer or evidence quality first — drifting or contradictory findings, unread diffs, unsupported findings, or weak evidence are not scope evidence. Then re-partition into smaller Reviewed Changes on coherent outcome and risk boundaries — independently plannable, reviewable, verifiable, dependency-ordered, still covering the original acceptance; not by file or layer.
+They stay Reviewed; only `task-router`'s positive-containment evidence downgrades one. Coupled risk must remain jointly reviewable; never split work merely to obtain approval. A business acceptance decision still undetermined → `shape`, not re-partitioning. No split state or review counter exists.
+
 ### 9. User and commit boundary
 
-**Final Review approval freezes the reviewed production diff.** Later changes to production code, config, migrations, or user-visible behavior require invalidating that approval; re-verify and get a new independent Final Review.
+**Final Review approval freezes the reviewed production diff.** Later production code, config, migration, or user-visible behavior changes require invalidating that approval; re-verify and get a new independent Final Review.
 
-Reviewer approval is not user acceptance. When User Acceptance Scenarios exist, only after a valid Final Review hand the user a **User Acceptance Card**: a conversation-only table of the frozen scenarios (actor → action → observable result) plus a line that automated verification and independent review are done and the user should now manually accept each scenario in their real business role. It restates scenarios frozen before implementation, not a new acceptance standard — do not claim the user's business acceptance has passed.
+Reviewer approval is not user acceptance. When User Acceptance Scenarios exist, only after a valid Final Review hand the user a **User Acceptance Card**: a conversation-only table of the frozen scenarios (actor → action → observable result), stating that automated verification and independent review are done and the user should now manually accept each scenario in their real business role. It restates scenarios frozen before implementation — the user's business acceptance has not passed.
 
-Destructive, irreversible, security, privacy, financial, or real-production writes need an explicit user decision — judged by the operation's actual risk and the host's permission rules, not by the topic's domain name alone. Do not commit or push unless asked; working tree safety per `bounded-change` — never discard or overwrite unrelated pre-existing user changes, and scope any requested commit to this change only.
+Destructive, irreversible, security, privacy, financial, or real-production writes need an explicit user decision — judged by actual risk and host permissions, not domain name. Do not commit or push unless asked; working tree safety per `bounded-change` — never discard or overwrite unrelated pre-existing user changes, and scope a requested commit to this change only.
 
-Completion after Final Review: when the original request already authorized the work (for example, implement and verify), final verification and review passing let that authorized work finish and report — do not re-ask for the same authorization just because a review or skill transition completed. Re-ask only for a genuinely new decision.
+Completion after Final Review: already-authorized work that passes final verification and review finishes and reports — re-ask only for a genuinely new decision, never for a completed review or skill transition.
 
 ## Stop conditions
 
 - Plan Review blocking — do not implement until a new independent Plan Review returns an explicit APPROVED verdict.
-- Change Contract drifted semantically — amend and re-run Plan Review before continuing.
-- A necessary behavior is undefined (SPECIFICATION_GAP) — amend the contract, re-run Plan Review.
-- No independent reviewer available → report BLOCKED; a limited non-independent review is supplemental evidence only and cannot authorize completion. Do not silently self-approve. Next paths: obtain independence, or re-shape and re-route only with positive evidence of Bounded containment; never split work to bypass review.
-- A blocking finding survives re-review — re-diagnose it (is the finding still valid, did the fix miss the root cause, does the approach need re-evaluation); involve the user only for a material business, scope, acceptance, or risk decision.
-- Production code changed after a Final Review — prior approval is stale; re-verify and get a new independent Final Review.
-- High-risk operation (destructive, irreversible, security-, privacy-, financial-, or production-impacting write) — stop and ask the user unless already explicitly authorized; risk judged as in section 9, not by domain name alone.
-- Final review passed and reported — report completion; commit/deploy and business acceptance still wait on the user, but already-authorized work needs no re-asking.
+- Contract drifted semantically, or a necessary behavior is undefined (SPECIFICATION_GAP) — amend it and re-run Plan Review.
+- No independent reviewer available → report BLOCKED; a limited non-independent review cannot authorize completion. Next paths: obtain independence, or re-shape and re-route only with positive evidence of Bounded containment; never split work to bypass review.
+- A blocking finding survives re-review, or materially new separable ones keep arriving — re-diagnose as section 8 says; involve the user only for a material business, scope, acceptance, or risk decision.
+- Production code changed after a Final Review — approval is stale; re-verify and re-review.
+- High-risk operation (destructive, irreversible, security-, privacy-, financial-, or production-impacting write) — stop and ask the user unless already explicitly authorized; risk judged as in section 9.
+- Final review passed — report completion; commit/deploy and business acceptance still wait on the user.
 
 ## Record (on demand)
 
@@ -150,8 +153,8 @@ If a durable trail earns its keep, write `.agent-delivery/changes/<change-id>/re
 
 ## Example
 
-> **Change:** move alert delivery from a synchronous loop to a queued worker; risk: architecture + data (new persistent queue).
-> **Contract:** Outcome — alerts delivered within 15 min; approach — a durable queue table owned by `alerts`, consuming idempotently by message key; must-preserve — no alert lost on worker crash; acceptance — crash-recovery (automated), shutdown drain (automated), idempotency on retry (evidence review).
-> **Plan Review:** Codex — approved after the idempotency check was added and its falsification evidence reviewed.
-> **Final review:** Codex — approved after one blocking implementation finding (missing idempotency key) was fixed, verified, and re-reviewed.
+> **Change:** move alert delivery from a synchronous loop to a queued worker; risk: architecture + data.
+> **Contract:** alerts delivered within 15 min via a durable queue table owned by `alerts`, consumed idempotently by message key; no loss on worker crash; acceptance — crash-recovery and shutdown drain (automated), idempotency on retry (evidence review).
+> **Plan Review:** Codex — approved after the idempotency check's falsification evidence was reviewed.
+> **Final review:** Codex — approved after one blocking finding (missing idempotency key) was fixed, verified, and re-reviewed.
 > **Record:** `.agent-delivery/changes/2026-08-15-alert-queue/record.md`
