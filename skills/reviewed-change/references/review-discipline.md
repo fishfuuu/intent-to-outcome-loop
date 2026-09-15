@@ -86,3 +86,21 @@ Four categories only (see the main SKILL). One rule is decisive:
 > If the implementation fails an existing Contract, User Acceptance Scenario, or authoritative reference, it is **not** "non-blocking" merely because the fix is small.
 
 If the contract says role switching affects the visible scope but the UI selector changes nothing, that is an IMPLEMENTATION_DEFECT, not a non-blocking polish item. Likewise, if the contract says each row shows a sparkline but the rendered row shows "—" while the spark-data unit test is green, that is an IMPLEMENTATION_DEFECT — the rendered outcome is absent. A non-blocking finding stays a suggestion; do not implement it in the current scope by default. If evidence is simply missing and the implementation has not yet been shown wrong, verification is incomplete and Final Review cannot approve yet, but it is not yet a finding.
+
+## 7. Review convergence
+
+Plan Review is expected to converge. Repetition is a symptom, never a criterion: no round count, retry counter, or maximum number of reviews decides anything. See the main SKILL's Convergence rule.
+
+When re-review keeps producing blockers, rule out reviewer or evidence quality first, then diagnose which situation you are in:
+
+- **Reviewer or evidence quality** — findings that drift or contradict each other, a reviewer that did not read the diff or artifact, findings the evidence does not support, evidence too weak to settle a finding. This is a review problem; fix it. A reviewer that keeps producing new low-quality, unsupported findings is not evidence that the change is too wide. No model name or capability tier belongs in this judgment.
+- **Same blocker, still unresolved** — re-diagnose the root cause or the approach (the main SKILL's blocking-findings checkpoint). Do not split the change because review has repeated.
+- **Materially new blockers across separable semantics or boundaries** — for example schema design, then read semantics, then a state transition, then UI/business behavior, each arriving in turn. This points at an over-broad change contract, not an implementation problem: re-partition along coherent boundaries.
+
+A coherent boundary can be understood, plan-reviewed, and verified on its own, and its prerequisite order can be stated. Files, layers, and directories are not boundaries by themselves: a frontend/backend/test split is only correct when each piece is genuinely coherent on its own. The partitioned set must still cover the original outcome and acceptance; a piece that passes alone does not replace the aggregate result.
+
+Resulting changes stay Reviewed. Only `task-router`'s containment downgrade may move one to Bounded; that rule lives there, not here.
+
+Coupled risk must remain jointly reviewable. If migration and backward-compatible reads must be proven together, if a transaction and its rollback must be designed together, or if permission enforcement and the data boundary cannot be reviewed independently, they stay together in one change: do not split work merely to obtain approval. Implementation slices may still be separated; the risk must still be reviewed as one whole.
+
+If what keeps surfacing is undetermined business semantics, an unclear outcome, or an acceptance decision the user owns, the answer is not an engineering partition — return to `shape`.

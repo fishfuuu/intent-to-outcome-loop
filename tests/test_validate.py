@@ -805,5 +805,182 @@ class TestRoutingEscalationDiscipline(unittest.TestCase):
         self.assertIn("not a mandatory document", text)
 
 
+class TestReviewConvergenceDiscipline(unittest.TestCase):
+    """Regression guards for the reviewed-change convergence checkpoint.
+
+    A real Reviewed Change carried several independent semantics at once;
+    re-review kept surfacing materially new blockers on separable
+    boundaries, and nothing said when to stop patching one wide contract.
+    These are structural checks on the skill text and the reference: the
+    three diagnoses (same blocker / new separable blockers / reviewer-or-
+    evidence quality), the default that re-partitioned changes stay
+    Reviewed, the coupled-risk prohibition, the shape return, and the
+    absence of mechanical round counting or split state. They do not
+    simulate a reviewer.
+    """
+
+    def _skill(self, name):
+        return (REPO_ROOT / "skills" / name / "SKILL.md").read_text(
+            encoding="utf-8")
+
+    def _reference(self):
+        return (REPO_ROOT / "skills" / "reviewed-change" / "references"
+                / "review-discipline.md").read_text(encoding="utf-8")
+
+    def test_convergence_rule_sits_with_the_blocking_checkpoint(self):
+        # The checkpoint belongs in the findings/re-review step, next to
+        # the existing blocking-findings diagnosis — not a new section.
+        text = self._skill("reviewed-change")
+        checkpoint = text.index(
+            "Blocking findings as a diagnosis checkpoint")
+        convergence = text.index("**Convergence.** Plan Review should converge")
+        next_step = text.index("### 9.")
+        self.assertLess(checkpoint, convergence)
+        self.assertLess(convergence, next_step)
+
+    def test_case_a_same_blocker_is_a_root_cause_diagnosis(self):
+        # Case A: the same root cause surviving re-review stays a
+        # root-cause/approach re-diagnosis, and repetition alone never
+        # triggers a split.
+        text = self._skill("reviewed-change")
+        self.assertIn("When the same blocker survives re-review", text)
+        self.assertIn("repetition alone never justifies splitting", text)
+
+    def test_no_mechanical_review_round_counting(self):
+        # A count of reviews must never become the criterion. The skill
+        # states no counter, no maximum, and no "after N" trigger, and
+        # no rephrased counter survives either.
+        text = self._skill("reviewed-change")
+        for banned in ("after 3 failed reviews", "after N rounds",
+                       "maximum review rounds", "max review rounds",
+                       "retry counter", "round counter", "round limit",
+                       "Review round counting", "second re-review",
+                       "third round", "reviews are capped",
+                       "number of reviews is reached"):
+            self.assertNotIn(banned, text)
+        self.assertIn("No split state or review counter exists", text)
+        # "split state" appears only as a prohibition, never as a
+        # described lifecycle state.
+        self.assertEqual(text.count("split state"), 1)
+
+    def test_no_split_to_escape_reviewed(self):
+        # Attack #4: nothing may let a partition become Bounded because
+        # it looks small or contained — the router's rule is the only
+        # downgrade path, and the skill must not restate a shortcut.
+        text = self._skill("reviewed-change")
+        for banned in ("may be handled as Bounded", "looks contained",
+                       "can become Bounded", "downgrade to Bounded"):
+            self.assertNotIn(banned, text)
+        router = self._skill("task-router")
+        self.assertIn("Downgrade when evidence confirms", router)
+        self.assertNotIn("Downgrade when evidence confirms", text)
+
+    def test_no_engineering_scope_funnel_into_shape(self):
+        # Attack #6: only a business acceptance decision the user owns
+        # returns to shape; engineering ambiguity stays in the skill's
+        # own SPECIFICATION_GAP path.
+        text = self._skill("reviewed-change")
+        self.assertIn("A business acceptance decision still undetermined",
+                      text)
+        for banned in ("Engineering verification ambiguity",
+                       "engineering scope ambiguity also returns"):
+            self.assertNotIn(banned, text)
+        # The engineering path is still the SPECIFICATION_GAP one.
+        self.assertIn("SPECIFICATION_GAP", text)
+
+    def test_case_b_new_separable_blockers_signal_over_broad_contract(self):
+        # Case B: new material blockers across independently reviewable
+        # semantics mean the contract is too wide, and re-partitioning is
+        # the response — along outcome/risk boundaries, not file layout.
+        text = self._skill("reviewed-change")
+        self.assertIn(
+            "Materially new blockers across separable semantics or boundaries",
+            text)
+        self.assertIn("over-broad", text)
+        self.assertIn("re-partition into smaller Reviewed Changes", text)
+        self.assertIn("not by file or layer", text)
+        ref = self._reference()
+        self.assertIn("Materially new blockers across separable semantics "
+                      "or boundaries", ref)
+        self.assertIn("Files, layers, and directories are not boundaries", ref)
+        self.assertIn("The partitioned set must still cover the original "
+                      "outcome and acceptance", ref)
+
+    def test_case_c_reviewer_or_evidence_quality_is_checked_first(self):
+        # Case C: drifting/contradictory findings or unread artifacts are a
+        # review problem first, not a scope signal — and the diagnosis must
+        # not be tied to a model identity or capability tier.
+        text = self._skill("reviewed-change")
+        self.assertIn("Rule out reviewer or evidence quality first", text)
+        self.assertIn("drifting or contradictory findings", text)
+        self.assertIn("unread diffs", text)
+        # The judgment is about finding/evidence quality, never about the
+        # reviewer's identity or capability tier.
+        self.assertIn(
+            "unsupported findings, or weak evidence are not scope evidence",
+            text)
+        for banned in ("weaker model", "stronger model", "model capability",
+                       "smaller model", "weaker reviewer"):
+            self.assertNotIn(banned, text)
+        ref = self._reference()
+        self.assertIn(
+            "A reviewer that keeps producing new low-quality, unsupported "
+            "findings is not evidence that the change is too wide", ref)
+        self.assertIn("No model name or capability tier belongs", ref)
+
+    def test_case_d_partitioned_changes_stay_reviewed(self):
+        # Case D: re-partitioning is not a route out of Reviewed.
+        text = self._skill("reviewed-change")
+        self.assertIn("They stay Reviewed", text)
+
+    def test_case_e_downgrade_is_delegated_to_the_router(self):
+        # Case E: containment downgrade stays task-router policy; the
+        # reviewed-change skill references it and does not restate it.
+        text = self._skill("reviewed-change")
+        self.assertIn(
+            "only `task-router`'s positive-containment evidence downgrades "
+            "one", text)
+        router = self._skill("task-router")
+        self.assertIn("Downgrade when evidence confirms", router)
+        self.assertNotIn("Downgrade when evidence confirms", text)
+        # The reference points at the router instead of restating the
+        # criterion.
+        ref = self._reference()
+        self.assertIn("that rule lives there, not here", ref)
+        self.assertNotIn("positive evidence that the impact surface is "
+                         "contained", ref)
+
+    def test_case_f_coupled_risk_is_never_split(self):
+        # Case F: coupled risk must stay jointly reviewable; splitting it
+        # (or any work) merely to obtain approval is forbidden.
+        text = self._skill("reviewed-change")
+        self.assertIn("Coupled risk must remain jointly reviewable", text)
+        self.assertIn("never split work merely to obtain approval", text)
+        ref = self._reference()
+        self.assertIn("Coupled risk must remain jointly reviewable", ref)
+        self.assertIn("they stay together in one change", ref)
+        self.assertIn("If migration and backward-compatible reads must be "
+                      "proven together", ref)
+        self.assertIn("a transaction and its rollback must be designed "
+                      "together", ref)
+        # Implementation slices may be split without letting the risk be
+        # reviewed piecemeal.
+        self.assertIn("the risk must still be reviewed as one whole", ref)
+
+    def test_case_g_undetermined_business_semantics_return_to_shape(self):
+        # Case G: repeated Plan Review exposing undetermined business
+        # semantics or acceptance is not an engineering partition.
+        text = self._skill("reviewed-change")
+        self.assertIn("A business acceptance decision still undetermined",
+                      text)
+        self.assertIn("`shape`, not re-partitioning", text)
+
+    def test_stop_condition_covers_new_separable_blockers(self):
+        # The Stop conditions must not tell the user to re-diagnose the
+        # same-blocker case only.
+        text = self._skill("reviewed-change")
+        self.assertIn("or materially new separable ones keep arriving", text)
+
+
 if __name__ == "__main__":
     unittest.main()
