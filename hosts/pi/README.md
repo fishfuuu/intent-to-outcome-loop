@@ -59,3 +59,8 @@ substitutes for `independent-reviewer`.
 `skillset.json`, to the skills directories of the supported hosts. It does
 not touch `hosts/`. Deploying `hosts/pi/agents/` into a Pi agent directory is
 a separate step and is currently manual.
+
+After deploying or syncing these definitions, confirm through Pi's runtime
+discovery (for example `subagent list`) that every canonical agent registers
+and no invalid definitions are reported. The definitions here stay canonical;
+the runtime check is what proves host compatibility.

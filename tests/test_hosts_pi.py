@@ -32,6 +32,17 @@ EXPECTED_AGENTS = [
 
 CORE_SKILL_COUNT = 7
 
+# Frontmatter fields the supported Pi runtime has removed, or otherwise
+# rejects outright. A deployed agent carrying one of these never registers;
+# the runtime reports it as an invalid agent definition.
+#
+# This is a regression guard for fields already proven unacceptable by a
+# real runtime, NOT a copy of the Pi frontmatter schema. New legitimate Pi
+# fields must keep working without editing this file.
+REMOVED_OR_UNSUPPORTED_PI_AGENT_FIELDS = {
+    "fallbackModels",
+}
+
 
 FRONTMATTER_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n?(.*)\Z", re.DOTALL)
 
@@ -90,6 +101,18 @@ class TestPiHostIntegration(unittest.TestCase):
     def test_agent_names_are_unique(self):
         declared = [read_agent(n)[0].get("name") for n in EXPECTED_AGENTS]
         self.assertEqual(len(declared), len(set(declared)))
+
+    def test_agents_avoid_runtime_removed_frontmatter_fields(self):
+        # The supported Pi runtime rejects `fallbackModels`; an agent carrying
+        # it never registers even when its structural definition is otherwise
+        # valid. Pinned because the supported runtime proved it, not because
+        # this test mirrors Pi's schema.
+        for name in EXPECTED_AGENTS:
+            with self.subTest(agent=name):
+                fm, _ = read_agent(name)
+                found = sorted(REMOVED_OR_UNSUPPORTED_PI_AGENT_FIELDS.intersection(fm))
+                self.assertEqual(found, [],
+                                 f"{name}: removed/unsupported Pi fields: {found}")
 
     def test_code_reviewer_and_change_architecture_reviewer_stay_separate(self):
         # Guards against collapsing the two roles back into one file.
