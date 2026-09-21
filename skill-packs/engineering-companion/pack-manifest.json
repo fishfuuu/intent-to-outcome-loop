@@ -1,0 +1,89 @@
+{
+  "pack_name": "engineering-companion",
+  "version": "0.1.0",
+  "status": "provisional",
+  "status_note": "Optional engineering companion pack. Not installed by default, and not part of the Core install surface or the Core skillset.json.",
+  "skills": [
+    {
+      "name": "grilling",
+      "entry": "skills/grilling/SKILL.md",
+      "canonical_files": [
+        "skills/grilling/agents/openai.yaml",
+        "skills/grilling/SKILL.md"
+      ],
+      "provenance": "upstream-snapshot",
+      "upstream_repository": "mattpocock/skills",
+      "upstream_commit": "c55ee46073ed923f86ce59a5eb3b6d895095d1b7",
+      "upstream_path": "skills/productivity/grilling"
+    },
+    {
+      "name": "domain-modeling",
+      "entry": "skills/domain-modeling/SKILL.md",
+      "canonical_files": [
+        "skills/domain-modeling/ADR-FORMAT.md",
+        "skills/domain-modeling/agents/openai.yaml",
+        "skills/domain-modeling/CONTEXT-FORMAT.md",
+        "skills/domain-modeling/SKILL.md"
+      ],
+      "provenance": "upstream-snapshot",
+      "upstream_repository": "mattpocock/skills",
+      "upstream_commit": "c55ee46073ed923f86ce59a5eb3b6d895095d1b7",
+      "upstream_path": "skills/engineering/domain-modeling"
+    },
+    {
+      "name": "tdd",
+      "entry": "skills/tdd/SKILL.md",
+      "canonical_files": [
+        "skills/tdd/agents/openai.yaml",
+        "skills/tdd/mocking.md",
+        "skills/tdd/SKILL.md",
+        "skills/tdd/tests.md"
+      ],
+      "provenance": "upstream-snapshot",
+      "upstream_repository": "mattpocock/skills",
+      "upstream_commit": "c55ee46073ed923f86ce59a5eb3b6d895095d1b7",
+      "upstream_path": "skills/engineering/tdd"
+    },
+    {
+      "name": "code-review",
+      "entry": "skills/code-review/SKILL.md",
+      "canonical_files": [
+        "skills/code-review/SKILL.md"
+      ],
+      "provenance": "intentional-fork",
+      "upstream_repository": "mattpocock/skills",
+      "upstream_commit": "c55ee46073ed923f86ce59a5eb3b6d895095d1b7",
+      "upstream_path": "skills/engineering/code-review",
+      "local_reason": "removed hard dependency on Matt setup and issue-tracker configuration; uses standalone spec/standards discovery"
+    },
+    {
+      "name": "codebase-design",
+      "entry": "skills/codebase-design/SKILL.md",
+      "canonical_files": [
+        "skills/codebase-design/agents/openai.yaml",
+        "skills/codebase-design/DEEPENING.md",
+        "skills/codebase-design/DESIGN-IT-TWICE.md",
+        "skills/codebase-design/SKILL.md"
+      ],
+      "provenance": "upstream-snapshot",
+      "upstream_repository": "mattpocock/skills",
+      "upstream_commit": "c55ee46073ed923f86ce59a5eb3b6d895095d1b7",
+      "upstream_path": "skills/engineering/codebase-design"
+    },
+    {
+      "name": "improve-codebase-architecture",
+      "entry": "skills/improve-codebase-architecture/SKILL.md",
+      "canonical_files": [
+        "skills/improve-codebase-architecture/agents/openai.yaml",
+        "skills/improve-codebase-architecture/HTML-REPORT.md",
+        "skills/improve-codebase-architecture/SKILL.md"
+      ],
+      "provenance": "upstream-snapshot",
+      "upstream_repository": "mattpocock/skills",
+      "upstream_commit": "c55ee46073ed923f86ce59a5eb3b6d895095d1b7",
+      "upstream_path": "skills/engineering/improve-codebase-architecture"
+    }
+  ],
+  "dependencies": [],
+  "installed": false
+}
