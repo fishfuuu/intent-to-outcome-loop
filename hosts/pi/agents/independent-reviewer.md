@@ -3,7 +3,6 @@ name: independent-reviewer
 description: "Independent read-only review for a reviewed-change: Plan Review (Change Contract + falsification/RED evidence before implementation) and Final Independent Review (implementation against the Change Contract and verification evidence). Use for quality-gate review verdicts: APPROVED / BLOCKING / BLOCKED."
 tools: read, grep, find
 model: openai-codex/gpt-5.6-sol
-fallbackModels: xai/grok-4.6
 thinking: high
 systemPromptMode: replace
 inheritProjectContext: true
