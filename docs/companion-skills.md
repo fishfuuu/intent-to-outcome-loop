@@ -79,6 +79,7 @@ This repository maintains optional, self-contained skill packs that can be insta
 
 - **[internal-enterprise-companion](../skill-packs/internal-enterprise-companion/README.md)** — fieldwork and business discovery methods for enterprise IT, data, automation, and AI/Agent delivery (`observe-real-work`, `discover-business-contract`, `worth-building-now`, `bounded-validation`, `smallest-real-deployment`, `adopted-not-released`).
 - **windows-agent-safety** — terminal safety and encoding guards for Windows agent environments.
+- **[engineering-companion](../skill-packs/engineering-companion/README.md)** — optional engineering skills commonly used alongside Core (`grilling`, `domain-modeling`, `tdd`, `code-review`, `codebase-design`, `improve-codebase-architecture`). Not Core, not default-installed.
 
 ## How to choose
 
