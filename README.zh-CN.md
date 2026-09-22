@@ -86,6 +86,7 @@ Companion Skills 是推荐而非依赖——Core 从不要求某个特定的第�
 - `internal-enterprise-companion`（[skill-packs/internal-enterprise-companion/README.md](skill-packs/internal-enterprise-companion/README.md)）——面向企业交付的可选业务发现与现场调研技能包。
 - `windows-agent-safety` ——面向 Windows 环境的终端安全与文本编码防护。
 - `engineering-companion`（[skill-packs/engineering-companion/README.md](skill-packs/engineering-companion/README.md)）——可选工程技能包（`grilling`、`domain-modeling`、`tdd`、`code-review`、`codebase-design`、`improve-codebase-architecture`）；不属于 Core，默认不安装。
+- `knowledge-work-companion`（[skill-packs/knowledge-work-companion/README.md](skill-packs/knowledge-work-companion/README.md)）——可选知识工作判断技能包（`research-synthesis`、`decision-memo`、`reviewing-output`）；不属于 Core，默认不安装。
 
 各技能的覆盖范围与选择方式见 [docs/companion-skills.md](docs/companion-skills.md)。
 

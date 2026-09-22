@@ -125,6 +125,7 @@ Two common starting points:
 - `internal-enterprise-companion` ([skill-packs/internal-enterprise-companion/README.md](skill-packs/internal-enterprise-companion/README.md)) — optional business discovery and fieldwork companion skills for enterprise delivery.
 - `windows-agent-safety` — terminal safety and text encoding guards for Windows.
 - `engineering-companion` ([skill-packs/engineering-companion/README.md](skill-packs/engineering-companion/README.md)) — optional engineering skills (`grilling`, `domain-modeling`, `tdd`, `code-review`, `codebase-design`, `improve-codebase-architecture`); not Core, not default-installed.
+- `knowledge-work-companion` ([skill-packs/knowledge-work-companion/README.md](skill-packs/knowledge-work-companion/README.md)) — optional knowledge-work judgment skills (`research-synthesis`, `decision-memo`, `reviewing-output`); not Core, not default-installed.
 
 See [docs/companion-skills.md](docs/companion-skills.md) for what each covers and how to choose.
 

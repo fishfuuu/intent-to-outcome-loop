@@ -80,6 +80,7 @@ This repository maintains optional, self-contained skill packs that can be insta
 - **[internal-enterprise-companion](../skill-packs/internal-enterprise-companion/README.md)** — fieldwork and business discovery methods for enterprise IT, data, automation, and AI/Agent delivery (`observe-real-work`, `discover-business-contract`, `worth-building-now`, `bounded-validation`, `smallest-real-deployment`, `adopted-not-released`).
 - **windows-agent-safety** — terminal safety and encoding guards for Windows agent environments.
 - **[engineering-companion](../skill-packs/engineering-companion/README.md)** — optional engineering skills commonly used alongside Core (`grilling`, `domain-modeling`, `tdd`, `code-review`, `codebase-design`, `improve-codebase-architecture`). Not Core, not default-installed.
+- **[knowledge-work-companion](../skill-packs/knowledge-work-companion/README.md)** — optional knowledge-work judgment skills for turning evidence into judgment, judgment into a responsible decision, and a material deliverable into something trustworthy (`research-synthesis`, `decision-memo`, `reviewing-output`). Not Core, not default-installed. Not an orchestrator, router, or mandatory pipeline.
 
 ## How to choose
 
@@ -94,8 +95,12 @@ Start with the smallest useful combination.
 ## Third-party ownership
 
 Third-party skills are maintained by their original authors. Check each
-skill's latest version, invocation policy, and license. This repo does
-not copy or redistribute third-party skill content. A recommendation is
+skill's latest version, invocation policy, and license. Recommendations
+in this document do not copy or redistribute third-party skill content.
+Optional in-repo packs may contain third-party material — licensed
+pinned upstream snapshots or intentional forks — each recorded with its
+upstream commit, license, and third-party notices in that pack. Core
+itself does not depend on any third-party skill. A recommendation is
 not an endorsement, a compatibility guarantee, or a pinned dependency.
 If a third-party skill renames or stops being maintained, Core is
 unaffected.
