@@ -778,6 +778,35 @@ class TestRoutingEscalationDiscipline(unittest.TestCase):
             self.assertIn(signal, text, f"missing escalation signal {signal!r}")
         self.assertIn("do not downgrade on an unknown", text)
 
+    def test_router_precedence_when_shaping_and_reviewed_both_apply(self):
+        """Both rules can fire on one task; the skill must say which wins.
+
+        Regression guard for the ambiguity a behavior run exposed: a Bounded
+        task widened with a persistence requirement was answered both Reviewed
+        and "route to shape first", and both readings followed the text.
+        """
+        text = self._skill("task-router")
+        self.assertIn("Both signals appear at once", text)
+        self.assertIn("route to `shape` only when a material business decision "
+                      "is genuinely missing", text)
+        self.assertIn("If the intended outcome is clear and the remaining "
+                      "uncertainty is engineering design, persistence, "
+                      "architecture, or impact scope, Route = Reviewed", text)
+
+    def test_router_next_change_skill_is_an_enum_matching_the_route(self):
+        """The handoff field must be a closed value set, consistent with Route.
+
+        Behavior runs produced `reviewed-tier`, "the Reviewed change skill" and
+        a shape route paired with a reviewed handoff, none of which violated
+        the previous free-text wording.
+        """
+        text = self._skill("task-router")
+        self.assertIn("exactly one of `quick-change` | `bounded-change` | "
+                      "`reviewed-change` | `shape`", text)
+        for mapping in ("Quick→`quick-change`", "Bounded→`bounded-change`",
+                        "Reviewed→`reviewed-change`", "shape→`shape`"):
+            self.assertIn(mapping, text, f"missing Route mapping {mapping!r}")
+
     def test_router_downgrade_requires_positive_evidence(self):
         text = self._skill("task-router")
         self.assertIn("Downgrade when evidence confirms", text)
