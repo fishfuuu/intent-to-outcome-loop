@@ -1,0 +1,46 @@
+{
+  "pack_name": "knowledge-work-companion",
+  "version": "0.1.0",
+  "status": "provisional",
+  "status_note": "Optional knowledge-work companion pack. Not installed by default, and not part of the Core install surface or the Core skillset.json. scripts/install.py installs the Seven Core skills only.",
+  "skills": [
+    {
+      "name": "research-synthesis",
+      "entry": "skills/research-synthesis/SKILL.md",
+      "canonical_files": [
+        "skills/research-synthesis/SKILL.md"
+      ],
+      "provenance": "intentional-fork",
+      "upstream_repository": "andreaswasita/copilot-cowork-dojo",
+      "upstream_commit": "10605ba267c18dfd725a3507f4cf14b607a64e9a",
+      "upstream_path": "skills/research-synthesis/SKILL.md",
+      "local_reason": "replaced the 'synthesis takes a position' rule with 'the strongest judgment the evidence supports' (directional judgment, bounded conclusion, competing interpretations, or insufficient evidence); so-what no longer forces a recommendation; added a scope boundary against turning synthesis into a research program; removed host/vendor wording and links to skills outside this pack"
+    },
+    {
+      "name": "decision-memo",
+      "entry": "skills/decision-memo/SKILL.md",
+      "canonical_files": [
+        "skills/decision-memo/SKILL.md"
+      ],
+      "provenance": "intentional-fork",
+      "upstream_repository": "andreaswasita/copilot-cowork-dojo",
+      "upstream_commit": "10605ba267c18dfd725a3507f4cf14b607a64e9a",
+      "upstream_path": "skills/decision-memo/SKILL.md",
+      "local_reason": "decision position supports RECOMMEND / DEFER / ESCALATE instead of assuming a recommendation is always responsibly available; 'one page, no exceptions' becomes 'default to one page, keep it as small as the decision responsibly allows'; memo explicitly prepares a human decision rather than owning it; removed host/vendor wording and links to skills outside this pack"
+    },
+    {
+      "name": "reviewing-output",
+      "entry": "skills/reviewing-output/SKILL.md",
+      "canonical_files": [
+        "skills/reviewing-output/SKILL.md"
+      ],
+      "provenance": "intentional-fork",
+      "upstream_repository": "andreaswasita/copilot-cowork-dojo",
+      "upstream_commit": "10605ba267c18dfd725a3507f4cf14b607a64e9a",
+      "upstream_path": "skills/reviewing-output/SKILL.md",
+      "local_reason": "removed host/vendor wording for host neutrality; removed the code-or-automation review pass and added an engineering-review boundary; resolved the five-lenses-every-time versus right-size tension; added claim-versus-evidence discipline (UNVERIFIED vs FALSE); removed links to skills outside this pack"
+    }
+  ],
+  "dependencies": [],
+  "installed": false
+}
