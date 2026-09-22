@@ -112,7 +112,8 @@ or verdict taxonomy.
 
 - [ ] As small as the decision responsibly allows.
 - [ ] TL;DR carries the position.
-- [ ] Three options, each with pros / cons / cost.
+- [ ] Up to three real options; each included option with pros / cons /
+      cost.
 - [ ] Risks have mitigations.
 - [ ] Ask names the action and the by-when.
 - [ ] Decision-maker named.

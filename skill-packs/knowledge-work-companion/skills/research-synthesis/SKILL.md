@@ -28,7 +28,7 @@ judgment the evidence supports.
 ## When to Use
 
 - Competitive analyses, market scans, policy reviews, due-diligence.
-- When 3+ sources need a single point of view.
+- When 3+ sources need a single traceable judgment.
 - When the reader needs a judgment across sources, not a literature review.
 
 ## Scope Boundary
@@ -105,8 +105,8 @@ A synthesis that opens with "This document covers…" gets skipped. Force
 these two beats:
 
 - **Hook (first 2 sentences):** the single most consequential finding,
-  stated in the reader's vocabulary, with the magnitude. Not the
-  methodology.
+  stated in the reader's vocabulary, with the magnitude when the evidence
+  supports one. Not the methodology.
 - **So-what (closing paragraph):** what the evidence supports doing, what it
   argues against, what stays unresolved, and what would change the picture.
   "Nothing to act on yet" is legitimate only when it says what evidence
@@ -141,7 +141,8 @@ attention and different review.
 - [ ] Matrix attached.
 - [ ] Every claim cites source(s).
 - [ ] Disagreements named, not papered over.
-- [ ] Hook leads with finding + magnitude.
+- [ ] Hook leads with the finding, plus magnitude only where the evidence
+      supports one.
 - [ ] So-what names what the evidence supports, leaves unresolved, or still
       requires — and asserts no position beyond what the sources carry.
 

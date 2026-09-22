@@ -95,8 +95,12 @@ Start with the smallest useful combination.
 ## Third-party ownership
 
 Third-party skills are maintained by their original authors. Check each
-skill's latest version, invocation policy, and license. This repo does
-not copy or redistribute third-party skill content. A recommendation is
+skill's latest version, invocation policy, and license. Recommendations
+in this document do not copy or redistribute third-party skill content.
+Optional in-repo packs may contain third-party material — licensed
+pinned upstream snapshots or intentional forks — each recorded with its
+upstream commit, license, and third-party notices in that pack. Core
+itself does not depend on any third-party skill. A recommendation is
 not an endorsement, a compatibility guarantee, or a pinned dependency.
 If a third-party skill renames or stops being maintained, Core is
 unaffected.

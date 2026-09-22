@@ -60,7 +60,9 @@ throwaway output, and do not skim something that ships.
    sources. You cannot review against a standard you have not opened. This
    is the knowledge-worker equivalent of opening the repo's guidelines
    before a code review.
-2. **Run the five-lens review.** Score each lens GREEN / AMBER / RED.
+2. **Run the five-lens review for material deliverables.** For trivial,
+   disposable, or very small outputs, apply only the smallest relevant
+   checks. Score each lens GREEN / AMBER / RED.
 
    | Lens | Question |
    |---|---|
@@ -221,7 +223,8 @@ with no source" beats "the data feels off."
 ## Verify Before Refining
 
 - [ ] The ask and house references were open during review.
-- [ ] All five lenses scored.
+- [ ] Full five lenses scored for a material deliverable, or the smallest
+      relevant checks for a trivial one.
 - [ ] Specialized passes run for what the deliverable contains.
 - [ ] Each finding has a confidence call; low-confidence noise dropped.
 - [ ] Findings grouped Critical / Important / Suggestion / Strength.
