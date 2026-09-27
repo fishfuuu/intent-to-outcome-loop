@@ -23,6 +23,14 @@ Produce clean handoff and review artifacts so work moves between a person and an
 - You want an outcome judgment — use `evaluate`.
 - The user has not asked to save a handoff — do not write a file on your own initiative.
 
+## Execution channel for parallel workers
+
+When the work being coordinated needs several mutually independent workers running in parallel, and none of them is the independent reviewer, run them as a Dynamic Workflows workflow so worker model routing is managed by `pi-worker-selector` (tier, quota, same-tier fallback, STOP).
+
+Keep these on native `subagent(...)` instead: independent review, and any ad-hoc single worker. Reviewers need independence and an explicitly chosen strong model, not quota-aware fallback.
+
+Coordinate itself still does not dispatch or schedule: this only names the channel the orchestrator should use.
+
 ## Required inputs
 
 - What was done so far (the change, the contract, or the problem).
