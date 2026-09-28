@@ -1,66 +1,40 @@
-# Pi host integration (optional)
+# Pi host integration (retired)
 
-`hosts/pi/agents/` holds the Pi subagent definitions this project uses in
-practice. This directory is an **optional Pi host integration**. It is not
-part of the Seven Core, and the Core does not depend on it.
+This directory no longer owns or deploys Pi agent definitions.
 
-## What this layer is
+## Canonical source
 
-- It is one host's runtime realization of ITOL responsibilities: which role
-  runs on which model, with which tools, under which permissions.
-- Core (`skills/`) describes *responsibility and evidence type*, and stays
-  vendor-neutral and host-neutral. This layer describes *concrete agents*.
-- Other hosts may realize the same responsibilities with entirely different
-  agents, runtimes, or hand-offs. Nothing outside `hosts/pi/` should assume
-  these agents exist, and no Core skill requires them.
+Pi Web custom agent profiles live in the `pi-extensions` repository, under
+`pi-extensions/agents/`. That repository is their single canonical source.
+Install them from a `pi-extensions` checkout using the command in that
+directory's own `agents/README.md`.
 
-## Agents
+Do not copy agent definitions into this repository, and do not re-create
+`hosts/pi/agents/`. There is no sync step and no mirror: this repository keeps
+no copy, so it has nothing to keep in step and nothing to disagree with.
 
-| Agent | Responsibility |
-|-------|----------------|
-| `browser-qa-agent` | Browser-level evidence from the running UI |
-| `execution-verifier` | Independent execution evidence: tests, builds, probes |
-| `code-reviewer` | Standalone implementation-quality review |
-| `change-architecture-reviewer` | Architecture and structural review of the current change |
-| `independent-reviewer` | Formal independent review for `reviewed-change` |
+## Why this was retired
 
-`code-reviewer` and `change-architecture-reviewer` are deliberately distinct
-and both are kept. The first is generic implementation quality; the second is
-change-scoped architecture. Neither substitutes for the other, and neither
-substitutes for `independent-reviewer`.
+`hosts/pi/agents/` used to version five Pi agent definitions written in the
+`pi-subagents` frontmatter dialect. Pi Web's built-in Agent replaced that
+runtime, and the canonical definitions now live in `pi-extensions/agents/`,
+in the built-in Agent schema.
 
-## Boundaries
+The copies kept here were stale. They carried `systemPromptMode`,
+`inheritProjectContext`, `inheritSkills`, and `acceptanceRole`, none of which
+the current runtime honors, and none of which any tool in this repository read
+or deployed. `scripts/install.py` distributes only the Core skills declared in
+`skillset.json` and never touches `hosts/`, so deployment was always manual.
 
-- The frontmatter in these files is **Pi-specific** — `model`,
-  `fallbackModels`, `tools`, `thinking`, `systemPromptMode`,
-  `inheritProjectContext`, `inheritSkills`, `acceptanceRole` and similar.
-  These are host defaults, not an ITOL Core contract. Other hosts will
-  differ, and that difference is expected.
-- Specialist agents produce **evidence and findings**, not approvals.
-  Browser QA, execution verification, code review and architecture review
-  results are inputs the `independent-reviewer` must itself judge for
-  relevance, freshness, sufficiency and contract coverage. The formal
-  Reviewed lifecycle remains defined by Core and decided by the main
-  session.
-- `code-reviewer` is a standalone capability. It does not depend on Matt
-  Pocock's `code-review`, and it must keep working for users who have no
-  Matt Pocock skills installed.
-- Matt Pocock skills (`code-review`, `improve-codebase-architecture`,
-  `tdd`, `grilling`, `codebase-design`, `domain-modeling`, and others) are
-  **optional external skills**. They are not dependencies of these agents,
-  and none of their content is vendored into this repository.
-- This repository is the **canonical source** for these definitions. A copy
-  deployed under a Pi agent directory is a deployment, not a source of
-  truth. If the two disagree, the repository wins.
+A second copy therefore bought nothing and cost two things: a competing
+canonical claim, and a rollback risk. A manual deploy of these files would
+have silently replaced the current profiles with the retired schema.
 
-## Deployment
+## What this layer still means
 
-`scripts/install.py` distributes only the Core skills declared in
-`skillset.json`, to the skills directories of the supported hosts. It does
-not touch `hosts/`. Deploying `hosts/pi/agents/` into a Pi agent directory is
-a separate step and is currently manual.
-
-After deploying or syncing these definitions, confirm through Pi's runtime
-discovery (for example `subagent list`) that every canonical agent registers
-and no invalid definitions are reported. The definitions here stay canonical;
-the runtime check is what proves host compatibility.
+The responsibilities those agents realized — browser-level evidence,
+independent execution evidence, implementation-quality review, change-scoped
+architecture review, and formal independent review — are realized on the Pi
+host by the profiles in `pi-extensions/agents/`. Core (`skills/`) continues to
+describe responsibility and evidence type and stays vendor-neutral: nothing
+outside `hosts/` depends on any particular agent existing.
