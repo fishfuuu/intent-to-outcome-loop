@@ -86,6 +86,27 @@ Bridge UI elements to real-world business actions:
 - **Downstream Continuity:** Does system output continue into Excel, reports, Lark/email, review meetings, or ERP?
 *(Displaying data on a screen does not mean the business process is finished. If downstream export + manual adjustment + review meeting exists, that downstream handoff is part of the business contract).*
 
+## Interview discipline
+
+When a coverage lens leaves a gap that existing materials cannot answer, ask the business
+people who know — briefly and prepared:
+
+- **Prepare before asking.** Re-read the prototype, documents, and any existing contract or
+open `UNRESOLVED` items first; do not spend business people's time on what materials already
+answer. Lead with the 2–3 questions that cannot be confirmed from existing materials and that
+block the most contract content.
+- **Separate claim sources while asking.** Stakeholders state firsthand observation, retold
+rules, recollection, and guesswork in the same confident tone. Ask where a rule comes from
+and when it last actually happened; for a load-bearing historical rule, ask for the most
+recent concrete case and its basis. A recounted rule with no findable recent case stays a claim, not a frozen rule — and a stakeholder's account is their claim, not your direct observation.
+- **Read back before closing.** Repeat the 2–3 most important conclusions in your own words
+and correct misunderstandings in the room. Read-back verifies understanding, not authorization: it does not upgrade `UNRESOLVED` to `CONFIRMED` — only the decision authority
+confirming intended future behavior does.
+- **Update the contract afterwards.** Fold results into this skill's output: move authorized
+dispositions into the Confirmed parts, and record still-open items under Conflicts &
+Evidence as `UNRESOLVED` with decision authority and needed evidence. Do not leave findings
+in meeting notes outside the contract.
+
 ## Conflict and change discipline
 
 When inherited requirements, prototypes, stakeholder statements, SOPs, observed real work, system constraints, or policies materially conflict:
