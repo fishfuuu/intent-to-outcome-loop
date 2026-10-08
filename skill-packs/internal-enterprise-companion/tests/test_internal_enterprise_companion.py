@@ -108,6 +108,11 @@ class TestInternalEnterpriseCompanionPack(unittest.TestCase):
         self.assertIn("Strictly forbidden in this skill: designing database tables", text)
         self.assertIn("task-router", text)
 
+        # Interview discipline: prepared questions, claim-source separation, read-back
+        self.assertIn("block the most contract content", text)
+        self.assertIn("their claim, not your direct observation", text)
+        self.assertIn("verifies understanding, not authorization", text)
+
     def test_observe_real_work_contracts(self):
         text = (PACK_ROOT / "skills" / "observe-real-work" / "SKILL.md").read_text(encoding="utf-8")
 
